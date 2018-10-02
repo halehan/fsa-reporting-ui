@@ -1,0 +1,76 @@
+<app-navbar></app-navbar>
+<!--
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Work',     11],
+      ['Eat',      2],
+      ['Commute',  2],
+      ['Watch TV', 2],
+      ['Sleep',    7]
+    ]);
+
+    var options = {
+      title: 'My Daily Activities',
+      is3D: true,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script>
+-->
+
+<div class="container-fluid">
+    <div class="row">
+<!--
+      <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item">
+            <a [routerLink]="['/message']"  class="nav-link  " href="#"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp; Messages</a>
+          </li>
+          <li class="nav-item">
+            <a [routerLink]="['/dash']"  class="nav-link  active" href="#"><fa-icon [icon]="faChartPie"></fa-icon>&nbsp; Reports</a>
+          </li>
+          <li class="nav-item">  
+            <a [routerLink]="['/user']"  class="nav-link  " href="#"><fa-icon [icon]="faAddressBook"></fa-icon>&nbsp; Users</a>
+          </li>  
+          <li class="nav-item">
+            <a [routerLink]="['/transaction']"  class="nav-link   " href="#"><fa-icon [icon]="faCoins"></fa-icon>&nbsp; Bids</a>
+          </li>
+        </ul>
+      </nav>
+    -->
+    </div>
+  </div>
+    <div style="margin-top: 55px; height: 600px; margin-left: 100px;"  class="row">
+      <div class="col-md-6">
+        <google-chart width="600" height="600"
+            [title]="chart.title"
+            [type]="chart.type"
+            [data]="chart.data"
+            [columnNames]="chart.columnNames"
+            [options]="chart.options"
+            [dynamicResize]="true">
+        </google-chart>
+      </div>
+
+
+      <div class="col-md-6">
+
+        <google-chart width="600" height="600"
+        title="Top 10 Providers"
+        type="PieChart"
+        [data]="chart.data"
+        [columnNames]="chart.columnNames"
+        [options]="chart.options"
+        [dynamicResize]="true">
+      </google-chart>
+
+      </div>
+</div>
+  <app-footer></app-footer>

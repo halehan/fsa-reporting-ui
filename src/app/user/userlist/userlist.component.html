@@ -1,0 +1,139 @@
+<div class="container">
+
+        <div class="example-header">
+          <mat-form-field>
+            <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+
+        <mat-table class="mat-table" #table [dataSource]="userDataSource" matSort>
+
+          <ng-container matColumnDef="firstName">
+            <mat-header-cell fxFlex="125px" style="padding-left: 1px;"  *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
+            <mat-cell fxFlex="125px" *matCellDef="let row"> {{row.firstName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="lastName">
+            <mat-header-cell  fxFlex="125px" *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
+            <mat-cell  fxFlex="125px" *matCellDef="let row"> {{row.lastName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="city">
+            <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> City</mat-header-cell>
+            <mat-cell fxFlex="125px" *matCellDef="let row"> {{row.city}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="state">
+                <mat-header-cell fxFlex="75px" *matHeaderCellDef mat-sort-header> State</mat-header-cell>
+                <mat-cell fxFlex="75px" *matCellDef="let row"> {{row.state}} </mat-cell>
+          </ng-container>
+
+            <ng-container matColumnDef="loginId">
+                    <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> Login Id</mat-header-cell>
+                    <mat-cell fxFlex="175px" *matCellDef="let row"> {{row.loginId}} </mat-cell>
+            </ng-container>
+
+         <ng-container matColumnDef="createdTime">
+            <mat-header-cell fxFlex="150px" *matHeaderCellDef mat-sort-header> Created </mat-header-cell>
+            <mat-cell fxFlex="150px" *matCellDef="let row">{{ row.createdDate | date }}</mat-cell>
+          </ng-container>
+
+    <!--      <ng-container matColumnDef="edit">
+              <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell>
+              <mat-cell fxFlex="175px" *matCellDef="let row">
+                  <button (click)="onSelect(row)" class="btn btn-primary btn-simple btn-xs" rel="tooltip" title="Edit User" type="button">
+                    <i  class="fa fa-pencil" aria-hidden="true"></i>
+                  </button>
+              </mat-cell>
+          </ng-container>  -->
+
+
+            <ng-container matColumnDef="actionsColumn">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Edit &nbsp; &nbsp; Delete</mat-header-cell>
+
+              <mat-cell *matCellDef="let row">
+                <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
+                      <i class="fa fa-pencil mat-icon"></i>
+                    </button>
+                    <button  *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="closeThread(row)">
+                        <i class="fa fa-times mat-icon"></i>
+                      </button>
+                <button   *ngIf="row.editing" mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                      <i class="fa fa-check mat-icon"></i>
+                    </button>
+
+
+              </mat-cell>
+            </ng-container>
+
+          
+
+          <mat-header-row class="mat-900"  *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row class="mat-900" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+    </div>
+    <br><hr>
+
+    <div *ngIf="selectedUser">
+
+        <div class="card-content">
+            <form #myForm="ngForm">
+               <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-black label-floating is-empty">
+                            <label class="control-label">First Name</label>
+                            <input type="text" name="firstName" required [(ngModel)]="selectedUser.firstName" #firstName="ngModel" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-black label-floating is-empty">
+                            <label class="control-label">Last Name</label>
+                            <input type="text" name="lastName" required [(ngModel)]="selectedUser.lastName" #lastName="ngModel" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Phone Number</label>
+                          <input type="text" name="phoneMobile" required [(ngModel)]="selectedUser.phone" #phoneMobile="ngModel" class="form-control" >
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Address</label>
+                          <input type="text"  name="address" required [(ngModel)]="selectedUser.address" #address="ngModel" class="form-control" >
+                      </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating is-empty">
+                            <label class="control-label">City</label>
+                            <input type="text" name="city" required [(ngModel)]="selectedUser.city" #city="ngModel" class="form-control" >
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating is-empty">
+                            <label class="control-label">State</label>
+                            <input type="text" name="state" required [(ngModel)]="selectedUser.state" #city="ngModel" class="form-control" >
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-group form-black label-floating is-empty">
+                            <label class="control-label">Zip Code</label>
+                            <input type="text" name="zip" required [(ngModel)]="selectedUser.zip" #zip="ngModel" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+
+                <button (click)="updateUser()" type="submit" [disabled]="!myForm.dirty" class="btn btn-success pull-right">Update User</button>
+                <div class="clearfix"></div>
+            </form>
+            <br>
+        </div>
+
+     </div>

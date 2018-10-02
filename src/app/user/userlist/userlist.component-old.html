@@ -1,0 +1,45 @@
+<div class="container">
+  
+      <div class="example-header">
+        <mat-form-field>
+          <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      </div>
+    
+      <mat-table #table [dataSource]="userDataSource" matSort>
+    
+        <ng-container matColumnDef="firstName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="lastName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="loginId">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Login Id</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.loginId}} </mat-cell>
+        </ng-container>
+    
+       <ng-container matColumnDef="createdTime">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Created </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.createdTime | date }}</mat-cell>
+        </ng-container>  
+
+        <ng-container matColumnDef="delete">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
+            <mat-cell> <i (click)="onSelect(element)" class="fa fa-envelope-o" aria-hidden="true"></i> </mat-cell>  
+            
+          </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    
+  </div>
+  
+  
+  
+  

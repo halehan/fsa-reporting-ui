@@ -1,0 +1,42 @@
+<nav class=" navbar-expand-lg navbar-dark navbar-inverse fixed-top bg-inverse ">
+
+  <a class="navbar-brand" href="#">{{appTitle}} </a>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+      <ul class="navbar-nav ml-auto">
+
+        <li class="nav-item {{homeActive}} ">
+              <a [routerLink]="['/home']" class="nav-link" href="#"><fa-icon [icon]="faHome"></fa-icon>&nbsp; Home</a>
+        </li>
+
+        <li class="nav-item {{dashActive}}   ">
+              <a [routerLink]="['/dash']" class="nav-link" href="#"><fa-icon [icon]="faTachometerAlt"></fa-icon>&nbsp; Dashboard</a>
+         </li>
+
+         <li class="nav-item  {{bidActive}}">
+            <a [routerLink]="['/bids']"  class="nav-link " href="#"><fa-icon [icon]="faCoins"></fa-icon>&nbsp; Purchase Orders</a>
+          </li>
+
+         <li class="nav-item  {{reportActive}}">
+            <a [routerLink]="['/reports']"  class="nav-link" href="#"><fa-icon [icon]="faChartPie"></fa-icon>&nbsp; Reports</a>
+          </li>
+
+          <li class="nav-item  {{userActive}}  ">
+            <a [routerLink]="['/user']"   class="nav-link " href="#"><fa-icon [icon]="faAddressBook"></fa-icon>&nbsp; Users</a>
+          </li>
+
+<!--
+       
+
+           <li class="nav-item {{profileActive}}" >
+              <a [routerLink]="['/profile']" class="nav-link"  href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Profile</a>
+           </li>
+          -->
+        <li class="nav-item">
+            <a [routerLink]="['/login']"  class="nav-link" href="#"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp; Logout</a>
+      </li>
+
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,37 @@
+<nav  class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse" >
+    <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" >
+
+      </span>
+
+    </button>
+<!--    <a class="navbar-brand" href="#">WCSO{{appTitle}} </a>
+   <img style= "overflow: hidden; width: 60px; height: 60px;  background: rgb(23, 233, 51);" src="../../assets/walton-ico.jpg" />  -->
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav ml-auto ">
+          <li class="nav-item {{homeActive}} {{styleCls}} ">
+      <!--      <a class="nav-link" href="/"><i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp; Home <span class="sr-only">(current)</span></a>  -->
+            <a [routerLink]="['/']" class="nav-link" href="#"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp; Home</a>
+          </li>
+          <li class="nav-item {{dashActive}}  {{styleCls}} ">
+         <!--     <a class="nav-link" href="dash"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp; Dashboard</a>  -->
+              <a [routerLink]="['/dash']" class="nav-link" href="#"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp; Dashboard</a>
+          </li>
+   <!--       <li class="nav-item {{listActive}}   ">
+                 <a [routerLink]="['/list']" class="nav-link" href="#"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp; List</a>
+          </li>  -->
+          <li class="nav-item">
+            <a [routerLink]="['/login']" class="nav-link" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp; Logout</a>
+          </li>
+     <!--     <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li> -->
+          <li class="nav-item {{profileActive}}">
+              <a [routerLink]="['/profile']" class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Profile</a>
+          </li>
+
+        </ul>
+
+      </div>
+  </nav>
