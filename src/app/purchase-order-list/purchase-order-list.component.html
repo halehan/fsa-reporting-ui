@@ -19,10 +19,6 @@
                 <mat-form-field class="gap" *ngIf="showFilter()">
                     <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Search">
                 </mat-form-field>  
-
-                <div class="form-group col-md-8 insert-button-div">
-                        <button mat-button (click)="showNewPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
-                </div>
                
               </div>
             
@@ -101,7 +97,9 @@
       
       <br><hr> 
 
-     
+      <div class="new-po form-group col-md-8">
+            <button mat-button (click)="showNewPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
+    </div>
       <div *ngIf="selectedPO && !showNewPayment">
 
         <div class="card-content">
@@ -196,7 +194,7 @@
                             </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                             <div class="form-group form-black label-floating is-empty">
                                 <label class="control-label">Specification</label>
                                 <select required [(ngModel)]="selectedPO.spec"  #spec="ngModel" (change)="filterVehicleTypes($event.target.value)" class="form-control"  id="dealerSelect">
@@ -226,23 +224,18 @@
                             </div>
                     </div>
                    
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="sweet">Qty</label>
-                                <input type="text" name="qty" required [(ngModel)]="selectedPO.qty" #spec="ngModel" class="form-control" >
-                            </div>
-                    </div>
+                    
                
                     <div class="col-md-2">
                             <div class="form-group form-black label-floating is-empty">
                                 <label class="control-label">PO Reported by</label>
                                 <div style="padding-top: 5px;" class="form-group form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="inlineCheckbox1"  [(ngModel)]="selectedPO.agencyFlag" name="agencyFlag" value="X">
-                                    <label class="form-check-label" for="inlineCheckbox1">Agency</label>
+                                    <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
                                   </div>
                                   <div class="form-group form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="inlineCheckbox2" [(ngModel)]="selectedPO.dealerFlag" value="X">
-                                    <label class="form-check-label" for="inlineCheckbox2">Dealer</label>
+                                    <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
                                  </div>
                             </div>
                     </div> 
@@ -264,22 +257,29 @@
 
                     <div class="col-md-2">
                             <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Correction</label>
-                                <input  placeholder="$0.00" type="text" name="correction"  required [(ngModel)]="selectedPO.correction" #correction="ngModel" class="form-control" >
+                                <label class="sweet">Qty</label>
+                                <input type="text" name="qty" required [(ngModel)]="selectedPO.qty" #spec="ngModel" class="form-control" >
                             </div>
-                    </div>  
+                    </div>
+
+               <!--     <div class="col-md-2">
+                            <div class="form-group form-black label-floating is-empty">
+                                <label class="control-label">Correction</label>
+                                <input  placeholder="$0.00" type="text" name="correction"  [(ngModel)]="selectedPO.correction" #correction="ngModel" class="form-control" >
+                            </div>
+                    </div>   -->
 
                     <div class="col-md-2">
                             <div class="form-group form-black label-floating is-empty">
                                 <label class="control-label">PO Amount</label>
-                                <input   placeholder="$0.00" type="text" name="poAmount" required [(ngModel)]="selectedPO.poAmount" #poAmount="ngModel" class="form-control" >
+                                <input   placeholder="$0.00" type="text" name="poAmount"  [(ngModel)]="selectedPO.poAmount" #poAmount="ngModel" class="form-control" >
                             </div>
                     </div>  
 
                     <div class="col-md-2">
                             <div class="form-group form-black label-floating is-empty">
                                 <label class="control-label">Actual PO</label>
-                                <input   placeholder="$0.00" type="text"  required [(ngModel)]="selectedPO.actualPo" #actualPo="ngModel" class="form-control" >
+                                <input   placeholder="$0.00" type="text"   [(ngModel)]="selectedPO.actualPo" #actualPo="ngModel" class="form-control" >
                             </div>
                     </div>  
 
@@ -294,7 +294,7 @@
                     <div class="col-md-12">
                             <div class="form-group form-black label-floating is-empty">
                                 <label class="control-label">Comments</label>
-                                <input type="text" name="comments" required [(ngModel)]="selectedPO.comments" #spec="ngModel" class="form-control" >
+                                <input type="text" name="comments"  [(ngModel)]="selectedPO.comments" #spec="ngModel" class="form-control" >
                             </div>
                     </div> 
                     
@@ -304,6 +304,7 @@
                     </div>
     
                 </div>
+
                 
                 <div class="row shadow p-3 mb-5 bg-white rounded">
                         <mat-toolbar >
@@ -329,13 +330,13 @@
                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Number</label>
-                                            <input type="text" name="paymentNumber" required [(ngModel)]="selectedPayment.paymentNumber" #paymentNumber="ngModel" class="form-control" >
+                                            <input type="text" name="paymentNumber"  [(ngModel)]="selectedPayment.paymentNumber" #paymentNumber="ngModel" class="form-control" >
                                         </div>
                                 </div>
                                 <div class="col-md-2 ">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Check Number</label>
-                                            <input type="text" name="paymentCheckNum" required [(ngModel)]="selectedPayment.paymentCheckNum" #paymentNumber="ngModel" class="form-control" >
+                                            <input type="text" name="paymentCheckNum"  [(ngModel)]="selectedPayment.paymentCheckNum" #paymentNumber="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
@@ -371,14 +372,14 @@
                                 <div class="col-md-2 ">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Late Fee Amount</label>
-                                            <input type="text" name="lateFeeAmt" required [(ngModel)]="selectedPayment.lateFeeAmt" #lateFeeAmt="ngModel" class="form-control" >
+                                            <input type="text" name="lateFeeAmt"  [(ngModel)]="selectedPayment.lateFeeAmt" #lateFeeAmt="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
                                 <div class="col-md-2 ">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Late Fee Check Num</label>
-                                            <input type="text" name="lateFeeCheckNum" required [(ngModel)]="selectedPayment.lateFeeCheckNum" #lateFeeCheckNum="ngModel" class="form-control" >
+                                            <input type="text" name="lateFeeCheckNum"  [(ngModel)]="selectedPayment.lateFeeCheckNum" #lateFeeCheckNum="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
@@ -386,28 +387,28 @@
                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Late Fee Check Date</label>
-                                            <input type="text" name="lateFeeCheckDate" required [(ngModel)]="selectedPayment.lateFeeCheckDate" #lateFeeCheckDate="ngModel" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }">
+                                            <input type="text" name="lateFeeCheckDate"  [(ngModel)]="selectedPayment.lateFeeCheckDate" #lateFeeCheckDate="ngModel" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }">
                                         </div>
                                 </div>
                                
                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">FSA Refund Amount</label>
-                                            <input type="text" name="fsaRefundAmount" required [(ngModel)]="selectedPayment.fsaRefundAmount" #fsaRefundAmount="ngModel" class="form-control" >
+                                            <input type="text" name="fsaRefundAmount"  [(ngModel)]="selectedPayment.fsaRefundAmount" #fsaRefundAmount="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">FSA Refund Check Num</label>
-                                            <input type="text" name="fsaRefundCheckNum" required [(ngModel)]="selectedPayment.fsaRefundCheckNum" #fsaRefundCheckNum="ngModel" class="form-control" >
+                                            <input type="text" name="fsaRefundCheckNum"  [(ngModel)]="selectedPayment.fsaRefundCheckNum" #fsaRefundCheckNum="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">FSA Refund Date</label>
-                                            <input type="text" name="fsaRefundDate" required [(ngModel)]="selectedPayment.fsaRefundDate" #lateFeeCheckDate="ngModel" class="form-control" 
+                                            <input type="text" name="fsaRefundDate"  [(ngModel)]="selectedPayment.fsaRefundDate" #lateFeeCheckDate="ngModel" class="form-control" 
                                             bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }" >
                                         </div>
                                 </div>
@@ -415,14 +416,14 @@
                                 <div class="col-md-2 ">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Correction</label>
-                                            <input type="text" name="correction" required [(ngModel)]="selectedPayment.correction" #correction="ngModel" class="form-control" >
+                                            <input type="text" name="correction"  [(ngModel)]="selectedPayment.correction" #correction="ngModel" class="form-control" >
                                         </div>
                                 </div>
 
                                 <div class="col-md-2 ">
                                         <div class="form-group form-black label-floating is-empty">
                                             <label class="control-label">Audit Difference</label>
-                                            <input type="text" name="auditDifference" required [(ngModel)]="selectedPayment.auditDifference" #auditDifference="ngModel" class="form-control" >
+                                            <input type="text" name="auditDifference"  [(ngModel)]="selectedPayment.auditDifference" #auditDifference="ngModel" class="form-control" >
                                         </div>
                                 </div>
 

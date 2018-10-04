@@ -18,7 +18,7 @@ import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 
 export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
-  displayedColumns = ['bidNumber', 'cityAgency', 'dealerName', 'spec', 'vehicleType',
+  displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'spec', 'vehicleType',
                       'poNumber', 'poIssueDate', 'edit', 'addPayment'];
 
   paymentColumns = ['paymentDate', 'paymentAmount', 'paymentNumber', 'paymentCheckNum', 'edit', 'delete'];
@@ -45,6 +45,8 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   selectedPO: PurchaseOrder;
   selectedPayment: Payment;
   currentBid: BidNumber;
+  newPoForm: FormGroup;
+  dateFailed: boolean;
 
   myDate: Date;
 
@@ -59,8 +61,19 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
               private dateFormatPipe: DateFormatPipe  ) {
 
-    this.poForm = this.createFormGroup();
+    
     this.myDate = new Date();
+}
+
+validateFormDates(g: FormGroup) {
+
+  const poDate: Date = g.get('poIssueDate').value;
+  const reporteddate: Date = g.get('dateReported').value;
+  const isValid:  boolean = poDate > reporteddate;
+
+ return reporteddate > poDate ? null : {'mismatch': true};
+
+
 }
 
 editName() {
@@ -97,27 +110,6 @@ sendData(bidId: string) {
 
     });
 
-}
-
-createFormGroupWithBuilder(fb: FormBuilder) {
-  return this.fb.group({
-    purchaseOrderData: this.fb.group({
-      bidNumber: ['', [Validators.required ]],
-      poNumber: ['', Validators.required],
-      dealerName: [Validators.required]
-    })
-  });
-}
-
-createFormGroup() {
-  return this.fb.group({
-    purchaseOrderData:  new FormGroup({
-      bidNumber: new FormControl(),
-      poNumber: new FormControl(),
-      dealerName: new FormControl(),
-      cityAgency: new FormControl()
-    })
-  });
 }
 
 sleep(milliseconds) {

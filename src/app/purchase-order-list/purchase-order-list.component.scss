@@ -2,11 +2,27 @@ hr {
     width: 1225px;
   }
 
+  .ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+  
+
   .gap{
     padding-top: 15px;
     padding-left: 10px;
   }
 
+
+  .new-po {
+    margin-left: 10px;
+    padding-left: 1100px;
+    padding-bottom: 25px;
+   
+}
   
 
   .insert-button-div {

@@ -10,9 +10,9 @@
               <a [routerLink]="['/home']" class="nav-link" href="#"><fa-icon [icon]="faHome"></fa-icon>&nbsp; Home</a>
         </li>
 
-        <li class="nav-item {{dashActive}}   ">
+    <!--    <li class="nav-item {{dashActive}}   ">
               <a [routerLink]="['/dash']" class="nav-link" href="#"><fa-icon [icon]="faTachometerAlt"></fa-icon>&nbsp; Dashboard</a>
-         </li>
+         </li>  -->
 
          <li class="nav-item  {{bidActive}}">
             <a [routerLink]="['/bids']"  class="nav-link " href="#"><fa-icon [icon]="faCoins"></fa-icon>&nbsp; Purchase Orders</a>
@@ -26,13 +26,10 @@
             <a [routerLink]="['/user']"   class="nav-link " href="#"><fa-icon [icon]="faAddressBook"></fa-icon>&nbsp; Users</a>
           </li>
 
-<!--
-       
-
-           <li class="nav-item {{profileActive}}" >
+     <!--      <li class="nav-item {{profileActive}}" >
               <a [routerLink]="['/profile']" class="nav-link"  href="#"><i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Profile</a>
-           </li>
-          -->
+           </li>  -->
+          
         <li class="nav-item">
             <a [routerLink]="['/login']"  class="nav-link" href="#"><fa-icon [icon]="faSignOutAlt"></fa-icon>&nbsp; Logout</a>
       </li>

@@ -4,7 +4,7 @@ import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
 import { AuthGuard } from './guards/index';
 import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+// import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MessageComponent } from './message/message.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
@@ -15,7 +15,7 @@ import { ReportsComponent } from './reports/reports.component';
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
-    { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard] },
+  //  { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'register', component: RegisterComponent },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
