@@ -61,7 +61,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
               private dateFormatPipe: DateFormatPipe  ) {
 
-    
+
     this.myDate = new Date();
 }
 
@@ -198,7 +198,7 @@ showFilter() {
   }
 
   onSelect(po: PurchaseOrder): void {
-    
+
     this.poService.getPoById(po.id)
     .subscribe(poVal => {
         this.selectedPO = poVal[0];
@@ -317,7 +317,6 @@ showFilter() {
     this.selectedPayment.fsaReportId = po.id;
     this.showPayment = true;
     this.fuck = true;
-   
 
     this.paymentFocus.nativeElement.focus();
 
@@ -338,8 +337,8 @@ showFilter() {
 
   }
 
-  truncateDecimals(poAmount: number, places: number) { 
-    var shift = Math.pow(10, places);
+  truncateDecimals(poAmount: number, places: number) {
+    const shift = Math.pow(10, places);
 
     return ((poAmount * shift) | 0) / shift;
 };
@@ -348,7 +347,7 @@ showFilter() {
   updatePurchaseOrder() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     let adminCalc: number;
-    
+
     if  ( Number(this.selectedPO.actualPo) > 0 ) {
       adminCalc = this.calculateAdminFee(Number(this.selectedPO.actualPo));
     } else if (Number(this.selectedPO.poAmount) > 0 )   {

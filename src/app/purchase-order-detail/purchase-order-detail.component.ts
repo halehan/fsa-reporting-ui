@@ -1,7 +1,7 @@
 
 import { Component, ViewChild, OnInit, AfterViewInit, Output, EventEmitter,  OnChanges, SimpleChanges, Input  } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {BehaviorSubject, Observable} from 'rxjs';
+// import {BehaviorSubject, Observable} from 'rxjs';
 import { PurchaseOrder } from '../model/index';
 import { Dealer, CityAgency, BidType, BidNumber, PoStatusType, Specification } from '../model/index';
 import { ContactRequest } from '../model/contact-request';
@@ -30,7 +30,7 @@ export class PurchaseOrderDetailComponent implements OnInit  {
 
   dealers: Dealer[] = [];
   newPO: PurchaseOrder;
-  POForm: FormGroup;
+
   default: String = 'UK';
   enableSpec: Boolean = false;
   enableVehicleType: String = 'disabled';
@@ -40,18 +40,14 @@ export class PurchaseOrderDetailComponent implements OnInit  {
   poStatusTypeCodes: PoStatusType[] = [];
   newPoForm: FormGroup;
   dateFailed: boolean;
-
+  currentBid: BidNumber;
 
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
-    private dateFormatPipe: DateFormatPipe) {
-   this.contactForm = this.createFormGroupWithBuilder(fb);
-    this.POForm  = new FormGroup({
-      state: new FormControl(this.dealers),
-    });
+    private dateFormatPipe: DateFormatPipe) {this.newPO = new PurchaseOrder(); }
 
-    this.newPO = new PurchaseOrder();
-
-}
+get poAmount() {
+  return this.newPoForm.get('poAmount');
+ }
 
 ngOnInit() {
 
@@ -87,35 +83,64 @@ ngOnInit() {
       this.bidNumbers = _bidNum;
   });
 
+this.formControlValueChanged();
+
 }
 
-purchaserChange(event)  {
+calculateAdminFee(poAmount: number) {
+ return this.truncateDecimals(poAmount * this.currentBid.AdminFeeRate, 2);
+// return this.truncateDecimals(poAmount * .07, 2);
 
-  const newVal = event.target.value;
+}
 
-  this.poService.getPayCode(newVal)
-  .subscribe(cd => {
-  this.newPO.payCd = cd[0].agencyPayCode;
+formControlValueChanged() {
 
-});
+  this.poAmount.valueChanges.subscribe(
+      _poAmount => {
+      console.log('poAmount changed ' + _poAmount);
+      if ( !(this.newPoForm.get('actualPo').value >= 0)) {
+          if ( _poAmount >= 0) {
+            this.newPoForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
+          }
+      }
+  });
+
+   this.newPoForm.get('actualPo').valueChanges.subscribe(
+      _actualPo => {
+        if ( _actualPo > 0) {
+        console.log(this.calculateAdminFee(_actualPo));
+        this.newPoForm.patchValue({'adminFeeDue': this.calculateAdminFee(_actualPo)});
+        }
+      });
+
+   this.newPoForm.get('cityAgency').valueChanges.subscribe(
+        _cityAgency => {
+          this.poService.getPayCode(_cityAgency).subscribe(cd => {this.newPO.payCd = cd[0].agencyPayCode; });
+          console.log(this.newPO.payCd);
+          });
+
+   this.newPoForm.get('bidNumber').valueChanges.subscribe(
+       _bidNumber => {
+          this.vehicleTypeCodes = null;
+          this.poService.getSpec(_bidNumber).subscribe(data => {this.specs = data; });
+          this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
+          console.log(this.currentBid.AdminFeeRate);
+    });
+          });
+
+   this.newPoForm.get('spec').valueChanges.subscribe(_spec => {
+          this.poService.getVehicleType(this.newPoForm.controls.bidNumber.value, _spec)
+                .subscribe(data => {this.vehicleTypeCodes = data; });
+              });
+
+    this.newPoForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
+                  console.log(_poIssueDate);
+                  });
 
 }
 
 getSuck() {
   return this.enableVehicleType;
-}
-
-
-createFormGroupWithBuilder(fb: FormBuilder) {
-  return this.fb.group({
-    requestType: ['', [Validators.required, Validators.minLength(2)]],
-    text: [''],
-    personalData: this.fb.group({
-      email: ['duser@fsa.gov', [Validators.required, Validators.minLength(2)]],
-      mobile: ['', Validators.required],
-      country: ['', Validators.required]
-    })
-  });
 }
 
 createFormGroup() {
@@ -162,13 +187,6 @@ copyFormToModel() {
 
 }
 
-// convenience getter for easy access to form fields
-get f() { return this.newPoForm.controls; }
-
-test() {
-  console.log();
-}
-
 validateFormDates(g: FormGroup) {
 
   const poDate: Date = g.get('poIssueDate').value;
@@ -177,8 +195,13 @@ validateFormDates(g: FormGroup) {
 
  return reporteddate > poDate ? null : {'mismatch': true};
 
-
 }
+
+truncateDecimals(poAmount: number, places: number) {
+  const shift = Math.pow(10, places);
+
+  return ((poAmount * shift) | 0) / shift;
+};
 
 revert() {
   // Resets to blank object
@@ -197,66 +220,34 @@ onSubmit() {
   console.log(result);
 }
 
-calculateAdminFee(poAmount: number) {
-    return poAmount * .07;
-
+  getCurrentUserName() {
+    return JSON.parse(localStorage.getItem('currentUser')).username;
   }
 
 
   insertPurchaseOrder() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.copyFormToModel();
-    let adminCalc: number;
 
-    if (this.newPoForm.invalid) {
-      this.dateFailed = true;
-      return;
-  } else {
-    this.dateFailed = false;
-    if ( Number(this.newPO.actualPo) > 0 ) {
-      adminCalc = this.calculateAdminFee(Number(this.newPO.actualPo));
-    } else if (Number(this.newPO.poAmount) > 0 )   {
-      adminCalc = this.calculateAdminFee(Number(this.newPO.poAmount));
-    }
+     this.copyFormToModel();
 
-    this.newPO.adminFeeDue = adminCalc;
-    this.newPO.createdBy = currentUser.username;
+     if (this.newPoForm.invalid) {
+       this.dateFailed = true;
+       return;
+     } else {
+        this.dateFailed = false;
 
-    this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
-    this.newPO = po;
+     this.newPO.createdBy = this.getCurrentUserName();
+
+     this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
+     this.newPO = po;
   });
 
     this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);
 
     this.toastr.success('Transaction Saved Successful', 'Transaction Update', {
     timeOut: 2000,
-});
-  }
-  }
-
-  filterSpecifications(filterVal: string) {
-
-    // reset the VehicleTypes
-    this.vehicleTypeCodes = null;
-
-    this.poService.getSpec(filterVal)
-    .subscribe(data => {
-        this.specs = data;
     });
-
   }
-
-  filterVehicleTypes(filterVal: string) {
-
-    console.log(filterVal);
-    console.log(this.newPO.bidNumber);
-    console.log(this.newPO.spec);
-
-    this.poService.getVehicleType(this.newPoForm.controls.bidNumber.value, filterVal)
-    .subscribe(data => {
-        this.vehicleTypeCodes = data;
-    });
-
 }
+
 
 }

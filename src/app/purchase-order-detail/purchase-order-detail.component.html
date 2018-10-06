@@ -11,7 +11,7 @@
                 <div class="form-group form-black label-floating is-empty">
                         <label for="bidTypeNnumberSelect">Bid Number</label>
 
-                        <select required formControlName="bidNumber" (change)="filterSpecifications($event.target.value)" class="form-control"  id="bidTypeNnumberSelect">
+                        <select required formControlName="bidNumber" class="form-control"  id="bidTypeNnumberSelect">
                             <option  selected>{{ newPO.bidNumber }} 
                             </option>      
                             <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
@@ -57,7 +57,7 @@
               <div class="col-md-6">
                 <div class="form-group form-black label-floating is-empty">
                         <label for="cityAgencySelect">Purchaser</label>
-                        <select placeholder="Purchaser" (change)="purchaserChange($event)" required formControlName="cityAgency" [(ngModel)]="newPO.cityAgency" class="form-control"  id="cityAgencySelect">
+                        <select placeholder="Purchaser" required formControlName="cityAgency"  class="form-control"  id="cityAgencySelect">
                                 <option  selected>{{ newPO.cityAgency }} 
                                     </option>
                             <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
@@ -83,7 +83,7 @@
               <div class="col-md-6">
                 <div class="form-group form-black label-floating is-empty">
                     <label class="control-label">Specification</label>
-                    <select required [(ngModel)]="newPO.spec"  [(ngModel)]="newPO.spec" formControlName="spec" (change)="filterVehicleTypes($event.target.value)" class="form-control"  id="dealerSelect">
+                    <select required [(ngModel)]="newPO.spec"  [(ngModel)]="newPO.spec" formControlName="spec"  class="form-control"  id="dealerSelect">
                                 <option>Select Spec</option>
                                 <option *ngFor="let spec of specs"  value= {{spec.specNumber}}>
                                         {{ spec.specNumber}} -  {{ spec.specDescription}} 
@@ -145,21 +145,21 @@
         <div class="col-md-2">
                 <div class="form-group form-black label-floating is-empty">
                     <label class="control-label">PO Amount</label>
-                    <input type="text" placeholder="$0.00" name="poAmount"  formControlName="poAmount" [(ngModel)]="newPO.poAmount"  class="form-control" >
+                    <input type="text"  name="poAmount"  formControlName="poAmount" [(ngModel)]="newPO.poAmount"  class="form-control" >
                 </div>
         </div>  
 
         <div class="col-md-2">
                 <div class="form-group form-black label-floating is-empty">
                     <label class="control-label">Actual PO</label>
-                    <input type="number" placeholder="$0.00" name="actualPo" formControlName="actualPo"  [(ngModel)]="newPO.actualPo"  class="form-control" >
+                    <input type="number"  name="actualPo" formControlName="actualPo"  [(ngModel)]="newPO.actualPo"  class="form-control" >
                 </div>
         </div>  
 
         <div class="col-md-2">
                 <div class="form-group form-black label-floating is-empty">
                     <label class="control-label">Admin Fee Due</label>
-                    <input type="number" disabled placeholder="$0.00" name="adminFeeDue" formControlName="adminFeeDue"  [(ngModel)]="newPO.adminFeeDue"  class="form-control" >
+                    <input type="number" disabled placeholder="$0.00" name="adminFeeDue" formControlName="adminFeeDue"   class="form-control" >
                 </div>
         </div>  
 
