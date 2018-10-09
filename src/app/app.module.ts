@@ -80,8 +80,6 @@ import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-o
 import { ReportsComponent } from './reports/reports.component';
 import { DateFormatPipe } from './dateFormat/date-format-pipe.pipe';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

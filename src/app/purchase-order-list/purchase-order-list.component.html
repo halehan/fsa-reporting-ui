@@ -1,514 +1,672 @@
 <div class="container">
     
-    <div class="example-header">
-        
-          <div class="row">
-            <div class="col-md-12">
-                <div  class="col-md-12 form-group form-black label-floating is-empty gap">
-                        <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
-
-                        <select required  (change)="filterBids($event.target.value)" class="form-control"  
-                                id="bidTypeNnumberSelect2">
-                                <option>Select Bid</option>
-                            <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
-                                        {{bn.BidNumber}} - {{bn.BidTitle}}
-                          </option>  
-                        </select>
-                </div>
-
-                <mat-form-field class="gap" *ngIf="showFilter()">
-                    <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Search">
-                </mat-form-field>  
-               
-              </div>
+        <div class="example-header">
             
-            </div>  
-
-         
-    <div>
-         
-        <mat-table *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
-      
-          <ng-container matColumnDef="bidNumber">
-            <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
-            <mat-cell fxFlex="125px" *matCellDef="let row"> {{row.bidNumber}} </mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="cityAgency">
-            <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header> City/Agency Name</mat-header-cell>
-            <mat-cell fxFlex="200px" *matCellDef="let row"> {{row.cityAgency}} </mat-cell>
-          </ng-container>
-      
-         <ng-container matColumnDef="dealerName">
-            <mat-header-cell fxFlex="275px" *matHeaderCellDef mat-sort-header> Dealer Name </mat-header-cell>
-            <mat-cell fxFlex="275px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="spec">
-            <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Specification </mat-header-cell>
-            <mat-cell fxFlex="100px" *matCellDef="let row">{{row.spec}}</mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="vehicleType">
-            <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> Vehicla Type </mat-header-cell>
-            <mat-cell fxFlex="175px" *matCellDef="let row">{{row.vehicleType}}</mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="poNumber">
-            <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
-            <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
-          </ng-container>
-      
-          <ng-container matColumnDef="poIssueDate">
-            <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-            <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
-          </ng-container>
-
-            <ng-container matColumnDef="edit">
-                <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
-      
-                <mat-cell fxFlex="50px" *matCellDef="let row">
-                    <button mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
-                        <i class="fa fa-pencil mat-icon"></i>
-                    </button>  
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="addPayment">
-                    <mat-header-cell fxFlex="150px" *matHeaderCellDef mat-sort-header> Add Payment </mat-header-cell>
-                    <mat-cell fxFlex="175px" *matCellDef="let row">
-                        <button mat-icon-button color="primary" focusable="false" (click)="newPayment(row)">
-                            <i class="fa fa-plus mat-icon"></i>
-                        </button>  
-                    </mat-cell>
-              </ng-container>
-        
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      
-        
-        </mat-table>
-      
-                <mat-paginator 
-                    [length]="1000"
-                    [pageSize]="5"
-                    [pageSizeOptions]="[5, 25, 100, 500]">
-                </mat-paginator>
-      
-      <br><hr> 
-
-      <div class="new-po form-group col-md-8">
-            <button mat-button (click)="showNewPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
-    </div>
-      <div *ngIf="selectedPO && !showNewPayment">
-
-        <div class="card-content">
-          <!--  <form #myForm="ngForm"> -->
-               <div class="row shadow p-3 mb-5 bg-white rounded">
-                    <mat-toolbar >
-                            <span>Purchase Order Details</span>
-                    </mat-toolbar>
-
-               <!--     Last updated: <b>{{myDate | amTimeAgo}}</b>, <b>{{myDate | amCalendar}}</b>, <b>{{myDate | amDateFormat:'LL'}}</b>  -->
-
-                    <div class="col-md-4">
-                            <div class="form-group form-black label-floating is-empty">
-                                    <label for="bidTypeNnumberSelect">Bid Number</label>
-
-                                    <select required [(ngModel)]="selectedPO.bidNumber" (change)="filterSpecifications($event.target.value)" class="form-control"  id="bidTypeNnumberSelect">
-                                        <option  selected>{{ selectedPO.bidNumber }} 
-                                        </option>      
-                                        <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
-                                                {{bn.BidNumber}} - {{bn.BidTitle}}
-                                        </option>     
-                                    </select>
-                            </div>
-                    </div>  
-
-          <!--          <div class="col-md-4">
-                        <div class="form-group form-black label-floating is-empty">
-                              
-                                        <label class="control-label">Bid Number</label>
-                                        <input type="text" name="bidNumber" required [(ngModel)]="selectedPO.bidNumber" #bidNumber="ngModel"  class="form-control">  
-                             
-                        </div>
-                    </div>  -->
-                    <div class="col-md-2">
-                           <div class="form-group form-black label-floating is-empty">  
-                                <label class="control-label">PO Number</label>
-                                <input #poFocus type="text" name="poNumber" required [(ngModel)]="selectedPO.poNumber" #poNumber="ngModel" class="form-control" >
-                             
-                            </div>  
-                    </div>  
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">PO Issue Date</label>
-                                <input type="text" class="form-control"   [(ngModel)]="selectedPO.poIssueDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  />
-                               
-                            </div>
-                    </div>
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">PO Reported Date</label>
-                                <input type="text" class="form-control"  [(ngModel)]="selectedPO.dateReported"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  >
-                            </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group form-black label-floating is-empty">
-                            <label class="control-label">Estimated Delivery</label>
-                            <input type="text" placeholder="Estimated Delivery" name="estimatedDelivery" bsDatepicker [(ngModel)]="selectedPO.estimatedDelivery" class="form-control" >
-                        </div>
-                    </div>  
-
-                  <div class="col-md-6">
-                            <div class="form-group form-black label-floating is-empty">
-                                    <label for="cityAgencySelect">Purchaser</label>
-                                    <select (change)="purchaserChange($event)" required [(ngModel)]="selectedPO.cityAgency" class="form-control"  id="cityAgencySelect">
-                                            <option  selected>{{ selectedPO.cityAgency }} 
-                                                </option>
-                                        <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
-                                            {{ ca.cityAgencyName }}  -  {{ ca.agencyName }}
-                                      </option>  
-                                    </select>
-                            </div>
-                    </div>  
-
-                <!--    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Pay Code</label>
-                                <input disabled type="text" name="payCd" required [(ngModel)]="selectedPO.payCd" #payCd="ngModel" class="form-control" >
-                            </div>
-                    </div>  -->
-
-                    <div class="col-md-6">
-                            <div class="form-group form-black label-floating is-empty">
-                                    <label for="dealerSelect">Vendor</label>
-                                    <select required [(ngModel)]="selectedPO.dealerName" class="form-control"  id="dealerSelect">
-                                            <option  selected>{{ selectedPO.dealerName }} 
-                                                </option>
-                                        <option *ngFor="let dealer of dealers" >
-                                            {{ dealer.dealerName}} 
-                                      </option>  
-                                    </select>
-                            </div>
-                    </div>
-
-                    <div class="col-md-6">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Specification</label>
-                                <select required [(ngModel)]="selectedPO.spec"  #spec="ngModel" (change)="filterVehicleTypes($event.target.value)" class="form-control"  id="dealerSelect">
-                                        <option  selected>{{ selectedPO.spec }} 
-                                            </option>
-                                    <option *ngFor="let spec of specs" value= {{spec.specNumber}} >
-                                            {{ spec.specNumber}} -  {{ spec.specDescription}} 
-                                                  
-                                    </option>  
-                                 </select>
-            
-                            </div>
-                    </div>
-
-
-                    <div class="col-md-6">
-                            <div class="form-group form-black label-floating is-empty">
-                                    <label for="vehicleTypeSelect">Model</label>
-
-                                    <select required [(ngModel)]="selectedPO.vehicleType" class="form-control"  id="vehicleTypeSelect">
-                                            <option  selected>{{ selectedPO.vehicleType }} 
-                                                </option>  
-                                        <option *ngFor="let vehicle of vehicleTypeCodes" value={{vehicle.vehicleType}}>
-                                            {{vehicle.vehicleMake}} - {{ vehicle.vehicleType}}
-                                        </option>  
-                                    </select>
-                            </div>
-                    </div>
-                   
-                    
-               
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">PO Reported by</label>
-                                <div style="padding-top: 5px;" class="form-group form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1"  [(ngModel)]="selectedPO.agencyFlag" name="agencyFlag" value="X">
-                                    <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
-                                  </div>
-                                  <div class="form-group form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" [(ngModel)]="selectedPO.dealerFlag" value="X">
-                                    <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
-                                 </div>
-                            </div>
-                    </div> 
-
-                    
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">PO Completed</label>
-
-                                <select required [(ngModel)]="selectedPO.poComplete" class="form-control"  id="poCompleteSelect">
-                                        <option  selected>{{ selectedPO.poComplete }} 
-                                            </option>  
-                                 <option *ngFor="let code of poStatusTypeCodes" >
-                                        {{ code.poStatusTypeCode}} 
-                                  </option>  
-                                </select>
-                            </div>
-                    </div>  
-
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="sweet">Qty</label>
-                                <input type="text" name="qty" required [(ngModel)]="selectedPO.qty" #spec="ngModel" class="form-control" >
-                            </div>
-                    </div>
-
-               <!--     <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Correction</label>
-                                <input  placeholder="$0.00" type="text" name="correction"  [(ngModel)]="selectedPO.correction" #correction="ngModel" class="form-control" >
-                            </div>
-                    </div>   -->
-
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">PO Amount</label>
-                                <input   placeholder="$0.00" type="text" name="poAmount"  [(ngModel)]="selectedPO.poAmount" #poAmount="ngModel" class="form-control" >
-                            </div>
-                    </div>  
-
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Actual PO</label>
-                                <input   placeholder="$0.00" type="text"   [(ngModel)]="selectedPO.actualPo" #actualPo="ngModel" class="form-control" >
-                            </div>
-                    </div>  
-
-                    <div class="col-md-2">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Admin Fee Due</label>
-                                <input disabled placeholder="$0.00" type="text" name="adminFeeDue" name="selectedPO.adminFeeDue" required [(ngModel)]="selectedPO.adminFeeDue" #adminFeeDue="ngModel" class="form-control" >
-                            </div>
-                    </div>  
-          
-
-                    <div class="col-md-12">
-                            <div class="form-group form-black label-floating is-empty">
-                                <label class="control-label">Comments</label>
-                                <input type="text" name="comments"  [(ngModel)]="selectedPO.comments" #spec="ngModel" class="form-control" >
-                            </div>
-                    </div> 
-                    
-                    <div class="col-md-12">
-                         <!--       <button (click)="updatePurchaseOrder()" type="submit" [disabled]="!myForm.dirty" class="btn btn-success pull-right">Close</button> -->
-                                <button (click)="updatePurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>
+              <div class="row">
+                <div class="col-md-12">
+                    <div  class="col-md-12 form-group form-black label-floating is-empty gap">
+                            <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
+    
+                            <select required  (change)="filterBids($event.target.value)" class="form-control"  
+                                    id="bidTypeNnumberSelect2">
+                                    <option>Select Bid</option>
+                                <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
+                                            {{bn.BidNumber}} - {{bn.BidTitle}}
+                              </option>  
+                            </select>
                     </div>
     
-                </div>
-
+                    <mat-form-field class="gap" *ngIf="showFilter()">
+                        <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Search">
+                    </mat-form-field>  
+                   
+                  </div>
                 
-                <div class="row shadow p-3 mb-5 bg-white rounded">
-                        <mat-toolbar >
-                                <span>Administrative Fee Payments</span>
-                        </mat-toolbar>
-                      
-                        <div *ngIf="selectedPayment" style="width: 1220px;" class="row shadow p-3 mb-5 bg-white rounded">
-                                <mat-toolbar >
-                                        <span >Payment Details</span>
-                                </mat-toolbar>
-                                <div class="col-md-2">
+                </div>  
+    
+             
+        <div>
+             
+            <mat-table *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
+          
+              <ng-container matColumnDef="bidNumber">
+                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
+                <mat-cell fxFlex="125px" *matCellDef="let row"> {{row.bidNumber}} </mat-cell>
+              </ng-container>
+          
+              <ng-container matColumnDef="cityAgency">
+                <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header> City/Agency Name</mat-header-cell>
+                <mat-cell fxFlex="200px" *matCellDef="let row"> {{row.cityAgency}} </mat-cell>
+              </ng-container>
+          
+             <ng-container matColumnDef="dealerName">
+                <mat-header-cell fxFlex="275px" *matHeaderCellDef mat-sort-header> Dealer Name </mat-header-cell>
+                <mat-cell fxFlex="275px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
+              </ng-container>
+          
+              <ng-container matColumnDef="spec">
+                <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Specification </mat-header-cell>
+                <mat-cell fxFlex="100px" *matCellDef="let row">{{row.spec}}</mat-cell>
+              </ng-container>
+          
+              <ng-container matColumnDef="vehicleType">
+                <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> Vehicla Type </mat-header-cell>
+                <mat-cell fxFlex="175px" *matCellDef="let row">{{row.vehicleType}}</mat-cell>
+              </ng-container>
+          
+              <ng-container matColumnDef="poNumber">
+                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
+                <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
+              </ng-container>
+          
+              <ng-container matColumnDef="poIssueDate">
+                <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
+                <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
+              </ng-container>
+    
+                <ng-container matColumnDef="edit">
+                    <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
+          
+                    <mat-cell fxFlex="50px" *matCellDef="let row">
+                        <button mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
+                            <i class="fa fa-pencil mat-icon"></i>
+                        </button>  
+                    </mat-cell>
+                </ng-container>
+    
+                <ng-container matColumnDef="addPayment">
+                        <mat-header-cell fxFlex="150px" *matHeaderCellDef mat-sort-header> Add Payment </mat-header-cell>
+                        <mat-cell fxFlex="175px" *matCellDef="let row">
+                            <button mat-icon-button color="primary" focusable="false" (click)="newPayment(row)">
+                                <i class="fa fa-plus mat-icon"></i>
+                            </button>  
+                        </mat-cell>
+                  </ng-container>
+            
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          
+            
+            </mat-table>
+          
+                    <mat-paginator 
+                        [length]="1000"
+                        [pageSize]="5"
+                        [pageSizeOptions]="[5, 25, 100, 500]">
+                    </mat-paginator>
+          
+          <br><hr> 
+    
+          <div class="new-po form-group col-md-8">
+                <button mat-button (click)="showNewPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
+        </div>
+
+        <div *ngIf="selectedPO && !showNewPayment">
+                <div class="card-content">
+                        <form [formGroup]="poForm" (ngSubmit)="updatePurchaseOrder()">
+                                <div class="row shadow p-3 mb-5 bg-white rounded">
+                                        <mat-toolbar >
+                                                <span>Purchase Order Details</span>
+                                        </mat-toolbar>
+
+                                <div class="col-md-4">
                                     <div class="form-group form-black label-floating is-empty">
-                                        <label class="control-label">Date</label>
-                                        <input  class="form-control" type="text" name="paymentDate" required [(ngModel)]="selectedPayment.paymentDate" #paymentDate="ngModel"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  >
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Amount</label>
-                                            <input #paymentFocus  type="text" name="paymentAmount" required [(ngModel)]="selectedPayment.paymentAmount" #paymentAmount="ngModel" class="form-control" >
-                                        </div>
-                                </div>
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Number</label>
-                                            <input type="text" name="paymentNumber"  [(ngModel)]="selectedPayment.paymentNumber" #paymentNumber="ngModel" class="form-control" >
-                                        </div>
-                                </div>
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Check Number</label>
-                                            <input type="text" name="paymentCheckNum"  [(ngModel)]="selectedPayment.paymentCheckNum" #paymentNumber="ngModel" class="form-control" >
-                                        </div>
-                                </div>
-
-
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                           <label class="control-label">FSA Alloction</label>
-                                           <input type="text" name="fsaAlloc" required [(ngModel)]="selectedPayment.fsaAlloc" #fsaAlloc="ngModel" class="form-control" >
-                                       </div>
-                                   </div>  
-
-                              <div class="col-md-2 ">
-                                     <div class="form-group form-black label-floating is-empty">
-                                        <label class="control-label">FAC Alloction</label>
-                                        <input type="text" name="facAlloc" required [(ngModel)]="selectedPayment.facAlloc" #facAlloc="ngModel" class="form-control" >
+                                        <label for="bidTypeNnumberSelect">Bid Number</label>
+                                            <select required formControlName="bidNumber"  class="form-control"  id="bidTypeNnumberSelect">
+                                                <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
+                                                                    {{bn.BidNumber}} - {{bn.BidTitle}}
+                                                </option>     
+                                            </select>
                                     </div>
                                 </div>  
 
-                                <div class="col-md-2 ">
+                                <div class="col-md-2">
+                                        <div class="form-group form-black label-floating is-empty">  
+                                             <label class="control-label">PO Number</label>
+                                             <input type="text" formControlName="poNumber" required  class="form-control" >
+                                         </div>  
+                                         <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
+                                 </div>  
+
+    
+
+                                 <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
-                                          <label class="control-label">Total Alloction</label>
-                                          <input type="text" name="totalAlloc" required [(ngModel)]="selectedPayment.totalAlloc" #totalAlloc="ngModel" class="form-control" >
+                                            <label class="control-label">PO Issue Date</label>
+                                            <input type="text" class="form-control"  formControlName="poIssueDate"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }"  />
                                         </div>
+                                        <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poIssueDate').touched && poForm.get('poIssueDate').hasError('required')">PO Issue Date Required!</small>
                                 </div>
-                            
-                                <div class="col-md-2 ">
+                                <div class="col-md-2">
                                         <div class="form-group form-black label-floating is-empty">
-                                        <label class="control-label">FFCA Alloction</label>
-                                        <input type="text" name="ffcaAlloc" required [(ngModel)]="selectedPayment.ffcaAlloc" #ffcaAlloc="ngModel" class="form-control" >
+                                            <label class="control-label">PO Reported Date</label>
+                                            <input type="text" class="form-control" formControlName="dateReported"  bsDatepicker >
+                                        </div>
+                                        <div [hidden]="!dateFailed" class="alert alert-danger">PO Reported Date must be later than PO Issue Date </div>  
+                                        <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('dateReported').touched && poForm.get('dateReported').hasError('required')">PO Issue Date Required!</small>
+                                        <small  *ngIf="poForm.get('dateReported').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
+                                </div>
+
+                                <div class="col-md-2">
+                                        <div class="form-group form-black label-floating is-empty">
+                                            <label class="control-label">Estimated Delivery</label>
+                                            <input type="text" class="form-control" placeholder="Estimated Delivery" formControlName="estimatedDelivery"  bsDatepicker  >
+                                        </div>
+                                    </div>  
+                
+                                  <div class="col-md-6">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                    <label for="cityAgencySelect">Purchaser</label>
+                                                    <select  required formControlName="cityAgency" class="form-control"  id="cityAgencySelect">
+                                                            <option  selected>{{ selectedPO.cityAgency }} 
+                                                                </option>
+                                                        <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
+                                                            {{ ca.cityAgencyName }}  -  {{ ca.agencyName }}
+                                                      </option>  
+                                                    </select>
+                                            </div>
+                                            <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('cityAgency').touched && poForm.get('cityAgency').hasError('required')">Purchaser Required!</small>
                                     </div>
-                                </div>
-                        
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Late Fee Amount</label>
-                                            <input type="text" name="lateFeeAmt"  [(ngModel)]="selectedPayment.lateFeeAmt" #lateFeeAmt="ngModel" class="form-control" >
-                                        </div>
-                                </div>
+                                    
+                                    <div class="col-md-6">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                    <label for="dealerSelect">Vendor</label>
+                                                    <select required formControlName="dealerName" class="form-control"  id="dealerSelect">
+                                                        <!--    <option  selected>{{ selectedPO.dealerName }} 
+                                                                </option> -->
+                                                        <option *ngFor="let dealer of dealers" >
+                                                            {{ dealer.dealerName}} 
+                                                      </option>  
+                                                    </select>
+                                            </div>
+                                            <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('dealerName').touched && poForm.get('dealerName').hasError('required')">Vendor Required!</small>
+                                    </div>
 
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Late Fee Check Num</label>
-                                            <input type="text" name="lateFeeCheckNum"  [(ngModel)]="selectedPayment.lateFeeCheckNum" #lateFeeCheckNum="ngModel" class="form-control" >
-                                        </div>
-                                </div>
+                                    <div class="col-md-6">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Specification</label>
+                                                <select required formControlName="spec"  class="form-control"  id="dealerSelect">
+                                                     <!--   <option  selected>{{ selectedPO.spec }} </option>  -->
+                                                    <option *ngFor="let spec of specs" value= {{spec.specNumber}} >
+                                                            {{ spec.specNumber}} -  {{ spec.specDescription}} 
+                                                                  
+                                                    </option>  
+                                                 </select>
+                            
+                                            </div>
+                                            <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('spec').touched && poForm.get('spec').hasError('required')">Specification Required!</small>
+                                    </div>
 
-                               
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Late Fee Check Date</label>
-                                            <input type="text" name="lateFeeCheckDate"  [(ngModel)]="selectedPayment.lateFeeCheckDate" #lateFeeCheckDate="ngModel" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }">
-                                        </div>
-                                </div>
-                               
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">FSA Refund Amount</label>
-                                            <input type="text" name="fsaRefundAmount"  [(ngModel)]="selectedPayment.fsaRefundAmount" #fsaRefundAmount="ngModel" class="form-control" >
-                                        </div>
-                                </div>
+                                    <div class="col-md-6">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                    <label for="vehicleTypeSelect">Model</label>
+                
+                                                    <select required formControlName="vehicleType" class="form-control"  id="vehicleTypeSelect">
+                                                           <!-- <option  selected>{{ selectedPO.vehicleType }} </option>   -->
+                                                        <option *ngFor="let vehicle of vehicleTypeCodes" value={{vehicle.vehicleType}}>
+                                                            {{vehicle.vehicleMake}} - {{ vehicle.vehicleType}}
+                                                        </option>  
+                                                    </select>
+                                            </div>
+                                    <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('vehicleType').touched && poForm.get('vehicleType').hasError('required')">Model Required!</small>
+                                    </div>
 
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">FSA Refund Check Num</label>
-                                            <input type="text" name="fsaRefundCheckNum"  [(ngModel)]="selectedPayment.fsaRefundCheckNum" #fsaRefundCheckNum="ngModel" class="form-control" >
-                                        </div>
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">PO Reported by</label>
+                                                <div style="padding-top: 5px;" class="form-group form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="agencyFlag"  name="agencyFlag" value="X">
+                                                    <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
+                                                  </div>
+                                                  <div class="form-group form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="dealerFlag"  value="X">
+                                                    <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
+                                                 </div>
+                                            </div>
+                                    </div> 
+                
+                                    
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">PO Completed</label>
+                
+                                                <select required formControlName="poComplete"  class="form-control"  id="poCompleteSelect">
+                                                      <!--  <option  selected>{{ selectedPO.poComplete }} 
+                                                            </option>  -->
+                                                 <option *ngFor="let code of poStatusTypeCodes" >
+                                                        {{ code.poStatusTypeCode}} 
+                                                  </option>  
+                                                </select>
+                                            </div>
+                                            <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poComplete').touched && poForm.get('poComplete').hasError('required')">Po Status Required!</small>
+                                    </div>  
+
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="sweet">Qty</label>
+                                                <input type="text" required formControlName="qty"  class="form-control" >
+                                            </div>
+                                            <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('qty').touched && poForm.get('qty').hasError('required')">Qty Required!</small>
+                                    </div>
+            
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">PO Amount</label>
+                                                <input   placeholder="$0.00" type="text" formControlName="poAmount"  class="form-control" >
+                                            </div>
+                                    </div>  
+                
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Actual PO</label>
+                                                <input   placeholder="$0.00" type="text" formControlName="actualPo" class="form-control" >
+                                            </div>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Admin Fee Due</label>
+                                                <input disabled placeholder="$0.00" type="text"  formControlName="adminFeeDue" required  class="form-control">
+                                            </div>
+                                    </div>
+                          
+                                    <div class="col-md-12">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Comments</label>
+                                                <input type="text" name="comments" formControlName="comments"  class="form-control" >
+                                            </div>
+                                    </div>
+
+                             <div class="col-md-12">  
+                             <!--       <button (click)="updatePurchaseOrder()" type="submit" [disabled]="!myForm.dirty" class="btn btn-success pull-right">Close</button> -->
+                           <!--     <button (click)="updatePurchaseOrder()" type="submit" [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>  -->
+                                <button [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>
+                              </div>  
+
+                           </div>
+                        </form>
+                </div>
+        </div>
+
+          <div *ngIf="selectedPO && !showNewPayment">
+    
+            <div class="card-content">
+            
+               <!--    <div class="row shadow p-3 mb-5 bg-white rounded">
+                        <mat-toolbar >
+                                <span>Purchase Order Details</span>
+                        </mat-toolbar>
+    
+                 
+    
+                     <div class="col-md-4">
+                                <div class="form-group form-black label-floating is-empty">
+                                        <label for="bidTypeNnumberSelect">Bid Number</label>
+    
+                                        <select required formControlName="bidNumber" (change)="filterSpecifications($event.target.value)" class="form-control"  id="bidTypeNnumberSelect">
+                                            <option  selected>{{ selectedPO.bidNumber }} 
+                                            </option>      
+                                            <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
+                                                    {{bn.BidNumber}} - {{bn.BidTitle}}
+                                            </option>     
+                                        </select>
                                 </div>
-
-                                <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">FSA Refund Date</label>
-                                            <input type="text" name="fsaRefundDate"  [(ngModel)]="selectedPayment.fsaRefundDate" #lateFeeCheckDate="ngModel" class="form-control" 
-                                            bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }" >
-                                        </div>
-                                </div>
-
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Correction</label>
-                                            <input type="text" name="correction"  [(ngModel)]="selectedPayment.correction" #correction="ngModel" class="form-control" >
-                                        </div>
-                                </div>
-
-                                <div class="col-md-2 ">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Audit Difference</label>
-                                            <input type="text" name="auditDifference"  [(ngModel)]="selectedPayment.auditDifference" #auditDifference="ngModel" class="form-control" >
-                                        </div>
-                                </div>
-
-
-                       <!--    <div class="col-md-2">
-                                        <div class="form-group form-black label-floating is-empty">
-                                            <label class="control-label">Comment</label>
-                                            <input type="text" name="comment" required [(ngModel)]="selectedPayment.comment" #comment="ngModel" class="form-control"  >
-                                        </div>
+                        </div>  
+    
+        
+                        <div class="col-md-2">
+                               <div class="form-group form-black label-floating is-empty">  
+                                    <label class="control-label">PO Number</label>
+                                    <input #poFocus type="text" formControlName="poNumber" required  class="form-control" >
+                                 
                                 </div>  
-                            -->
-
-                                        <div *ngIf="!fuck" style= "padding-top: 30px; margin-left: 155px;"  class="form-group form-black label-floating is-empty">
-                                                <button (click)="updatePayment()" type="submit"   class="btn btn-success pull-right">Update Payment</button>
-                                        </div>
-                                        <div *ngIf="fuck" style= "padding-top: 30px; margin-left: 155px;"  class="form-group form-black label-floating is-empty">
-                                            <button (click)="insertPayment()" type="submit"   class="btn btn-success pull-right">Insert Payment</button>
-                                    </div>
-
-                                <div style= "padding-top: 30px;  padding-left: 10px;" class="form-group form-black label-floating is-empty">
-                                        <button (click)="cancelPayment()" type="submit"  class="btn btn-success pull-right">Cancel</button>
+                        </div>  
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">PO Issue Date</label>
+                                    <input type="text" class="form-control"   [(ngModel)]="selectedPO.poIssueDate" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  />
+                                   
                                 </div>
+                        </div>
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">PO Reported Date</label>
+                                    <input type="text" class="form-control"  [(ngModel)]="selectedPO.dateReported"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  >
                                 </div>
-
+                        </div>  
+    
+                        <div class="col-md-2">
+                            <div class="form-group form-black label-floating is-empty">
+                                <label class="control-label">Estimated Delivery</label>
+                                <input type="text" placeholder="Estimated Delivery" name="estimatedDelivery" bsDatepicker [(ngModel)]="selectedPO.estimatedDelivery" class="form-control" >
+                            </div>
+                        </div>  
+    
+                      <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                        <label for="cityAgencySelect">Purchaser</label>
+                                        <select (change)="purchaserChange($event)" required [(ngModel)]="selectedPO.cityAgency" class="form-control"  id="cityAgencySelect">
+                                                <option  selected>{{ selectedPO.cityAgency }} 
+                                                    </option>
+                                            <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
+                                                {{ ca.cityAgencyName }}  -  {{ ca.agencyName }}
+                                          </option>  
+                                        </select>
+                                </div>
+                        </div>  
+    
+                        <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                        <label for="dealerSelect">Vendor</label>
+                                        <select required [(ngModel)]="selectedPO.dealerName" class="form-control"  id="dealerSelect">
+                                                <option  selected>{{ selectedPO.dealerName }} 
+                                                    </option>
+                                            <option *ngFor="let dealer of dealers" >
+                                                {{ dealer.dealerName}} 
+                                          </option>  
+                                        </select>
+                                </div>
+                        </div>  
+    
+                        <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Specification</label>
+                                    <select required [(ngModel)]="selectedPO.spec"  #spec="ngModel" (change)="filterVehicleTypes($event.target.value)" class="form-control"  id="dealerSelect">
+                                            <option  selected>{{ selectedPO.spec }} 
+                                                </option>
+                                        <option *ngFor="let spec of specs" value= {{spec.specNumber}} >
+                                                {{ spec.specNumber}} -  {{ spec.specDescription}} 
+                                                      
+                                        </option>  
+                                     </select>
+                
+                                </div>
+                        </div>   
+    
+    
+                        <div class="col-md-6">
+                                <div class="form-group form-black label-floating is-empty">
+                                        <label for="vehicleTypeSelect">Model</label>
+    
+                                        <select required [(ngModel)]="selectedPO.vehicleType" class="form-control"  id="vehicleTypeSelect">
+                                                <option  selected>{{ selectedPO.vehicleType }} 
+                                                    </option>  
+                                            <option *ngFor="let vehicle of vehicleTypeCodes" value={{vehicle.vehicleType}}>
+                                                {{vehicle.vehicleMake}} - {{ vehicle.vehicleType}}
+                                            </option>  
+                                        </select>
+                                </div>
+                        </div>   
+                       
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">PO Reported by</label>
+                                    <div style="padding-top: 5px;" class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1"  [(ngModel)]="selectedPO.agencyFlag" name="agencyFlag" value="X">
+                                        <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
+                                      </div>
+                                      <div class="form-group form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" [(ngModel)]="selectedPO.dealerFlag" value="X">
+                                        <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
+                                     </div>
+                                </div>
+                        </div> 
+    
                         
-                        <mat-table class="mat-table-800" #table [dataSource]="paymentDataSource" matSort>
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">PO Completed</label>
+    
+                                    <select required [(ngModel)]="selectedPO.poComplete" class="form-control"  id="poCompleteSelect">
+                                            <option  selected>{{ selectedPO.poComplete }} 
+                                                </option>  
+                                     <option *ngFor="let code of poStatusTypeCodes" >
+                                            {{ code.poStatusTypeCode}} 
+                                      </option>  
+                                    </select>
+                                </div>
+                        </div>  
+    
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="sweet">Qty</label>
+                                    <input type="text" name="qty" required [(ngModel)]="selectedPO.qty" #spec="ngModel" class="form-control" >
+                                </div>
+                        </div>
 
-                                <ng-container matColumnDef="paymentDate">
-                                    <mat-header-cell fxFlex="175px" class="mat-800"   *matHeaderCellDef mat-sort-header>Payment Date </mat-header-cell>
-                                    <mat-cell fxFlex="175px" *matCellDef="let payment"> {{payment.paymentDate | date }} </mat-cell>
-                                </ng-container>
-                                  
-                                <ng-container matColumnDef="paymentAmount">
-                                    <mat-header-cell fxFlex="175px" class="mat-800"  *matHeaderCellDef mat-sort-header>Payment Amount</mat-header-cell>
-                                    <mat-cell fxFlex="175px" *matCellDef="let payment"> {{payment.paymentAmount}} </mat-cell>
-                                </ng-container>
-                                  
-                                <ng-container matColumnDef="paymentNumber">
-                                    <mat-header-cell fxFlex="175px" class="mat-800"  *matHeaderCellDef mat-sort-header> Payment Number </mat-header-cell>
-                                    <mat-cell fxFlex="175px" *matCellDef="let payment">{{payment.paymentNumber}}</mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="paymentCheckNum">
-                                        <mat-header-cell fxFlex="175px" class="mat-800" *matHeaderCellDef mat-sort-header> Payment Check Number </mat-header-cell>
-                                        <mat-cell fxFlex="175px" *matCellDef="let payment">{{payment.paymentCheckNum}}</mat-cell>
-                                    </ng-container>
-
-                                <ng-container matColumnDef="edit">
-                                    <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
-                                    <mat-cell fxFlex="50px" *matCellDef="let row">
-                                        <button mat-icon-button color="primary" focusable="false" (click)="onSelectPayment(row)">
-                                            <i class="fa fa-pencil mat-icon"></i>
-                                        </button>  
-                                    </mat-cell>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="delete">
-                                            <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
-                                            <mat-cell fxFlex="50px" *matCellDef="let row">
-                                                <button mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
-                                                    <i class="fa fa-trash-o  mat-icon"></i>
-                                                </button>  
-                                            </mat-cell>
-                                      </ng-container>
-
-                                      
-                                <mat-header-row class="mat-800" *matHeaderRowDef="paymentColumns"></mat-header-row>
-                                <mat-row class="mat-800" *matRowDef="let payment; columns: paymentColumns;"></mat-row>
-
+    
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">PO Amount</label>
+                                    <input   placeholder="$0.00" type="text" name="poAmount"  [(ngModel)]="selectedPO.poAmount" #poAmount="ngModel" class="form-control" >
+                                </div>
+                        </div>  
+    
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Actual PO</label>
+                                    <input   placeholder="$0.00" type="text"   [(ngModel)]="selectedPO.actualPo" #actualPo="ngModel" class="form-control" >
+                                </div>
+                        </div>  
+    
+                        <div class="col-md-2">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Admin Fee Due</label>
+                                    <input disabled placeholder="$0.00" type="text" name="adminFeeDue" name="selectedPO.adminFeeDue" required [(ngModel)]="selectedPO.adminFeeDue" #adminFeeDue="ngModel" class="form-control" >
+                                </div>
+                        </div>  
+              
+    
+                        <div class="col-md-12">
+                                <div class="form-group form-black label-floating is-empty">
+                                    <label class="control-label">Comments</label>
+                                    <input type="text" name="comments"  [(ngModel)]="selectedPO.comments" #spec="ngModel" class="form-control" >
+                                </div>
+                        </div> -->
+                        
+                  <!--      <div class="col-md-12">  -->
+                             <!--       <button (click)="updatePurchaseOrder()" type="submit" [disabled]="!myForm.dirty" class="btn btn-success pull-right">Close</button> -->
+                  <!--                  <button (click)="updatePurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>
+                        </div>  
+        
+                    </div>  -->
+    
+                    
+                    <div class="row shadow p-3 mb-5 bg-white rounded">
+                            <mat-toolbar >
+                                    <span>Administrative Fee Payments</span>
+                            </mat-toolbar>
+                          
+                            <div *ngIf="selectedPayment" style="width: 1220px;" class="row shadow p-3 mb-5 bg-white rounded">
+                                    <mat-toolbar >
+                                            <span >Payment Details</span>
+                                    </mat-toolbar>
+                                    <div class="col-md-2">
+                                        <div class="form-group form-black label-floating is-empty">
+                                            <label class="control-label">Date</label>
+                                            <input  class="form-control" type="text" name="paymentDate" required [(ngModel)]="selectedPayment.paymentDate" #paymentDate="ngModel"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }"  >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Amount</label>
+                                                <input #paymentFocus  type="text" name="paymentAmount" required [(ngModel)]="selectedPayment.paymentAmount" #paymentAmount="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Number</label>
+                                                <input type="text" name="paymentNumber"  [(ngModel)]="selectedPayment.paymentNumber" #paymentNumber="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Check Number</label>
+                                                <input type="text" name="paymentCheckNum"  [(ngModel)]="selectedPayment.paymentCheckNum" #paymentNumber="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+    
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                               <label class="control-label">FSA Alloction</label>
+                                               <input type="text" name="fsaAlloc" required [(ngModel)]="selectedPayment.fsaAlloc" #fsaAlloc="ngModel" class="form-control" >
+                                           </div>
+                                       </div>  
+    
+                                  <div class="col-md-2 ">
+                                         <div class="form-group form-black label-floating is-empty">
+                                            <label class="control-label">FAC Alloction</label>
+                                            <input type="text" name="facAlloc" required [(ngModel)]="selectedPayment.facAlloc" #facAlloc="ngModel" class="form-control" >
+                                        </div>
+                                    </div>  
+    
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                              <label class="control-label">Total Alloction</label>
+                                              <input type="text" name="totalAlloc" required [(ngModel)]="selectedPayment.totalAlloc" #totalAlloc="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
                                 
-
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                            <label class="control-label">FFCA Alloction</label>
+                                            <input type="text" name="ffcaAlloc" required [(ngModel)]="selectedPayment.ffcaAlloc" #ffcaAlloc="ngModel" class="form-control" >
+                                        </div>
+                                    </div>
                             
-                            </mat-table>
-
-                            <div class="col-md-12">
-                                <button (click)="newPayment2()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Add Payment</button>
-                             </div>
-
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Late Fee Amount</label>
+                                                <input type="text" name="lateFeeAmt"  [(ngModel)]="selectedPayment.lateFeeAmt" #lateFeeAmt="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Late Fee Check Num</label>
+                                                <input type="text" name="lateFeeCheckNum"  [(ngModel)]="selectedPayment.lateFeeCheckNum" #lateFeeCheckNum="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+                                   
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Late Fee Check Date</label>
+                                                <input type="text" name="lateFeeCheckDate"  [(ngModel)]="selectedPayment.lateFeeCheckDate" #lateFeeCheckDate="ngModel" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }">
+                                            </div>
+                                    </div>
+                                   
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">FSA Refund Amount</label>
+                                                <input type="text" name="fsaRefundAmount"  [(ngModel)]="selectedPayment.fsaRefundAmount" #fsaRefundAmount="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">FSA Refund Check Num</label>
+                                                <input type="text" name="fsaRefundCheckNum"  [(ngModel)]="selectedPayment.fsaRefundCheckNum" #fsaRefundCheckNum="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+                                    <div class="col-md-2">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">FSA Refund Date</label>
+                                                <input type="text" name="fsaRefundDate"  [(ngModel)]="selectedPayment.fsaRefundDate" #lateFeeCheckDate="ngModel" class="form-control" 
+                                                bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY', containerClass: 'theme-green' }" >
+                                            </div>
+                                    </div>
+    
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Correction</label>
+                                                <input type="text" name="correction"  [(ngModel)]="selectedPayment.correction" #correction="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+                                    <div class="col-md-2 ">
+                                            <div class="form-group form-black label-floating is-empty">
+                                                <label class="control-label">Audit Difference</label>
+                                                <input type="text" name="auditDifference"  [(ngModel)]="selectedPayment.auditDifference" #auditDifference="ngModel" class="form-control" >
+                                            </div>
+                                    </div>
+    
+    
+                                     <div *ngIf="!fuck" style= "padding-top: 30px; margin-left: 155px;"  class="form-group form-black label-floating is-empty">
+                                                    <button (click)="updatePayment()" type="submit"   class="btn btn-success pull-right">Update Payment</button>
+                                     </div>
+                                     <div *ngIf="fuck" style= "padding-top: 30px; margin-left: 155px;"  class="form-group form-black label-floating is-empty">
+                                                <button (click)="insertPayment()" type="submit"   class="btn btn-success pull-right">Insert Payment</button>
+                                     </div>
+    
+                                    <div style= "padding-top: 30px;  padding-left: 10px;" class="form-group form-black label-floating is-empty">
+                                            <button (click)="cancelPayment()" type="submit"  class="btn btn-success pull-right">Cancel</button>
+                                    </div>
+                                    </div>
+    
                             
-
-                         
-                </div>
-                </div>
-                </div>
-                </div>
-
-                <app-purchase-order-detail  (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="showNewPayment"></app-purchase-order-detail>  
-        <!--    </form>  -->
+                            <mat-table class="mat-table-800" #table [dataSource]="paymentDataSource" matSort>
+    
+                                    <ng-container matColumnDef="paymentDate">
+                                        <mat-header-cell fxFlex="175px" class="mat-800"   *matHeaderCellDef mat-sort-header>Payment Date </mat-header-cell>
+                                        <mat-cell fxFlex="175px" *matCellDef="let payment"> {{payment.paymentDate | date }} </mat-cell>
+                                    </ng-container>
+                                      
+                                    <ng-container matColumnDef="paymentAmount">
+                                        <mat-header-cell fxFlex="175px" class="mat-800"  *matHeaderCellDef mat-sort-header>Payment Amount</mat-header-cell>
+                                        <mat-cell fxFlex="175px" *matCellDef="let payment"> {{payment.paymentAmount}} </mat-cell>
+                                    </ng-container>
+                                      
+                                    <ng-container matColumnDef="paymentNumber">
+                                        <mat-header-cell fxFlex="175px" class="mat-800"  *matHeaderCellDef mat-sort-header> Payment Number </mat-header-cell>
+                                        <mat-cell fxFlex="175px" *matCellDef="let payment">{{payment.paymentNumber}}</mat-cell>
+                                    </ng-container>
+    
+                                    <ng-container matColumnDef="paymentCheckNum">
+                                            <mat-header-cell fxFlex="175px" class="mat-800" *matHeaderCellDef mat-sort-header> Payment Check Number </mat-header-cell>
+                                            <mat-cell fxFlex="175px" *matCellDef="let payment">{{payment.paymentCheckNum}}</mat-cell>
+                                        </ng-container>
+    
+                                    <ng-container matColumnDef="edit">
+                                        <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
+                                        <mat-cell fxFlex="50px" *matCellDef="let row">
+                                            <button mat-icon-button color="primary" focusable="false" (click)="onSelectPayment(row)">
+                                                <i class="fa fa-pencil mat-icon"></i>
+                                            </button>  
+                                        </mat-cell>
+                                    </ng-container>
+                                
+                                    <ng-container matColumnDef="delete">
+                                                <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
+                                                <mat-cell fxFlex="50px" *matCellDef="let row">
+                                                    <button mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                                                        <i class="fa fa-trash-o  mat-icon"></i>
+                                                    </button>  
+                                                </mat-cell>
+                                          </ng-container>
+    
+                                          
+                                    <mat-header-row class="mat-800" *matHeaderRowDef="paymentColumns"></mat-header-row>
+                                    <mat-row class="mat-800" *matRowDef="let payment; columns: paymentColumns;"></mat-row>
+    
+                                    
+    
+                                
+                                </mat-table>
+    
+                                <div class="col-md-12">
+                                    <button (click)="newPayment2()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Add Payment</button>
+                                 </div>
+    
+                                
+    
+                             
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+    
+                    <app-purchase-order-detail  (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="showNewPayment"></app-purchase-order-detail>  
+            <!--    </form>  -->

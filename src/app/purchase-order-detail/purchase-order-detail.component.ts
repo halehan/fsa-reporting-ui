@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
 import { VehicleTypeCodes } from '../model/vehicleType';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 
-
 @Component({
   selector: 'app-purchase-order-detail',
   templateUrl: './purchase-order-detail.component.html',
@@ -22,8 +21,6 @@ export class PurchaseOrderDetailComponent implements OnInit  {
   @Output() refreshPurchaseOrderList: EventEmitter<string> =   new EventEmitter();
 
   contactForm: FormGroup;
-  countries = ['USA', 'Germany', 'Italy', 'France'];
-  requestTypes = ['Claim', 'Feedback', 'Help Request'];
   cityAgencies: CityAgency[] = [];
   bidTypes: BidType[] = [];
   bidNumbers: BidNumber[] = [];
@@ -31,7 +28,6 @@ export class PurchaseOrderDetailComponent implements OnInit  {
   dealers: Dealer[] = [];
   newPO: PurchaseOrder;
 
-  default: String = 'UK';
   enableSpec: Boolean = false;
   enableVehicleType: String = 'disabled';
   specs: Specification[] = [];
@@ -86,6 +82,12 @@ ngOnInit() {
 this.formControlValueChanged();
 
 }
+
+truncateDecimals(poAmount: number, places: number) {
+  const shift = Math.pow(10, places);
+
+  return ((poAmount * shift) | 0) / shift;
+};
 
 calculateAdminFee(poAmount: number) {
  return this.truncateDecimals(poAmount * this.currentBid.AdminFeeRate, 2);
@@ -147,7 +149,7 @@ createFormGroup() {
 
   return new FormGroup({
 
-      bidNumber: new FormControl('', Validators.required),
+      bidNumber:  new FormControl('', Validators.required),
       poNumber: new FormControl('', Validators.required),
       poIssueDate: new FormControl('', Validators.required),
       dateReported: new FormControl('', Validators.required),
@@ -164,10 +166,12 @@ createFormGroup() {
       actualPo: new FormControl(),
       adminFeeDue: new FormControl(),
       comments: new FormControl(),
+      payCd: new FormControl(),
     }, this.validateFormDates);
 }
 
 copyFormToModel() {
+
   this.newPO.bidNumber = this.newPoForm.controls.bidNumber.value;
   this.newPO.poNumber = this.newPoForm.controls.poNumber.value;
   this.newPO.poIssueDate = this.newPoForm.controls.poIssueDate.value;
@@ -191,17 +195,11 @@ validateFormDates(g: FormGroup) {
 
   const poDate: Date = g.get('poIssueDate').value;
   const reporteddate: Date = g.get('dateReported').value;
-  const isValid:  boolean = poDate > reporteddate;
+  const isValid:  boolean = reporteddate > poDate;
 
- return reporteddate > poDate ? null : {'mismatch': true};
+ return isValid ? null : {mismatch: true};
 
 }
-
-truncateDecimals(poAmount: number, places: number) {
-  const shift = Math.pow(10, places);
-
-  return ((poAmount * shift) | 0) / shift;
-};
 
 revert() {
   // Resets to blank object
@@ -238,7 +236,7 @@ onSubmit() {
      this.newPO.createdBy = this.getCurrentUserName();
 
      this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
-     this.newPO = po;
+  //   this.newPO = po;
   });
 
     this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);

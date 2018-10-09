@@ -1,12 +1,11 @@
 
 <div class="card-content">
-   <form [formGroup]="newPoForm" (ngSubmit)="onSubmit()">
+   <form [formGroup]="newPoForm" (ngSubmit)="insertPurchaseOrder()">
     <div class="row shadow p-3 mb-5 bg-white rounded">
        <mat-toolbar >
-                <span>Purchase Order</span>
+                <span>Purchase Order New</span>
         </mat-toolbar>
 
-       
          <div class="col-md-4 topMargin">
                 <div class="form-group form-black label-floating is-empty">
                         <label for="bidTypeNnumberSelect">Bid Number</label>
@@ -19,6 +18,7 @@
                             </option>     
                         </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('bidNumber').touched && newPoForm.get('bidNumber').hasError('required')">Bid Required!</small>
          </div>  
 
         
@@ -27,6 +27,7 @@
                     <label class="control-label">P.O.Number</label>
                     <input placeholder="PO Number" type="text" formControlName="poNumber" name="poNumber" required class="form-control" >
               </div>  
+              <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('poNumber').touched && newPoForm.get('poNumber').hasError('required')">PO Number Required!</small>
             </div> 
 
             <div class="col-md-2 topMargin">
@@ -45,6 +46,7 @@
                                       PO Reported Date must be later than PO Issue Date
                         </div>  
                 </div>
+                <small  *ngIf="newPoForm.get('dateReported').touched && newPoForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
              </div>
 
              <div class="col-md-2 topMargin">
@@ -57,7 +59,7 @@
               <div class="col-md-6">
                 <div class="form-group form-black label-floating is-empty">
                         <label for="cityAgencySelect">Purchaser</label>
-                        <select placeholder="Purchaser" required formControlName="cityAgency"  class="form-control"  id="cityAgencySelect">
+                        <select placeholder="Purchaser" required formControlName="cityAgency" class="form-control"  id="cityAgencySelect">
                                 <option  selected>{{ newPO.cityAgency }} 
                                     </option>
                             <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
@@ -65,6 +67,7 @@
                           </option>  
                         </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('cityAgency').touched && newPoForm.get('cityAgency').hasError('required')">Purchaser Required!</small>
                </div>  
 
               <div class="col-md-6">
@@ -77,6 +80,7 @@
                           </option>  
                         </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('dealerName').touched && newPoForm.get('dealerName').hasError('required')">Vendor Required!</small>
               </div>
 
 
@@ -90,6 +94,7 @@
                                         </option>
                      </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('spec').touched && newPoForm.get('spec').hasError('required')">Specification Required!</small>
               </div>
 
               <div class="col-md-6">
@@ -103,6 +108,7 @@
                             </option>  
                         </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('vehicleType').touched && newPoForm.get('vehicleType').hasError('required')">Model Required!</small>
                </div>
 
         
@@ -132,14 +138,16 @@
                           </option>  
                         </select>
                 </div>
+                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('poComplete').touched && newPoForm.get('poComplete').hasError('required')">PO Status Required!</small>
                 </div>  
        
 
         <div class="col-md-2">
                         <div class="form-group form-black label-floating is-empty">
                             <label>Qty</label>
-                            <input  type="text" name="qty"  formControlName="qty" [(ngModel)]="newPO.qty"  class="form-control" >
+                            <input  type="text" name="qty" required formControlName="qty" [(ngModel)]="newPO.qty"  class="form-control" >
                         </div>
+                        <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('qty').touched && newPoForm.get('qty').hasError('required')">Qty Required!</small>
         </div>
 
         <div class="col-md-2">
@@ -172,7 +180,8 @@
 
     
             <div class="col-md-12">
-                    <button (click)="insertPurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
+                  <!--  <button (click)="insertPurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>  -->
+                    <button [disabled]="newPoForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
             </div>
        
 
