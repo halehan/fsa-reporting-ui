@@ -79,6 +79,7 @@ import { PurchaseOrderListComponent } from './purchase-order-list/purchase-order
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { ReportsComponent } from './reports/reports.component';
 import { DateFormatPipe } from './dateFormat/date-format-pipe.pipe';
+import { PaymentSearchComponent } from './payment-search/payment-search.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { DateFormatPipe } from './dateFormat/date-format-pipe.pipe';
     PurchaseOrderDetailComponent,
     ReportsComponent,
     DateFormatPipe,
+    PaymentSearchComponent,
   ],
   imports: [
     BsDatepickerModule.forRoot(),

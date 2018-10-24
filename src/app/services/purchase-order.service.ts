@@ -63,7 +63,7 @@ getPoById(id: number): Observable<PurchaseOrder> {
 getAdminFee(id: string) {
   return this.http.get(adminFeeUrl + id, this.jwt()).map((response: Response) => response.json());
 }
- 
+
 getById(id: number) {
   return this.http.get(url + id, this.jwt()).map((response: Response) => response.json());
 }

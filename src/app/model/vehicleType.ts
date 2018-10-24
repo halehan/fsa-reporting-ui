@@ -4,6 +4,7 @@ export class VehicleTypeCodes {
     specNumber: number;
     vehicleMake: string;
     vehicleType: string;
+    modelNumber: string;
     specDescription: string;
 
 }
