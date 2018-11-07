@@ -16,39 +16,29 @@ hr {
   }
 
   .ng-valid[required], .ng-valid.required  {
-    border-left: 5px solid #42A948; /* green */
-  }
-  
-  .ng-invalid:not(form)  {
-    border-left: 5px solid #a94442; /* red */
-  }
-  
-
-  .gap{
-    padding-top: 15px;
-    padding-left: 10px;
-  }
-
-
-  .new-po {
-    margin-left: 10px;
-    padding-left: 1100px;
-    padding-bottom: 25px;
-   
+  border-left: 5px solid #42A948; /* green */
 }
-  
 
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+
+  
   .insert-button-div {
     margin-left: 100px;
     padding-left: 900px;
-    padding-bottom: 25px;
    
+}
+
+.topMargin{
+  padding-top: 5px;
 }
 
   .example-header{
     padding-top: 1px;
     padding-bottom: 2px;
-    width: 450px;
+    width: 250px;
 
   }
 
@@ -90,17 +80,12 @@ hr {
     width: 800px;
   }
 
-  .mat-table-payment{
+  mat-table-payment{
     width: 800px;
   }
 
   .mat-header-cell{
     width: 1225px;
-  }
-
-  .mat-icon{
-    padding-left: 4px;
-    padding-right: 4px;
   }
 
   .mat-paginator{
@@ -110,18 +95,10 @@ hr {
 
   .mat-toolbar {
     width: 1225px;
-    height: 30px;
-    padding-bottom: 4px;
   }
 
   .card-content {
     padding-left: 10px;
     width: 1200px;
+
   }
-
-  .pull-left {
-    padding-left: 0px;
-  }
-
-
- 

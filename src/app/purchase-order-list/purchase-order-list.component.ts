@@ -1,15 +1,18 @@
 import { Component, Input, ViewChild, OnInit, AfterViewInit,  ElementRef } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MatPaginator, MatTableDataSource , MatSort} from '@angular/material';
-// import {DataSource} from '@angular/cdk/collections';
-// import {BehaviorSubject, Observable} from 'rxjs';
+
 import { PurchaseOrder, Dealer, CityAgency, BidType, Payment, BidNumber,
-  VehicleTypeCodes, PoStatusType, Specification, AgencyType } from '../model/index';
+  ItemBidTypeCode, PoStatusType, Specification, AgencyType } from '../model/index';
 import { PurchaseOrderService } from '../services/purchase-order.service';
 import { ToastrService } from 'ngx-toastr';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 import * as moment from 'moment';
 import 'moment/locale/pt-br';
+import { ItemPaymentComponent } from '../item-payment/item-payment.component';
+import { ItemListComponent } from '../item-list/item-list.component';
+import { PurchaseOrderDetailComponent } from '../purchase-order-detail/purchase-order-detail.component';
+
 
 @Component({
   selector: 'app-purchase-order-list',
@@ -29,7 +32,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   dealers: Dealer[] = [];
   bidNumbers: BidNumber[] = [];
   cityAgencies: CityAgency[] = [];
-  vehicleTypeCodes: VehicleTypeCodes[] = [];
+  itemTypeCodes: ItemBidTypeCode[] = [];
   bidTypes: BidType[] = [];
   payment: Payment[] = [];
   showPayment: Boolean = false;
@@ -52,13 +55,19 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   myDate: Date;
   minDate: Date;
   maxDate: Date;
+  isNewPo: Boolean;
+  bidId: String;
+  bidType: string;
 
   @ViewChild('poFocus') nameField: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
+
+  @ViewChild(ItemPaymentComponent) item: ItemPaymentComponent;
+  @ViewChild(ItemListComponent) itemList: ItemListComponent;
+  @ViewChild(PurchaseOrderDetailComponent) purchaseOrderDetailComponent: PurchaseOrderDetailComponent;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  @Input() name: string;
 
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
               private dateFormatPipe: DateFormatPipe ) {
@@ -93,7 +102,7 @@ createFormGroup() {
       qty: new FormControl(),
       poAmount: new FormControl(),
       actualPo: new FormControl(),
-      adminFeeDue: new FormControl(),
+      adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
       payCd: new FormControl(),
     }, this.validateFormDates);
@@ -251,7 +260,7 @@ if (this.selectedPO != null) {
   this.poForm.controls['adminFeeDue'].patchValue(this.selectedPO.adminFeeDue, {emitEvent : false});
   this.poForm.controls['comments'].patchValue(this.selectedPO.comments, {emitEvent : false});
   this.poForm.controls['payCd'].patchValue(this.selectedPO.payCd, {emitEvent : false});
-  this.poService.getSpec(this.selectedPO.bidNumber).subscribe(data => {this.specs = data; });
+  this.poService.getItem(this.selectedPO.bidNumber).subscribe(data => {this.specs = data; });
    }
 
 }
@@ -300,6 +309,12 @@ refreshPurchaseOrderListHandler(bidId: string) {
   this.sendData(bidId);
 
 }
+
+refreshItemListHandler(bidId: string) {
+  console.log('Called refreshItemListHandler');
+
+}
+
 
 purchaserChange(event)  {
 
@@ -396,9 +411,9 @@ showFilter() {
     console.log(this.selectedPO.bidNumber);
     console.log(this.selectedPO.spec);
 
-    this.poService.getVehicleType(this.selectedPO.bidNumber, filterVal)
+    this.poService.getItemType(this.selectedPO.bidNumber, filterVal)
     .subscribe(data => {
-        this.vehicleTypeCodes = data;
+        this.itemTypeCodes = data;
     });
 
 }
@@ -406,9 +421,9 @@ showFilter() {
   filterSpecifications(filterVal: string) {
 
     // reset the VehicleTypes
-    this.vehicleTypeCodes = null;
+    this.itemTypeCodes = null;
 
-    this.poService.getSpec(filterVal)
+    this.poService.getItem(filterVal)
     .subscribe(data => {
         this.specs = data;
     });
@@ -418,11 +433,13 @@ showFilter() {
   onSelect(po: PurchaseOrder): void {
 
     this.dateFailed = false;
+    this.isNewPo = false;
 
     this.selectedPO = po;
+
     this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
     this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
-    this.selectedPO.estimatedDelivery =  this.formatDate(this.selectedPO.estimatedDelivery);
+  //  this.selectedPO.estimatedDelivery =  this.formatDate(this.selectedPO.estimatedDelivery);
 
  /*   this.poService.getPoById(po.id)
     .subscribe(poVal => {
@@ -447,9 +464,9 @@ showFilter() {
 
     });
 
-    this.poService.getVehicleType(po.bidNumber, po.spec)
-    .subscribe(vehicleTypeCodes => {
-        this.vehicleTypeCodes = vehicleTypeCodes;
+    this.poService.getItemType(po.bidNumber, po.spec)
+    .subscribe(itemTypeCodes => {
+        this.itemTypeCodes = itemTypeCodes;
     });
 
     this.poService.getBids()
@@ -458,8 +475,16 @@ showFilter() {
         this.bidNumbers = bids;
     });
 
-  // this.nameField.nativeElement.focus();
-   this.copyModelToForm();
+    if (this.itemList !== undefined) {
+      this.itemList.getItems(po.id);
+    }
+
+    if (this.purchaseOrderDetailComponent !== undefined) {
+      this.purchaseOrderDetailComponent.getPurchaseOrder(po.id);
+    }
+
+  // this.purchaseOrderDetailComponent.getPurchaseOrder2();
+
   }
 
   filterBids(filterVal: string) {
@@ -535,13 +560,13 @@ showFilter() {
       }
   });
 
-   this.poForm.get('actualPo').valueChanges.subscribe(
+/*   this.poForm.get('actualPo').valueChanges.subscribe(
       _actualPo => {
         if ( _actualPo >= 0) {
         console.log(this.calculateAdminFee(_actualPo));
         this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_actualPo)});
         }
-      });
+      }); */
 
    this.poForm.get('cityAgency').valueChanges.subscribe(
         _cityAgency => {
@@ -551,16 +576,16 @@ showFilter() {
 
    this.poForm.get('bidNumber').valueChanges.subscribe(
        _bidNumber => {
-          this.vehicleTypeCodes = null;
-          this.poService.getSpec(_bidNumber).subscribe(data => {this.specs = data; });
+          this.itemTypeCodes = null;
+          this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
           this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
           console.log(this.currentBid.AdminFeeRate);
     });
           });
 
    this.poForm.get('spec').valueChanges.subscribe(_spec => {
-          this.poService.getVehicleType(this.poForm.controls.bidNumber.value, _spec)
-                .subscribe(data => {this.vehicleTypeCodes = data; });
+          this.poService.getItemType(this.poForm.controls.bidNumber.value, _spec)
+                .subscribe(data => {this.itemTypeCodes = data; });
               });
 
   /*  this.poForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
@@ -583,6 +608,11 @@ showFilter() {
     this.partialClearPo();
     this.showNewPayment = true;
     this.showPayment = false;
+  }
+
+  newPurchaseOrder() {
+    this.isNewPo = true;
+    this.purchaseOrderDetailComponent.newPo();
   }
 
 

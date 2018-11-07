@@ -1,0 +1,85 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">PO Item Details</h4>
+    </div>
+    <div class="panel-body">
+        <div class="card-content"> 
+            <form [formGroup]="itemForm" (ngSubmit)="processItem()">
+                <div class="row shadow p-3 mb-5 bg-white rounded">
+
+                            <div class="col-md-6">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                            <label class="label-small">Item Number</label>
+                                            <select required class="form-control"  formControlName="itemNumber">
+                                                        <option *ngFor="let item of itemTypeCodes" value={{item.itemNumber}}>
+                                                                {{item.itemNumber}} - {{ item.itemDescription}} 
+                                                        </option> 
+                                            </select>
+                                    </div>
+                                    <small class="form-text text-muted alert alert-danger" *ngIf="itemForm.get('itemNumber').touched && itemForm.get('itemNumber').hasError('required')">Item Required!</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                            <label class="label-small">Item Type</label>
+                                            <select required class="form-control"  formControlName="itemType">
+                                                        <option *ngFor="let item of itemTypeMakeCodes" value={{item.itemType}}>
+                                                                {{item.itemMake}} - {{ item.itemType}} 
+                                                        </option> 
+                                            </select>
+                                    </div>
+                                    <small class="form-text text-muted alert alert-danger" *ngIf="itemForm.get('itemType').touched && itemForm.get('itemType').hasError('required')">Item Required!</small>
+                            </div>
+                                                    
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Qty</label>
+                                        <input  type="text"  required formControlName="qty"   class="form-control" >
+                                    </div>
+                            </div> 
+
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Item Amount</label>
+                                        <input  type="text"  required formControlName="itemAmount"  class="form-control" >
+                                    </div>
+                            </div> 
+
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">FSA Fee</label>
+                                        <input disabled type="text"  formControlName="fsafee"  class="form-control" >
+                                    </div>
+                            </div> 
+
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">FAC Fee</label>
+                                        <input disabled type="text"  formControlName="facfee"  class="form-control" >
+                                    </div>
+                            </div> 
+
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">FFCA Fee</label>
+                                        <input disabled type="text"  formControlName="ffcaFee"  class="form-control" >
+                                    </div>
+                            </div> 
+
+                            <div class="col-md-2">
+                                    <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Admin Fee</label>
+                                        <input disabled type="text" formControlName="adminFeeDue"  class="form-control" >
+                                    </div>
+                            </div> 
+                                             
+                            <div class="col-md-12">
+                                <button [disabled]="itemForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
+                            </div>  
+
+                                                                               
+                </div>
+            </form>                                              
+        </div>   
+    </div>
+</div>

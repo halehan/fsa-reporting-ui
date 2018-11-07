@@ -24,13 +24,12 @@
                 
                 </div>  
     
-             
         <div>
              
             <mat-table *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
           
               <ng-container matColumnDef="bidNumber">
-                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
+                <mat-header-cell class="pull-left" fxFlex="125px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
                 <mat-cell fxFlex="125px" *matCellDef="let row"> {{row.bidNumber}} </mat-cell>
               </ng-container>
           
@@ -65,23 +64,32 @@
               </ng-container>
     
                 <ng-container matColumnDef="edit">
-                    <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
+                    <mat-header-cell fxFlex="75px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
           
-                    <mat-cell fxFlex="50px" *matCellDef="let row">
-                        <button mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
+                    <mat-cell fxFlex="75px" *matCellDef="let row">
+                      <button mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
                             <i class="fa fa-pencil mat-icon"></i>
                         </button>  
+                  <!--      <button mat-button [matMenuTriggerFor]="menu">Action</button>
+                        <mat-menu #menu="matMenu">
+                        <button mat-menu-item color="primary" focusable="false" (click)="onSelect(row)">Edit
+                                        <i class="fa fa-pencil mat-icon"></i>
+                        </button> --
+                        <button mat-menu-item color="primary" focusable="false" (click)="onSelect(row)">Add Item
+                                            <i class="fa fa-plus mat-icon"></i>
+                        </button> 
+                        </mat-menu> -->
                     </mat-cell>
                 </ng-container>
     
                 <ng-container matColumnDef="addPayment">
-                        <mat-header-cell fxFlex="150px" *matHeaderCellDef mat-sort-header> Add Payment </mat-header-cell>
-                        <mat-cell fxFlex="175px" *matCellDef="let row">
+                        <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Add Item </mat-header-cell>
+                        <mat-cell fxFlex="100px" *matCellDef="let row">
                             <button mat-icon-button color="primary" focusable="false" (click)="newPayment(row)">
                                 <i class="fa fa-plus mat-icon"></i>
                             </button>  
                         </mat-cell>
-                  </ng-container>
+                </ng-container>
             
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -98,9 +106,11 @@
           <br><hr> 
     
           <div class="new-po form-group col-md-8">
-                <button mat-button (click)="showNewPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
+                <button mat-button (click)="newPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
         </div>
 
+        <!-- Start New Po Form -->
+        <!--
         <div *ngIf="selectedPO && !showNewPayment">
                 <div class="card-content">
                         <form [formGroup]="poForm" (ngSubmit)="updatePurchaseOrder()">
@@ -127,8 +137,6 @@
                                          </div>  
                                          <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
                                  </div>  
-
-    
 
                                  <div class="col-md-2">
                                         <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -172,8 +180,6 @@
                                             <div class="form-group input-group-sm form-black label-floating is-empty">
                                                     <label class="label-small">Vendor</label>
                                                     <select required formControlName="dealerName" class="form-control"  id="dealerSelect">
-                                                        <!--    <option  selected>{{ selectedPO.dealerName }} 
-                                                                </option> -->
                                                         <option *ngFor="let dealer of dealers" >
                                                             {{ dealer.dealerName}} 
                                                       </option>  
@@ -186,7 +192,6 @@
                                             <div class="form-group input-group-sm input-group-sm form-black label-floating is-empty">
                                                 <label class="label-small">Specification</label>
                                                 <select required formControlName="spec"  class="form-control"  id="dealerSelect">
-                                                     <!--   <option  selected>{{ selectedPO.spec }} </option>  -->
                                                     <option *ngFor="let spec of specs" value= {{spec.specNumber}} >
                                                             {{ spec.specNumber}} -  {{ spec.specDescription}} 
                                                                   
@@ -202,16 +207,16 @@
                                                 <label class="label-small">Model</label>
                 
                                                     <select required formControlName="vehicleType" class="form-control"  id="vehicleTypeSelect">
-                                                           <!-- <option  selected>{{ selectedPO.vehicleType }} </option>   -->
-                                                        <option *ngFor="let vehicle of vehicleTypeCodes" value={{vehicle.vehicleType}}>
-                                                            {{vehicle.vehicleMake}} - {{ vehicle.vehicleType}} - {{vehicle.modelNumber}}
+                                                         
+                                                        <option *ngFor="let item of itemTypeCodes" value={{item.itemType}}>
+                                                            {{item.itemMake}} - {{ item.itemType}} - {{item.itemModelNumber}}
                                                         </option>  
                                                     </select>
                                             </div>
                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('vehicleType').touched && poForm.get('vehicleType').hasError('required')">Model Required!</small>
                                     </div>
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                             <div class="form-group input-group-sm form-black label-floating is-empty">
                                                 <label class="label-small">PO Reported by</label>
                                                 <div style="padding-top: 5px;" class="form-group form-check form-check-inline">
@@ -231,8 +236,7 @@
                                                 <label class="label-small">PO Completed</label>
                 
                                                 <select required formControlName="poComplete"  class="form-control"  id="poCompleteSelect">
-                                                      <!--  <option  selected>{{ selectedPO.poComplete }} 
-                                                            </option>  -->
+                                                     
                                                  <option *ngFor="let code of poStatusTypeCodes" >
                                                         {{ code.poStatusTypeCode}} 
                                                   </option>  
@@ -256,12 +260,7 @@
                                             </div>
                                     </div>  
                 
-                                    <div class="col-md-2">
-                                            <div class="form-group input-group-sm form-black label-floating is-empty">
-                                                <label class="label-small">Actual PO</label>
-                                                <input   placeholder="$0.00" type="text" formControlName="actualPo" class="form-control" >
-                                            </div>
-                                    </div>
+                        
                                     
                                     <div class="col-md-2">
                                             <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -278,19 +277,22 @@
                                     </div>
 
                              <div class="col-md-12">  
-                             <!--       <button (click)="updatePurchaseOrder()" type="submit" [disabled]="!myForm.dirty" class="btn btn-success pull-right">Close</button> -->
-                           <!--     <button (click)="updatePurchaseOrder()" type="submit" [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>  -->
                                 <button [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Update P.O.</button>
                               </div>  
 
                            </div>
                         </form>
                 </div>
-        </div>
-
-          <div *ngIf="selectedPO && !showNewPayment">
+        </div>  -->
+        <!-- END New Po Form -->
+        <!-- START Payment Details -->
+      <!--  <div *ngIf="selectedPO && !showNewPayment">  -->
+             <!--   <app-item-payment  [po]="selectedPO" ></app-item-payment>  -->
+               
+           <!--     <app-item-payment></app-item-payment>  -->
+            <!--            
             <div class="card-content">  
-                    <form [formGroup]="paymentForm">
+                <form [formGroup]="paymentForm">
                     <div style="padding-top: 10px;" class="row shadow p-3 mb-5 bg-white rounded">
                             <mat-toolbar >
                                     <span style="padding-bottom: 10px;">Administrative Fee Payments</span>
@@ -483,10 +485,20 @@
     
                                                             
                     </div>
-</form>
-                    </div>
-                    </div>
-                    </div>
+                </form>
+            </div> 
+        </div>  -->
+        <!-- END Payment Details -->    
+        
+      </div>          
+     <app-purchase-order-detail [poId] = "selectedPO.id" [bidId]="selectedPO.bidNumber" [isNew]="isNewPo" (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="selectedPO"></app-purchase-order-detail> 
+    <!--  <app-purchase-order-detail [pox]="selectedPO" [isNew]="isNewPo" *ngIf="selectedPO"></app-purchase-order-detail> -->
+      <app-item-list [currentBid] = "currentBid" [poId] = "selectedPO.id"  [payCd] = "selectedPO.payCd"  *ngIf="selectedPO && !showNewPayment"></app-item-list>
+      <br>
+    </div>
+</div>
+                   
     
-                    <app-purchase-order-detail  (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="showNewPayment"></app-purchase-order-detail>  
-            <!--    </form>  -->
+                <!--    <app-purchase-order-detail  (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="showNewPayment"></app-purchase-order-detail>  -->
+                     
+            

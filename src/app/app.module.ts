@@ -80,6 +80,10 @@ import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-o
 import { ReportsComponent } from './reports/reports.component';
 import { DateFormatPipe } from './dateFormat/date-format-pipe.pipe';
 import { PaymentSearchComponent } from './payment-search/payment-search.component';
+import { PurchaseOrderItemComponent } from './purchase-order-item/purchase-order-item.component';
+import { ItemPaymentComponent } from './item-payment/item-payment.component';
+import { ItemListComponent } from './item-list/item-list.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +108,10 @@ import { PaymentSearchComponent } from './payment-search/payment-search.componen
     ReportsComponent,
     DateFormatPipe,
     PaymentSearchComponent,
+    PurchaseOrderItemComponent,
+    ItemPaymentComponent,
+    ItemListComponent,
+    ItemDetailComponent,
   ],
   imports: [
     BsDatepickerModule.forRoot(),
@@ -129,6 +137,7 @@ import { PaymentSearchComponent } from './payment-search/payment-search.componen
     MomentModule,
     routing,
     MatButtonModule,
+    MatMenuModule,
     MatCheckboxModule,
     MatCardModule,
     MatToolbarModule,

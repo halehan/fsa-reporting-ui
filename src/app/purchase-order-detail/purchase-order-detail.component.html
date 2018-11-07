@@ -1,192 +1,212 @@
-
-<div class="card-content">
-   <form [formGroup]="newPoForm" (ngSubmit)="insertPurchaseOrder()">
-    <div class="row shadow p-3 mb-5 bg-white rounded">
-       <mat-toolbar >
-                <span>Purchase Order New</span>
-        </mat-toolbar>
-
-         <div class="col-md-4 topMargin">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                        <label class="label-small" for="bidTypeNnumberSelect">Bid Number</label>
-
-                        <select required formControlName="bidNumber" class="form-control input-group-sm"  id="bidTypeNnumberSelect">
-                            <option  selected>{{ newPO.bidNumber }} 
-                            </option>      
-                            <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
-                                    {{bn.BidNumber}} - {{bn.BidType}}
-                            </option>     
-                        </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('bidNumber').touched && newPoForm.get('bidNumber').hasError('required')">Bid Required!</small>
-         </div>  
-
-        
-          <div class="col-md-2 topMargin">
-            <div class="form-group input-group-sm form-black label-floating is-empty">  
-                    <label class="label-small">P.O.Number</label>
-                    <input placeholder="PO Number" type="text" formControlName="poNumber" name="poNumber" required class="form-control" >
-              </div>  
-              <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('poNumber').touched && newPoForm.get('poNumber').hasError('required')">PO Number Required!</small>
-            </div> 
-
-            <div class="col-md-2 topMargin">
-              <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">PO Issue Date</label>
-                    <input type="text" class="form-control" formControlName="poIssueDate" placeholder="PO Issue Date" required bsDatepicker />
-              </div>
-            </div>
-
-            <div class="col-md-2 topMargin">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">PO Reported Date</label>
-                    <input type="text" class="form-control" formControlName="dateReported" placeholder="PO Date Reported" required bsDatepicker />
-                        <div [hidden]="!dateFailed"
-                                      class="alert alert-danger">
-                                      PO Reported Date must be later than PO Issue Date
-                        </div>  
-                </div>
-                <small  *ngIf="newPoForm.get('dateReported').touched && newPoForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
-             </div>
-
-             <div class="col-md-2 topMargin">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">Estimated Delivery</label>
-                    <input type="text" placeholder="Estimated Delivery" formControlName="estimatedDelivery" name="estimatedDelivery" bsDatepicker class="form-control" >
-                </div>
-             </div>  
-       
-              <div class="col-md-6">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                        <label class="label-small" for="cityAgencySelect">Purchaser</label>
-                        <select placeholder="Purchaser" required formControlName="cityAgency" class="form-control input-group-sm"   id="cityAgencySelect">
-                                <option  selected>{{ newPO.cityAgency }} 
-                                    </option>
-                            <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
-                                {{ ca.cityAgencyName }}  -  {{ ca.agencyName }}
-                          </option>  
-                        </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('cityAgency').touched && newPoForm.get('cityAgency').hasError('required')">Purchaser Required!</small>
-               </div>  
-
-              <div class="col-md-6">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                        <label class="label-small" for="dealerSelect">Vendor Select</label>
-                        <select required [(ngModel)]="newPO.dealerName" class="form-control"  formControlName="dealerName" id="vendorSelect">
-                                        <option>Select Vendor</option>
-                         <option *ngFor="let dealer of dealers" >
-                                {{ dealer.dealerName}} 
-                          </option>  
-                        </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('dealerName').touched && newPoForm.get('dealerName').hasError('required')">Vendor Required!</small>
-              </div>
-
-
-              <div class="col-md-6">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">Specification</label>
-                    <select required [(ngModel)]="newPO.spec"  [(ngModel)]="newPO.spec" formControlName="spec"  class="form-control"  id="dealerSelect">
-                                <option>Select Spec</option>
-                                <option *ngFor="let spec of specs"  value= {{spec.specNumber}}>
-                                        {{ spec.specNumber}} -  {{ spec.specDescription}} 
-                                        </option>
-                     </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('spec').touched && newPoForm.get('spec').hasError('required')">Specification Required!</small>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                        <label class="label-small" for="vehicleTypeSelect">Model</label>
-                        <select required [(ngModel)]="newPO.vehicleType" class="form-control"  formControlName="vehicleType" id="vehicleTypeSelect">
-                                <option  selected>{{ newPO.vehicleType }} 
-                                    </option>  
-                            <option *ngFor="let vehicle of vehicleTypeCodes" value={{vehicle.vehicleType}}>
-                                {{vehicle.vehicleMake}} - {{ vehicle.vehicleType}}
-                            </option>  
-                        </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('vehicleType').touched && newPoForm.get('vehicleType').hasError('required')">Model Required!</small>
-               </div>
-
-        
-              <div class="col-md-2">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">PO Reported by</label>
-                    <div style="padding-top: 5px;" class="form-group input-group-sm form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="agencyFlag" [(ngModel)]="newPO.agencyFlag" name="agencyFlag" value="X">
-                        <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
-                      </div>
-                      <div class="form-group input-group-sm form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="dealerFlag" [(ngModel)]="newPO.dealerFlag" value="X">
-                        <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
-                     </div>
-                </div>
-              </div> 
-   
-               <div class="col-md-2">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">PO Completed</label>
-
-                    <select required [(ngModel)]="newPO.poComplete" class="form-control"  formControlName="poComplete" id="poCompleteSelect">
-                                <option  selected>{{ newPO.poComplete }} 
-                                    </option>  
-                         <option *ngFor="let code of poStatusTypeCodes" >
-                                {{ code.poStatusTypeCode}} 
-                          </option>  
-                        </select>
-                </div>
-                <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('poComplete').touched && newPoForm.get('poComplete').hasError('required')">PO Status Required!</small>
-                </div>  
-       
-
-        <div class="col-md-2">
-                        <div class="form-group input-group-sm form-black label-floating is-empty">
-                            <label class="label-small">Qty</label>
-                            <input  type="text" name="qty" required formControlName="qty" [(ngModel)]="newPO.qty"  class="form-control" >
-                        </div>
-                        <small class="form-text text-muted alert alert-danger" *ngIf="newPoForm.get('qty').touched && newPoForm.get('qty').hasError('required')">Qty Required!</small>
+<div class="panel panel-primary">
+<!-- Default panel contents -->
+        <div class="panel-heading">
+                <h4 class="panel-title">Purchase Order Details {{bidId}} {{poId}}</h4>
         </div>
+        <div class="panel-body">
 
-        <div class="col-md-2">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">PO Amount</label>
-                    <input type="text"  name="poAmount"  formControlName="poAmount" [(ngModel)]="newPO.poAmount"  class="form-control" >
-                </div>
-        </div>  
+                        <div class="card-content"> 
+                                        <form [formGroup]="poForm" (ngSubmit)="processPurchaseOrder()">
+                                         <div class="row shadow p-3 mb-5 bg-white rounded">
+                                       <!--     <mat-toolbar >
+                                                     <span>Purchase Order New {{isNew}}</span>
+                                             </mat-toolbar>  -->
+                                     
+                                              <div class="col-md-4 topMargin">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                             <label class="label-small" for="bidTypeNnumberSelect">Bid Number</label>
+                                     
+                                                             <select required formControlName="bidNumber" class="form-control input-group-sm"  id="bidTypeNnumberSelect">
+                                                          <!--      <option  selected>{{ pox.bidNumber }} 
+                                                                 </option>     -->
+                                                                 <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
+                                                                         {{bn.BidNumber}} - {{bn.BidType}}
+                                                                 </option>     
+                                                             </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('bidNumber').touched && poForm.get('bidNumber').hasError('required')">Bid Required!</small>
+                                              </div>  
+                                     
+                                             
+                                               <div class="col-md-2 topMargin">
+                                                 <div class="form-group input-group-sm form-black label-floating is-empty">  
+                                                         <label class="label-small">P.O.Number</label>
+                                                         <input placeholder="PO Number" type="text" formControlName="poNumber"  required class="form-control" >
+                                                   </div>  
+                                                   <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
+                                                 </div> 
+                                     
+                                                 <div class="col-md-2 topMargin">
+                                                   <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">PO Issue Date</label>
+                                                         <input type="text" class="form-control" formControlName="poIssueDate" placeholder="PO Issue Date" required bsDatepicker />
+                                                   </div>
+                                                 </div>
+                                     
+                                                 <div class="col-md-2 topMargin">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">PO Reported Date</label>
+                                                         <input type="text" class="form-control" formControlName="dateReported" placeholder="PO Date Reported" required bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }"  />
+                                                             <div [hidden]="!dateFailed"
+                                                                           class="alert alert-danger">
+                                                                           PO Reported Date must be later than PO Issue Date
+                                                             </div>  
+                                                     </div>
+                                                     <small  *ngIf="poForm.get('dateReported').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
+                                                  </div>
+                                     
+                                                  <div class="col-md-2 topMargin">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">Estimated Delivery</label>
+                                                         <input type="text" placeholder="Estimated Delivery" formControlName="estimatedDelivery" name="estimatedDelivery" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }"  class="form-control" />
+                                                     </div>
+                                                  </div>  
+                                            
+                                                   <div class="col-md-6">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                             <label class="label-small" for="cityAgencySelect">Purchaser</label>
+                                                             <select placeholder="Purchaser" required formControlName="cityAgency" class="form-control input-group-sm"   id="cityAgencySelect">
+                                                             <!--        <option  selected>{{ pox.cityAgency }} 
+                                                                         </option>  -->
+                                                                 <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >
+                                                                     {{ ca.cityAgencyName }}  -  {{ ca.agencyName }}
+                                                               </option>  
+                                                             </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('cityAgency').touched && poForm.get('cityAgency').hasError('required')">Purchaser Required!</small>
+                                                    </div>  
+                                     
+                                                   <div class="col-md-6">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                             <label class="label-small" for="dealerSelect">Vendor Select</label>
+                                                             <select required  class="form-control" formControlName="dealerName" id="vendorSelect">
+                                                                             <option>Select Vendor</option>
+                                                              <option *ngFor="let dealer of dealers" >
+                                                                     {{ dealer.dealerName}} 
+                                                               </option>  
+                                                             </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('dealerName').touched && poForm.get('dealerName').hasError('required')">Vendor Required!</small>
+                                                   </div>
+                                     
+                                     
+                                          <!--         <div class="col-md-6">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">Specification</label>
+                                                         <select required  formControlName="spec"  class="form-control"  id="dealerSelect">
+                                                                     <option>Select Spec</option>
+                                                                     <option *ngFor="let spec of specs"  value= {{spec.specNumber}}>
+                                                                             {{ spec.specNumber}} -  {{ spec.specDescription}} 
+                                                                             </option>
+                                                          </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('spec').touched && poForm.get('spec').hasError('required')">Specification Required!</small>
+                                                   </div>
+                                     
+                                                   <div class="col-md-6">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                             <label class="label-small" for="vehicleTypeSelect">Model</label>
+                                                             <select required class="form-control"  formControlName="vehicleType" id="vehicleTypeSelect">
+                                                                     <option  selected>{{ newPO.vehicleType }} 
+                                                                         </option>  
+                                                                         <option *ngFor="let item of itemTypeCodes" value={{item.itemType}}>
+                                                                                 {{item.itemMake}} - {{ item.itemType}} - {{item.itemModelNumber}}
+                                                                         </option> 
+                                                             </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('vehicleType').touched && poForm.get('vehicleType').hasError('required')">Model Required!</small>
+                                                    </div>
+                                     
+                                                 -->
+                                                   <div class="col-md-2">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">PO Reported by</label>
+                                                         <div style="padding-top: 5px;" class="form-group input-group-sm form-check form-check-inline">
+                                                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="agencyFlag"  name="agencyFlag" value="X">
+                                                             <label class="form-check-label" for="inlineCheckbox1">Purchaser</label>
+                                                           </div>
+                                                           <div class="form-group input-group-sm form-check form-check-inline">
+                                                             <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="dealerFlag"  value="X">
+                                                             <label class="form-check-label" for="inlineCheckbox2">Vendor</label>
+                                                          </div>
+                                                     </div>
+                                                   </div> 
+                                        
+                                                    <div class="col-md-2">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">PO Completed</label>
+                                     
+                                                         <select required  class="form-control"  formControlName="poComplete" id="poCompleteSelect">
+                                                               <!--      <option  selected>{{ pox.poComplete }} 
+                                                                         </option>  -->
+                                                              <option *ngFor="let code of poStatusTypeCodes" >
+                                                                     {{ code.poStatusTypeCode}} 
+                                                               </option>  
+                                                             </select>
+                                                     </div>
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poComplete').touched && poForm.get('poComplete').hasError('required')">PO Status Required!</small>
+                                                     </div>  
+                                            
+                                     
+                                             <div class="col-md-2">
+                                                             <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                                 <label class="label-small">Qty</label>
+                                                                 <input  type="text" name="qty" required formControlName="qty"   class="form-control" >
+                                                             </div>
+                                                             <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('qty').touched && poForm.get('qty').hasError('required')">Qty Required!</small>
+                                             </div>
+                                     
+                                             <div class="col-md-2">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">PO Amount</label>
+                                                         <input type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
+                                                     </div>
+                                             </div>  
+                                     
+                                          <!--   <div class="col-md-2">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">Actual PO</label>
+                                                         <input type="number"  name="actualPo" formControlName="actualPo"   class="form-control" >
+                                                     </div>
+                                             </div>  -->
+                                     
+                                             <div class="col-md-2">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">Admin Fee Due</label>
+                                                         <input type="number" disabled placeholder="$0.00"  formControlName="adminFeeDue"   class="form-control" >
+                                                     </div>
+                                             </div>  
+                                     
+                                             <div class="col-md-12">
+                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                         <label class="label-small">Comments</label>
+                                                         <input type="text" name="comments" formControlName="comments"   class="form-control" >
+                                                     </div>
+                                             </div>
+                                     
+                                         
+                                                 <div class="col-md-12">
+                                                       <!--  <button (click)="insertPurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>  -->
+                                                         <button [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
+                                                 </div>
+                                            
+                                     
+                                             </div>
+                                           </form>  
+                                     
+                                         <!--  <app-purchase-order-item  (refreshItemList)="refreshItemListHandler($event)"></app-purchase-order-item> -->
+                                         
+                                     
+                                        </div>   
 
-        <div class="col-md-2">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">Actual PO</label>
-                    <input type="number"  name="actualPo" formControlName="actualPo"  [(ngModel)]="newPO.actualPo"  class="form-control" >
-                </div>
-        </div>  
-
-        <div class="col-md-2">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">Admin Fee Due</label>
-                    <input type="number" disabled placeholder="$0.00" name="adminFeeDue" formControlName="adminFeeDue"   class="form-control" >
-                </div>
-        </div>  
-
-        <div class="col-md-12">
-                <div class="form-group input-group-sm form-black label-floating is-empty">
-                    <label class="label-small">Comments</label>
-                    <input type="text" name="comments" formControlName="comments" [(ngModel)]="newPO.comments"  class="form-control" >
-                </div>
+              
         </div>
-
-    
-            <div class="col-md-12">
-                  <!--  <button (click)="insertPurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>  -->
-                    <button [disabled]="newPoForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
-            </div>
        
+       
+              
+</div>
 
-        </div>
-      </form>  
-    </div>
+
+
     
     

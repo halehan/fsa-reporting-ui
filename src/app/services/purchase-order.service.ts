@@ -94,12 +94,16 @@ getBidNumber() {
   return this.http.get(bidNumberUrl, this.jwt()).map((response: Response) => response.json());
 }
 
-getSpec(bidNumber: string) {
+getItembyId(itemId: number) {
+  return this.http.get(specTypeUrl + itemId, this.jwt()).map((response: Response) => response.json());
+}
+
+getItem(bidNumber: string) {
   return this.http.get(specTypeUrl + bidNumber, this.jwt()).map((response: Response) => response.json());
 }
 
-getVehicleType(bidNumber: string, specId: string) {
-  return this.http.get(vehicleTypeUrl + bidNumber + '/' + specId, this.jwt()).map((response: Response) => response.json());
+getItemType(bidNumber: string, itemId: string) {
+  return this.http.get(vehicleTypeUrl + bidNumber + '/' + itemId, this.jwt()).map((response: Response) => response.json());
 }
 
 getCityAgency() {

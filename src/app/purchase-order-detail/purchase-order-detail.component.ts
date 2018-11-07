@@ -8,7 +8,7 @@ import { ContactRequest } from '../model/contact-request';
 import { PersonalData } from '../model/contact-request';
 import { PurchaseOrderService } from '../services/purchase-order.service';
 import { ToastrService } from 'ngx-toastr';
-import { VehicleTypeCodes } from '../model/vehicleType';
+import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 
 @Component({
@@ -19,6 +19,10 @@ import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 export class PurchaseOrderDetailComponent implements OnInit  {
 
   @Output() refreshPurchaseOrderList: EventEmitter<string> =   new EventEmitter();
+  @Input() pox: PurchaseOrder;
+  @Input() isNew: Boolean;
+  @Input() bidId: String;
+  @Input() poId: number;
 
   contactForm: FormGroup;
   cityAgencies: CityAgency[] = [];
@@ -27,37 +31,37 @@ export class PurchaseOrderDetailComponent implements OnInit  {
 
   dealers: Dealer[] = [];
   newPO: PurchaseOrder;
+  currentPO: PurchaseOrder;
 
   enableSpec: Boolean = false;
   enableVehicleType: String = 'disabled';
   specs: Specification[] = [];
-  vehicleTypeCodes: VehicleTypeCodes[] = [];
+  itemTypeCodes: ItemBidTypeCode[] = [];
   savedBid: string;
   poStatusTypeCodes: PoStatusType[] = [];
-  newPoForm: FormGroup;
+  // newPoForm: FormGroup;
+  poForm: FormGroup;
   dateFailed: boolean;
   currentBid: BidNumber;
 
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
-    private dateFormatPipe: DateFormatPipe) {this.newPO = new PurchaseOrder(); }
-
+    private dateFormatPipe: DateFormatPipe) { }
+/*
 get poAmount() {
   return this.newPoForm.get('poAmount');
  }
+*/
 
 ngOnInit() {
 
-  this.newPoForm = this.createFormGroup();
+  this.poForm = this.createFormGroup();
+
+  this.getPurchaseOrder(this.poId);
 
   this.poService.getPostatusType()
   .subscribe(codes => {
     this.poStatusTypeCodes = codes;
 });
-
-  this.poService.getDealer()
-  .subscribe(_dealers => {
-      this.dealers = _dealers;
-  });
 
   this.poService.getDealer()
   .subscribe(_dealers => {
@@ -95,55 +99,109 @@ calculateAdminFee(poAmount: number) {
 
 }
 
+newPo() {
+  this.newPO = new PurchaseOrder();
+  this.poForm = this.createFormGroup();
+  this.formControlValueChanged();
+}
+
 formControlValueChanged() {
 
-  this.poAmount.valueChanges.subscribe(
+  this.poForm.valueChanges.subscribe(
       _poAmount => {
       console.log('poAmount changed ' + _poAmount);
-      if ( !(this.newPoForm.get('actualPo').value >= 0)) {
           if ( _poAmount >= 0) {
-            this.newPoForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
+            this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
           }
-      }
   });
 
-   this.newPoForm.get('actualPo').valueChanges.subscribe(
+   this.poForm.get('poAmount').valueChanges.subscribe(
       _actualPo => {
         if ( _actualPo > 0) {
         console.log(this.calculateAdminFee(_actualPo));
-        this.newPoForm.patchValue({'adminFeeDue': this.calculateAdminFee(_actualPo)});
+        this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_actualPo)});
         }
       });
 
-   this.newPoForm.get('cityAgency').valueChanges.subscribe(
+   this.poForm.get('cityAgency').valueChanges.subscribe(
         _cityAgency => {
-          this.poService.getPayCode(_cityAgency).subscribe(cd => {this.newPO.payCd = cd[0].agencyPayCode; });
-          console.log(this.newPO.payCd);
+          this.poService.getPayCode(_cityAgency).subscribe(cd => {
+           // this.poForm.payCd = cd[0].agencyPayCode; 
+            this.poForm.controls['payCd'].patchValue(cd[0].agencyPayCode, {emitEvent : false});
+          
           });
+         
+      });
 
-   this.newPoForm.get('bidNumber').valueChanges.subscribe(
+   this.poForm.get('bidNumber').valueChanges.subscribe(
        _bidNumber => {
-          this.vehicleTypeCodes = null;
-          this.poService.getSpec(_bidNumber).subscribe(data => {this.specs = data; });
+          this.itemTypeCodes = null;
+          this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
           this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
           console.log(this.currentBid.AdminFeeRate);
     });
           });
 
-   this.newPoForm.get('spec').valueChanges.subscribe(_spec => {
-          this.poService.getVehicleType(this.newPoForm.controls.bidNumber.value, _spec)
-                .subscribe(data => {this.vehicleTypeCodes = data; });
+    /*
+
+   this.poForm.get('spec').valueChanges.subscribe(_spec => {
+          this.poService.getItemType(this.poForm.controls.bidNumber.value, _spec)
+                .subscribe(data => {this.itemTypeCodes = data; });
               });
 
-    this.newPoForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
-                  console.log(_poIssueDate);
+    this.poForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
+                 console.log(_poIssueDate);
                   });
+      */
 
 }
 
 getSuck() {
   return this.enableVehicleType;
 }
+
+formatDate(dateVal: Date) {
+  console.log(dateVal);
+//  dateVal.setHours(2);
+  const myDate = this.dateFormatPipe.transform(dateVal);
+  console.log(myDate);
+  return myDate;
+
+}
+
+copyModelToForm() {
+
+  if (this.currentPO != null) {
+
+    this.poService.getAdminFee(this.currentPO.bidNumber).subscribe(bid => {this.currentBid = bid[0]; });
+
+    const fname: string = this.currentPO.dealerName;
+    console.log(fname);
+
+    this.poForm.controls['bidNumber'].patchValue(this.currentPO.bidNumber, {emitEvent : false});
+    this.poForm.controls['poNumber'].patchValue(this.currentPO.poNumber, {emitEvent : false});
+    this.poForm.controls['poIssueDate'].patchValue(this.formatDate(this.currentPO.poIssueDate), {emitEvent : false});
+    this.poForm.controls['dateReported'].patchValue(this.formatDate(this.currentPO.dateReported), {emitEvent : false});
+    this.poForm.controls['estimatedDelivery'].patchValue(this.currentPO.estimatedDelivery, {emitEvent : false});
+    this.poForm.controls['cityAgency'].patchValue(this.currentPO.cityAgency, {emitEvent : false});
+    this.poForm.controls['dealerName'].patchValue(this.currentPO.dealerName, {emitEvent : false});
+ //   this.poForm.controls['spec'].patchValue(this.currentPO.spec, {emitEvent : false});
+ //   this.poForm.controls['vehicleType'].patchValue(this.currentPO.vehicleType, {emitEvent : false});
+    this.poForm.controls['agencyFlag'].patchValue(this.currentPO.agencyFlag, {emitEvent : false});
+    this.poForm.controls['dealerFlag'].patchValue(this.currentPO.dealerFlag, {emitEvent : false});
+    this.poForm.controls['poComplete'].patchValue(this.currentPO.poComplete, {emitEvent : false});
+
+    this.poForm.controls['qty'].patchValue(this.currentPO.qty, {emitEvent : false});
+    this.poForm.controls['poAmount'].patchValue(this.currentPO.poAmount, {emitEvent : false});
+    this.poForm.controls['actualPo'].patchValue(this.currentPO.actualPo, {emitEvent : false});
+
+    this.poForm.controls['adminFeeDue'].patchValue(this.currentPO.adminFeeDue, {emitEvent : false});
+    this.poForm.controls['comments'].patchValue(this.currentPO.comments, {emitEvent : false});
+    this.poForm.controls['payCd'].patchValue(this.currentPO.payCd, {emitEvent : false});
+//    this.poService.getItem(this.currentPO.bidNumber).subscribe(data => {this.specs = data; });
+     }
+
+  }
 
 createFormGroup() {
 
@@ -156,38 +214,63 @@ createFormGroup() {
       estimatedDelivery: new FormControl(),
       cityAgency: new FormControl('', Validators.required),
       dealerName: new FormControl('', Validators.required),
-      spec: new FormControl('', Validators.required),
-      vehicleType: new FormControl('', Validators.required),
+  //    spec: new FormControl('', Validators.required),
+  //    vehicleType: new FormControl('', Validators.required),
       agencyFlag: new FormControl(),
       dealerFlag: new FormControl(),
       poComplete: new FormControl(),
-      qty: new FormControl(),
+      qty: new FormControl({required: true}),
       poAmount: new FormControl(),
       actualPo: new FormControl(),
-      adminFeeDue: new FormControl(),
+      adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
       payCd: new FormControl(),
+      suck: new FormControl()
     }, this.validateFormDates);
+}
+
+copyFormToNewModel() {
+
+  this.newPO.bidNumber = this.poForm.controls.bidNumber.value;
+  this.newPO.poNumber = this.poForm.controls.poNumber.value;
+  this.newPO.poIssueDate = this.poForm.controls.poIssueDate.value;
+  this.newPO.dateReported = this.poForm.controls.dateReported.value;
+  this.newPO.estimatedDelivery = this.poForm.controls.estimatedDelivery.value;
+  this.newPO.cityAgency = this.poForm.controls.cityAgency.value;
+  this.newPO.dealerName = this.poForm.controls.dealerName.value;
+  // this.newPO.spec = this.poForm.controls.spec.value;
+  // this.newPO.vehicleType  = this.poForm.controls.vehicleType.value;
+  this.newPO.agencyFlag  = this.poForm.controls.agencyFlag.value;
+  this.newPO.dealerFlag = this.poForm.controls.dealerFlag.value;
+  this.newPO.poComplete = this.poForm.controls.poComplete.value;
+  this.newPO.poAmount = this.poForm.controls.poAmount.value;
+  this.newPO.actualPo = this.poForm.controls.actualPo.value;
+  this.newPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
+  this.newPO.comments = this.poForm.controls.comments.value;
+  this.newPO.payCd = this.poForm.controls.payCd.value;
+
 }
 
 copyFormToModel() {
 
-  this.newPO.bidNumber = this.newPoForm.controls.bidNumber.value;
-  this.newPO.poNumber = this.newPoForm.controls.poNumber.value;
-  this.newPO.poIssueDate = this.newPoForm.controls.poIssueDate.value;
-  this.newPO.dateReported = this.newPoForm.controls.dateReported.value;
-  this.newPO.estimatedDelivery = this.newPoForm.controls.estimatedDelivery.value;
-  this.newPO.cityAgency = this.newPoForm.controls.cityAgency.value;
-  this.newPO.dealerName = this.newPoForm.controls.dealerName.value;
-  this.newPO.spec = this.newPoForm.controls.spec.value;
-  this.newPO.vehicleType  = this.newPoForm.controls.vehicleType.value;
-  this.newPO.agencyFlag  = this.newPoForm.controls.agencyFlag.value;
-  this.newPO.dealerFlag = this.newPoForm.controls.dealerFlag.value;
-  this.newPO.poComplete = this.newPoForm.controls.poComplete.value;
-  this.newPO.poAmount = this.newPoForm.controls.poAmount.value;
-  this.newPO.actualPo = this.newPoForm.controls.actualPo.value;
-  this.newPO.adminFeeDue = this.newPoForm.controls.adminFeeDue.value;
-  this.newPO.comments = this.newPoForm.controls.comments.value;
+  this.currentPO.bidNumber = this.poForm.controls.bidNumber.value;
+  this.currentPO.poNumber = this.poForm.controls.poNumber.value;
+  this.currentPO.poIssueDate = this.formatDate(this.poForm.controls.poIssueDate.value);
+  this.currentPO.dateReported = this.formatDate(this.poForm.controls.dateReported.value);
+  this.currentPO.estimatedDelivery = this.formatDate(this.poForm.controls.estimatedDelivery.value);
+  this.currentPO.cityAgency = this.poForm.controls.cityAgency.value;
+  this.currentPO.dealerName = this.poForm.controls.dealerName.value;
+  // this.currentPO.spec = this.poForm.controls.spec.value;
+  // this.currentPO.vehicleType  = this.poForm.controls.vehicleType.value;
+  this.currentPO.agencyFlag  = this.poForm.controls.agencyFlag.value;
+  this.currentPO.dealerFlag = this.poForm.controls.dealerFlag.value;
+  this.currentPO.poComplete = this.poForm.controls.poComplete.value;
+  this.currentPO.poAmount = this.poForm.controls.poAmount.value;
+  this.currentPO.actualPo = this.poForm.controls.actualPo.value;
+  this.currentPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
+  this.currentPO.comments = this.poForm.controls.comments.value;
+  this.currentPO.payCd = this.poForm.controls.payCd.value;
+
 
 }
 
@@ -209,43 +292,93 @@ revert() {
   this.contactForm.reset({ personalData: new PersonalData(), requestType: '', text: '' });
 }
 
-onSubmit() {
-  // Make sure to create a deep copy of the form-model
-  const result: ContactRequest = Object.assign({}, this.contactForm.value);
-  result.personalData = Object.assign({}, result.personalData);
-
-  // Do useful stuff with the gathered data
-  console.log(result);
-}
 
   getCurrentUserName() {
     return JSON.parse(localStorage.getItem('currentUser')).username;
   }
 
+  refreshItemListHandler(bidId: string) {
+    console.log('Called refreshItemListHandler');
 
-  insertPurchaseOrder() {
+  }
 
-     this.copyFormToModel();
+  insertPo() {
+    this.newPO.createdBy = this.getCurrentUserName();
 
-     if (this.newPoForm.invalid) {
+    this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
+    });
+
+    this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);
+
+     this.toastr.success('Purchase Order Insert Successful', 'Purchase Insert', {
+      timeOut: 2000,
+      });
+
+  }
+
+  updatePo() {
+
+    this.poService.updatePurchaseOrder(this.currentPO).subscribe(po => {
+    });
+
+   // this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);
+
+     this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
+      timeOut: 2000,
+      });
+
+  }
+
+
+
+  processPurchaseOrder() {
+
+    // Determine if the action is an update or insert of the PO.
+
+     if (this.poForm.invalid) {
        this.dateFailed = true;
        return;
      } else {
         this.dateFailed = false;
 
-     this.newPO.createdBy = this.getCurrentUserName();
 
-     this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
-  //   this.newPO = po;
-  });
+    if (this.isNew) {
+      this.copyFormToNewModel();
+      this.insertPo();
+    } else {
+      this.copyFormToModel();
+      this.updatePo();
+    }
 
-    this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);
 
-    this.toastr.success('Transaction Saved Successful', 'Transaction Update', {
+  }
+
+  this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
     timeOut: 2000,
     });
-  }
+
 }
+
+getPurchaseOrder2() {
+
+        this.currentPO = this.pox;
+        this.copyModelToForm();
+
+}
+
+
+
+getPurchaseOrder(id: number) {
+
+  this.poService.getPoById(id)
+    .subscribe(po => {
+        this.currentPO = po[0];
+        console.log(this.currentPO.id);
+        this.copyModelToForm();
+    });
+
+}
+
 
 
 }
