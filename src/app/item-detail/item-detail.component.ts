@@ -86,11 +86,12 @@ export class ItemDetailComponent implements OnInit {
   ngOnInit() {
 
     this.itemForm = this.createFormGroup();
+    this.enableItemDetail = false;
 
-    console.log(this.currentBid.BidNumber);
-    console.log(this.currentBid.BidType);
-    console.log(this.currentBid.AdminFeeRate);
-    console.log(this.poId);
+  //  console.log(this.currentBid.BidNumber);
+  //  console.log(this.currentBid.BidType);
+  //  console.log(this.currentBid.AdminFeeRate);
+   // console.log(this.poId);
 
     this.formControlValueChanged();
 

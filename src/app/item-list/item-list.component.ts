@@ -26,6 +26,8 @@ export class ItemListComponent implements OnInit {
   @Input() payCd: string;
   @Input() enableItemDetail: boolean;
 
+  enableList: boolean;
+
   selectedItem: Item;
 
   rowSelected: boolean;
@@ -58,14 +60,15 @@ async delay(ms: number) {
   }
 
   ngOnInit() {
+    this.enableList = false;
 
     this.getItems(this.poId);
 
-    console.log('BidNumber ' + this.currentBid.BidNumber);
-    console.log('BidType ' + this.currentBid.BidType);
-    console.log('BidTitle ' + this.currentBid.BidTitle);
-    console.log('AdminFeeRate ' + this.currentBid.AdminFeeRate);
-    console.log('PO id ' + this.poId);
+   // console.log('BidNumber ' + this.currentBid.BidNumber);
+  //  console.log('BidType ' + this.currentBid.BidType);
+   // console.log('BidTitle ' + this.currentBid.BidTitle);
+   // console.log('AdminFeeRate ' + this.currentBid.AdminFeeRate);
+   // console.log('PO id ' + this.poId);
 
   }
 
@@ -80,7 +83,8 @@ async delay(ms: number) {
     this.itemService.getItemByPo(poId)
     .subscribe(items => {
         this.itemListDS.data = items;
-        this.enableItemDetail = (items.length > 0 ? true : false);
+   //     this.enableItemDetail = (items.length > 0 ? true : false);
+           this.enableList  = (items.length > 0 ? true : false);
     });
 
   }

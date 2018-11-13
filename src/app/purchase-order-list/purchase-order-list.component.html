@@ -103,7 +103,8 @@
       </div>          
 
       <app-purchase-order-detail [enableItemDetail] = "enableItemDetail" [poId] = "selectedPO.id" [bidId]="selectedPO.bidNumber" [isNew]="isNewPo" (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="selectedPO"></app-purchase-order-detail> 
-      <app-item-list [enableItemDetail] = "enableItemDetail" [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> 
+  <!--    <app-item-list [enableItemDetail] = "enableItemDetail" [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> -->
+      <app-item-list [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> 
 
       <br> 
     
