@@ -37,8 +37,16 @@ export class ItemDetailComponent implements OnInit {
   @Input() currentBid: BidNumber;
   @Input() payCd: string;
   @Input() poId: number;
+  @Input() enableItemDetail: boolean;
+  @Output() refreshItemList: EventEmitter<number> =   new EventEmitter();
 
-  constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService) { }
+  isNew: boolean;
+  showDetail: boolean;
+
+  constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService) {
+    this.isNew = false;
+    this.showDetail = false;
+  }
 
   postInitFees() {
 
@@ -46,6 +54,12 @@ export class ItemDetailComponent implements OnInit {
     console.log(this.currentBid.BidType);
 
     this.adminFeeRate = this.currentBid.AdminFeeRate;
+
+    this.itemService.getItemByBidId(this.currentBid.BidNumber)
+    .subscribe(items => {
+        this.itemTypeCodes = items;
+        console.log(this.itemTypeCodes);
+    });
 
     this.itemService.getFee('FSA', this.currentBid.BidType, this.payCd)
     .subscribe(fsa => {
@@ -65,6 +79,8 @@ export class ItemDetailComponent implements OnInit {
         console.log(this.ffcaFeeObj);
     });
 
+    this.formControlValueChanged();
+
   }
 
   ngOnInit() {
@@ -76,17 +92,11 @@ export class ItemDetailComponent implements OnInit {
     console.log(this.currentBid.AdminFeeRate);
     console.log(this.poId);
 
-    this.itemService.getItemByBidId(this.currentBid.BidNumber)
-    .subscribe(items => {
-        this.itemTypeCodes = items;
-        console.log(this.itemTypeCodes);
-    });
-
     this.formControlValueChanged();
 
   }
 
-  getItemSpecific(bidId: string, itemId: string) {
+  getItemSpecific(bidId: string, itemId: number) {
 
     this.itemService.getItemType(this.currentBid.BidNumber, itemId)
     .subscribe(items => {
@@ -101,10 +111,11 @@ export class ItemDetailComponent implements OnInit {
     return new FormGroup({
 
         itemNumber: new FormControl('', Validators.required),
-   //     itemMake: new FormControl('', Validators.required),
         itemType: new FormControl('', Validators.required),
-   //     itemModelNumber: new FormControl(),
-   //     itemDescription: new FormControl('', Validators.required),
+        bidItemCodeId: new FormControl(),
+        itemModelNumber: new FormControl(),
+        itemDescription: new FormControl(),
+        itemMake: new FormControl(),
         itemAmount: new FormControl('', Validators.required),
         qty: new FormControl('', Validators.required),
         adminFeeDue: new FormControl({disabled: true}),
@@ -119,18 +130,46 @@ export class ItemDetailComponent implements OnInit {
 
     console.log('in the formControlValueChanged');
 
-
      this.itemForm.get('itemNumber').valueChanges.subscribe(_item => {
-      console.log(_item);
-            this.itemService.getItemType(this.currentBid.BidNumber, _item)
+       if (this.isNew ) {
+         this.newItem.itemNumber = _item;
+       } else {
+        this.currentItem.itemNumber = _item;
+       }
+
+                console.log(_item);
+
+                this.itemService.getItemType(this.currentBid.BidNumber, _item)
                   .subscribe(data => {this.itemTypeMakeCodes = data; });
+
+                  console.log(this.itemTypeMakeCodes);
                 });
 
-      this.itemForm.get('itemType').valueChanges.subscribe(_type => {
+      this.itemForm.get('bidItemCodeId').valueChanges.subscribe(_type => {
                  console.log(_type);
-                      });
 
-      this.itemForm.get('itemAmount').valueChanges.subscribe(_amount => {
+      if ( _type !== 'Select Item Type') {
+
+        this.itemService.getItemByBidCodeId( _type )
+        .subscribe(_derived => {
+
+       //   this.itemService.getDerivedItem(this.currentBid.BidNumber, this.currentItem.itemNumber, _type )
+      //     .subscribe(_derived => {
+            this.itemForm.controls['itemType'].patchValue(_derived[0].itemType, {emitEvent : false});
+            this.itemForm.controls['itemDescription'].patchValue(_derived[0].itemDescription, {emitEvent : false});
+            this.itemForm.controls['itemMake'].patchValue(_derived[0].itemMake, {emitEvent : false});
+            this.itemForm.controls['itemModelNumber'].patchValue(_derived[0].itemModelNumber, {emitEvent : false});
+            this.itemForm.controls['bidItemCodeId'].patchValue(_derived[0].id, {emitEvent : false});
+              console.log(_derived[0].itemDescription);
+              console.log(_derived[0].itemMake);
+              console.log(_derived[0].itemModelNumber);
+              console.log(_derived[0].id);
+       });
+
+      }
+  });
+
+        this.itemForm.get('itemAmount').valueChanges.subscribe(_amount => {
 
         const adminFee: number = this.calculateFee(_amount, this.adminFeeRate);
 
@@ -184,14 +223,16 @@ export class ItemDetailComponent implements OnInit {
     if (this.currentItem != null) {
 
       this.itemForm.controls['itemNumber'].patchValue(this.currentItem.itemNumber, {emitEvent : false});
+      this.itemForm.controls['bidItemCodeId'].patchValue(this.currentItem.bidItemCodeId, {emitEvent : false});
       this.itemForm.controls['itemType'].patchValue(this.currentItem.itemType, {emitEvent : false});
       this.itemForm.controls['itemAmount'].patchValue(this.currentItem.itemAmount, {emitEvent : false});
+      this.itemForm.controls['itemModelNumber'].patchValue(this.currentItem.itemModelNumber, {emitEvent : false});
+      this.itemForm.controls['itemDescription'].patchValue(this.currentItem.itemDescription, {emitEvent : false});
+      this.itemForm.controls['itemMake'].patchValue(this.currentItem.itemMake, {emitEvent : false});
       this.itemForm.controls['qty'].patchValue(this.currentItem.qty, {emitEvent : false});
-
       this.itemForm.controls['adminFeeDue'].patchValue(this.currentItem.adminFeeDue, {emitEvent : false});
       this.itemForm.controls['fsafee'].patchValue(this.currentItem.fsaFee, {emitEvent : false});
       this.itemForm.controls['facfee'].patchValue(this.currentItem.facFee, {emitEvent : false});
-
       this.itemForm.controls['ffcaFee'].patchValue(this.currentItem.ffcaFee, {emitEvent : false});
 
        }
@@ -200,32 +241,51 @@ export class ItemDetailComponent implements OnInit {
 
     copyFormToModel() {
 
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
       this.currentItem.itemNumber = this.itemForm.controls.itemNumber.value;
+      this.currentItem.bidItemCodeId = this.itemForm.controls.bidItemCodeId.value;
       this.currentItem.itemType = this.itemForm.controls.itemType.value;
       this.currentItem.itemAmount = this.itemForm.controls.itemAmount.value;
+      this.currentItem.itemDescription = this.itemForm.controls.itemDescription.value;
+      this.currentItem.itemModelNumber = this.itemForm.controls.itemModelNumber.value;
+      this.currentItem.itemMake = this.itemForm.controls.itemMake.value;
       this.currentItem.adminFeeDue = this.itemForm.controls.adminFeeDue.value;
+      this.currentItem.qty = this.itemForm.controls.qty.value;
       this.currentItem.fsaFee = this.itemForm.controls.fsafee.value;
       this.currentItem.facFee = this.itemForm.controls.facfee.value;
       this.currentItem.ffcaFee = this.itemForm.controls.ffcaFee.value;
       this.currentItem.fsaCppPurchaseOrderId = this.poId;
+      this.currentItem.updatedBy = currentUser.username;
 
       }
 
     copyFormToNewModel() {
 
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
       this.newItem.itemNumber = this.itemForm.controls.itemNumber.value;
+      this.newItem.bidItemCodeId = this.itemForm.controls.bidItemCodeId.value;
       this.newItem.itemType = this.itemForm.controls.itemType.value;
       this.newItem.itemAmount = this.itemForm.controls.itemAmount.value;
+      this.newItem.itemDescription = this.itemForm.controls.itemDescription.value;
+      this.newItem.itemModelNumber = this.itemForm.controls.itemModelNumber.value;
+      this.newItem.itemMake = this.itemForm.controls.itemMake.value;
       this.newItem.adminFeeDue = this.itemForm.controls.adminFeeDue.value;
+      this.newItem.qty = this.itemForm.controls.qty.value;
       this.newItem.fsaFee = this.itemForm.controls.fsafee.value;
       this.newItem.facFee = this.itemForm.controls.facfee.value;
       this.newItem.ffcaFee = this.itemForm.controls.ffcaFee.value;
       this.newItem.fsaCppPurchaseOrderId = this.poId;
+      this.newItem.createdBy  = currentUser.username;
+
 
       }
 
   createItem() {
 
+
+      this.isNew = true;
       this.newItem = new Item();
       this.itemForm = this.createFormGroup();
       this.formControlValueChanged();
@@ -239,37 +299,61 @@ export class ItemDetailComponent implements OnInit {
     this.itemService.getItemById(itemId)
     .subscribe(item => {
         this.currentItem = item[0];
+        this.enableItemDetail = (item.length > 0 ? true : false);
         this.copyModelToForm();
+        this.populateItemTypeSelect(this.currentBid.BidNumber, this.currentItem.itemNumber);
     });
+
+  }
+
+  populateItemTypeSelect(bidNumber: string, itemNumber: number) {
+
+    this.itemService.getItemType(bidNumber, itemNumber)
+    .subscribe(data => {this.itemTypeMakeCodes = data; });
 
   }
 
   updateItem() {
 
-  /*    this.poService.updatePurchaseOrder(this.currentItem).subscribe(po => {
-      });
-*/
-       this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
+    this.itemService.updateItem(this.currentItem).subscribe(_item => {
+        });
+
+        this.refreshItemList.emit(this.currentItem.fsaCppPurchaseOrderId);
+
+       this.toastr.success('Item Update Successful', 'Item Update', {
         timeOut: 2000,
         });
 
     }
 
+    insertItem() {
+
+      this.isNew = false;
+
+      this.itemService.insertItem(this.newItem).subscribe(_item => {
+          });
+
+        this.refreshItemList.emit(this.currentItem.fsaCppPurchaseOrderId);
+
+         this.toastr.success('Item Insert Successful', 'Item Insert', {
+          timeOut: 2000,
+          });
+
+      }
+
+
   processItem() {
 
     // Determine if the action is an update or insert of the PO.
 
-    this.copyFormToModel();
-
-/*
     if (this.isNew) {
       this.copyFormToNewModel();
-      this.insertPo();
+      this.insertItem();
     } else {
       this.copyFormToModel();
-      this.updatePo();
+      this.updateItem();
     }
-*/
+
 
   }
 

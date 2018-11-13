@@ -3,6 +3,7 @@ export class Item {
     id: number;
     fsaCppPurchaseOrderId: number;
     bidNumber: string;
+    bidItemCodeId: number;
     itemNumber: number;
     itemMake: string;
     itemType: string;

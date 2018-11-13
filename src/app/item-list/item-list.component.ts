@@ -15,7 +15,7 @@ import { ItemDetailComponent } from '../item-detail/item-detail.component';
 export class ItemListComponent implements OnInit {
 
   itemListDS = new MatTableDataSource();
-  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemModel', 'qty', 'itemAmount', 'edit', 'delete'];
+  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'edit', 'delete'];
   @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
 
   @Input() poId: number;
@@ -24,8 +24,38 @@ export class ItemListComponent implements OnInit {
   @Input() bidType: string;
   @Input() currentBid: BidNumber;
   @Input() payCd: string;
+  @Input() enableItemDetail: boolean;
+
+  selectedItem: Item;
+
+  rowSelected: boolean;
 
   constructor( private itemService: ItemService) { }
+
+  refreshItemListHandler(poId: number) {
+    this.refreshPoList(poId);
+  }
+
+
+refreshPoList(poId: number) {
+
+ // this.enableItemDetail = false;
+
+     this.delay(1000).then(any => {
+     this.getItems(poId);
+     });
+
+}
+
+async delay(ms: number) {
+  await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
+}
+
+  chain () {
+      this.enableItemDetail = true;
+      this.itemDetail.createItem();
+
+  }
 
   ngOnInit() {
 
@@ -39,17 +69,28 @@ export class ItemListComponent implements OnInit {
 
   }
 
+  setItemListRowSelected(val: boolean) {
+    this.rowSelected = val;
+  }
+
   getItems(poId: number) {
+
+    this.enableItemDetail = false;
 
     this.itemService.getItemByPo(poId)
     .subscribe(items => {
         this.itemListDS.data = items;
+        this.enableItemDetail = (items.length > 0 ? true : false);
     });
 
   }
 
   onSelect(item: Item): void {
+    this.selectedItem = item;
 
+    this.enableItemDetail = true;
+
+    this.setItemListRowSelected(true);
     this.itemDetail.getItem(item.id);
     console.log();
 

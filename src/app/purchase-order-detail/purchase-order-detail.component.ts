@@ -10,19 +10,25 @@ import { PurchaseOrderService } from '../services/purchase-order.service';
 import { ToastrService } from 'ngx-toastr';
 import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
+import { ItemListComponent } from '../item-list/item-list.component';
+import { ItemDetailComponent } from '../item-detail/item-detail.component';
+
 
 @Component({
   selector: 'app-purchase-order-detail',
   templateUrl: './purchase-order-detail.component.html',
   styleUrls: ['./purchase-order-detail.component.scss']
 })
-export class PurchaseOrderDetailComponent implements OnInit  {
+export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
 
   @Output() refreshPurchaseOrderList: EventEmitter<string> =   new EventEmitter();
   @Input() pox: PurchaseOrder;
   @Input() isNew: Boolean;
   @Input() bidId: String;
   @Input() poId: number;
+  @Input() enableItemDetail: boolean;
+  @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
+  @ViewChild(ItemListComponent) itemList: ItemListComponent;
 
   contactForm: FormGroup;
   cityAgencies: CityAgency[] = [];
@@ -51,6 +57,17 @@ get poAmount() {
   return this.newPoForm.get('poAmount');
  }
 */
+
+ngAfterViewInit() {
+  console.log('Values on ngAfterViewInit():');
+  console.log('itemList:', this.itemList);
+}
+
+newItem() {
+
+  this.itemList.chain();
+
+}
 
 ngOnInit() {
 
@@ -128,31 +145,17 @@ formControlValueChanged() {
           this.poService.getPayCode(_cityAgency).subscribe(cd => {
            // this.poForm.payCd = cd[0].agencyPayCode; 
             this.poForm.controls['payCd'].patchValue(cd[0].agencyPayCode, {emitEvent : false});
-          
           });
-         
       });
 
    this.poForm.get('bidNumber').valueChanges.subscribe(
        _bidNumber => {
-          this.itemTypeCodes = null;
-          this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
+    //      this.itemTypeCodes = null;
+    //      this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
           this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
           console.log(this.currentBid.AdminFeeRate);
-    });
           });
-
-    /*
-
-   this.poForm.get('spec').valueChanges.subscribe(_spec => {
-          this.poService.getItemType(this.poForm.controls.bidNumber.value, _spec)
-                .subscribe(data => {this.itemTypeCodes = data; });
-              });
-
-    this.poForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
-                 console.log(_poIssueDate);
-                  });
-      */
+    });
 
 }
 
@@ -224,8 +227,7 @@ createFormGroup() {
       actualPo: new FormControl(),
       adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
-      payCd: new FormControl(),
-      suck: new FormControl()
+      payCd: new FormControl()
     }, this.validateFormDates);
 }
 
@@ -244,7 +246,7 @@ copyFormToNewModel() {
   this.newPO.dealerFlag = this.poForm.controls.dealerFlag.value;
   this.newPO.poComplete = this.poForm.controls.poComplete.value;
   this.newPO.poAmount = this.poForm.controls.poAmount.value;
-  this.newPO.actualPo = this.poForm.controls.actualPo.value;
+ // this.newPO.actualPo = this.poForm.controls.actualPo.value;
   this.newPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
   this.newPO.comments = this.poForm.controls.comments.value;
   this.newPO.payCd = this.poForm.controls.payCd.value;
@@ -266,7 +268,7 @@ copyFormToModel() {
   this.currentPO.dealerFlag = this.poForm.controls.dealerFlag.value;
   this.currentPO.poComplete = this.poForm.controls.poComplete.value;
   this.currentPO.poAmount = this.poForm.controls.poAmount.value;
-  this.currentPO.actualPo = this.poForm.controls.actualPo.value;
+ // this.currentPO.actualPo = this.poForm.controls.actualPo.value;
   this.currentPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
   this.currentPO.comments = this.poForm.controls.comments.value;
   this.currentPO.payCd = this.poForm.controls.payCd.value;
@@ -305,6 +307,8 @@ revert() {
   insertPo() {
     this.newPO.createdBy = this.getCurrentUserName();
 
+    this.isNew = false;
+
     this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
     });
 
@@ -321,7 +325,8 @@ revert() {
     this.poService.updatePurchaseOrder(this.currentPO).subscribe(po => {
     });
 
-   // this.refreshPurchaseOrderList.emit(this.newPO.bidNumber);
+
+   this.refreshPurchaseOrderList.emit(this.currentPO.bidNumber);
 
      this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
       timeOut: 2000,
@@ -352,10 +357,6 @@ revert() {
 
 
   }
-
-  this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
-    timeOut: 2000,
-    });
 
 }
 

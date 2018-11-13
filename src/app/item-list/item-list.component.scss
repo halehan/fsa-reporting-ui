@@ -48,7 +48,7 @@ hr {
 .example-header{
   padding-top: 1px;
   padding-bottom: 2px;
-  width: 250px;
+  width: 450px;
 
 }
 
@@ -63,6 +63,7 @@ hr {
 
 .mat-footer-row{
   width: 1225px;
+  min-height: 1px;
 }
 
 .mat-header-row{
@@ -71,6 +72,7 @@ hr {
 
 .mat-row{
   width: 1225px;
+  min-height: 1px;
 }
 
 .mat-header-cell{
@@ -98,6 +100,11 @@ width: 1225px;
   width: 1225px;
 }
 
+.mat-icon{
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
 .mat-paginator{
   padding-top: 4px;
   width: 1225px;
@@ -109,6 +116,15 @@ width: 1225px;
   padding-bottom: 4px;
 }
 
+.mat-row:hover {
+  background-color: green;
+}
+
+.mat-row:active {
+  background-color: gray
+}
+
+
 .card-content {
   padding-left: 10px;
   width: 1200px;
@@ -117,5 +133,9 @@ width: 1225px;
 .pull-left {
   padding-left: 0px;
 }
+
+
+
+
 
 

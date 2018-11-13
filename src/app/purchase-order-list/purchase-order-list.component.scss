@@ -63,6 +63,7 @@ hr {
 
 .mat-footer-row{
     width: 1225px;
+    min-height: 1px;
 }
 
 .mat-header-row{
@@ -71,6 +72,7 @@ hr {
 
 .mat-row{
     width: 1225px;
+    min-height: 1px;
 }
 
 .mat-header-cell{
@@ -113,6 +115,15 @@ hr {
     height: 30px;
     padding-bottom: 4px;
   }
+
+  .mat-row:hover {
+    background-color: green;
+  }
+
+  .mat-row:active {
+    background-color: gray
+  }
+
 
   .card-content {
     padding-left: 10px;

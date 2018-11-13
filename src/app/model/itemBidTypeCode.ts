@@ -2,6 +2,7 @@ export class ItemBidTypeCode {
 
     id: number;
     bidNumber: string;
+    bidItemCodeId: number;
     itemNumber: number;
     itemMake: string;
     itemType: string;

@@ -1,28 +1,33 @@
-<div class="panel panel-default">
+<div [hidden] = "!enableItemDetail" class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Purchase Order Items {{poId}}</h3>
+      <h3 class="panel-title">Purchase Order Items {{poId}} {{enableItemDetail}} </h3>
     </div>
     <div class="panel-body">
         <mat-table  #table [dataSource]="itemListDS" matSort>
 
             <ng-container matColumnDef="itemNumber">
-                <mat-header-cell class="pull-left" fxFlex="125px"  *matHeaderCellDef mat-sort-header>Item Number </mat-header-cell>
-                <mat-cell fxFlex="125px" *matCellDef="let itemList"> {{itemList.itemNumber}} </mat-cell>
+                <mat-header-cell class="pull-left" fxFlex="100px"  *matHeaderCellDef mat-sort-header>Item Number </mat-header-cell>
+                <mat-cell fxFlex="100px" *matCellDef="let itemList"> {{itemList.itemNumber}} </mat-cell>
             </ng-container>
               
             <ng-container matColumnDef="itemDescription">
-                <mat-header-cell class="pull-left" fxFlex="175px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
-                <mat-cell fxFlex="175px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
+                <mat-header-cell class="pull-left" fxFlex="325px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
+                <mat-cell fxFlex="325px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
             </ng-container>
+
+            <ng-container matColumnDef="itemMake">
+                    <mat-header-cell class="pull-left" fxFlex="100px"  *matHeaderCellDef mat-sort-header> Item Make </mat-header-cell>
+                    <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemMake}}</mat-cell>
+                </ng-container>
               
             <ng-container matColumnDef="itemModel">
-                    <mat-header-cell class="pull-left" fxFlex="175px" *matHeaderCellDef mat-sort-header> Item Model </mat-header-cell>
-                    <mat-cell fxFlex="175px" *matCellDef="let itemList">{{itemList.itemModel}}</mat-cell>
+                    <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Model </mat-header-cell>
+                    <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemModelNumber}}</mat-cell>
             </ng-container>
   
             <ng-container matColumnDef="itemType">
-                <mat-header-cell class="pull-left" fxFlex="250px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
-                <mat-cell fxFlex="250px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
+                <mat-header-cell class="pull-left" fxFlex="225px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
+                <mat-cell fxFlex="225px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
             </ng-container>
   
             <ng-container matColumnDef="qty">
@@ -68,9 +73,15 @@
 
 <br><hr> 
     </div>
+    
   </div>
 
-<app-item-detail  [currentBid] = "currentBid"  [payCd] = "payCd" [poId] = "poId" ></app-item-detail>  
+  <div class="new-po form-group col-md-8">
+    <button mat-button (click)="chain()" type="submit"  class="mat-flat-button btn-success insert-button">New Item</button>  
+  </div>
+
+
+ <app-item-detail  [currentBid] = "currentBid"  [payCd] = "payCd" [poId] = "poId"  [hidden] = "!enableItemDetail" (refreshItemList)="refreshItemListHandler($event)"></app-item-detail>  
 
 
    

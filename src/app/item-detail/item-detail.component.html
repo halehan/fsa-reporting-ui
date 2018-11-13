@@ -1,19 +1,57 @@
-<div class="panel panel-primary">
+<div  class="panel panel-primary">
     <div class="panel-heading">
-        <h4 class="panel-title">PO Item Details</h4>
+        <h4 class="panel-title">PO Item Detailss </h4>
+     
     </div>
     <div class="panel-body">
         <div class="card-content"> 
-            <form [formGroup]="itemForm" (ngSubmit)="processItem()">
+            <form [formGroup]="itemForm" >
                 <div class="row shadow p-3 mb-5 bg-white rounded">
+
+                        <div class="col-md-2">
+                                <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Item Number</label>
+                                        <input disabled type="text"  required formControlName="itemNumber"   class="form-control" >
+                                </div>
+                        </div>   
+
+                        <div class="col-md-2">
+                                <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">BidCode Item Id</label>
+                                        <input disabled type="text"   formControlName="bidItemCodeId"   class="form-control" >
+                                </div>
+                        </div>   
+
+                        <div class="col-md-3">
+                                <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Item Type</label>
+                                        <input disabled type="text"   formControlName="itemType"   class="form-control" >
+                                </div>
+                        </div>
+
+                        <div class="col-md-3">
+                                <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Model Make</label>
+                                        <input disabled type="text"   formControlName="itemMake"   class="form-control" >
+                                </div>
+                        </div>
+
+                        <div class="col-md-2">
+                                <div class="form-group input-group-sm form-black label-floating is-empty">
+                                        <label class="label-small">Model Number</label>
+                                        <input disabled type="text"   formControlName="itemModelNumber"   class="form-control" >
+                                </div>
+                        </div>
+
+                        
 
                             <div class="col-md-6">
                                     <div class="form-group input-group-sm form-black label-floating is-empty">
                                             <label class="label-small">Item Number</label>
                                             <select required class="form-control"  formControlName="itemNumber">
-                                                        <option *ngFor="let item of itemTypeCodes" value={{item.itemNumber}}>
+                                                    <option *ngFor="let item of itemTypeCodes" value={{item.itemNumber}}>
                                                                 {{item.itemNumber}} - {{ item.itemDescription}} 
-                                                        </option> 
+                                                    </option> 
                                             </select>
                                     </div>
                                     <small class="form-text text-muted alert alert-danger" *ngIf="itemForm.get('itemNumber').touched && itemForm.get('itemNumber').hasError('required')">Item Required!</small>
@@ -22,13 +60,14 @@
                             <div class="col-md-6">
                                     <div class="form-group input-group-sm form-black label-floating is-empty">
                                             <label class="label-small">Item Type</label>
-                                            <select required class="form-control"  formControlName="itemType">
-                                                        <option *ngFor="let item of itemTypeMakeCodes" value={{item.itemType}}>
-                                                                {{item.itemMake}} - {{ item.itemType}} 
-                                                        </option> 
+                                            <select required class="form-control"  formControlName="bidItemCodeId">
+                                                <option> Select Item Type</option>
+                                                    <option *ngFor="let item of itemTypeMakeCodes" value={{item.id}}>
+                                                               {{item.itemMake}} - {{ item.itemType}} 
+                                                </option> 
                                             </select>
                                     </div>
-                                    <small class="form-text text-muted alert alert-danger" *ngIf="itemForm.get('itemType').touched && itemForm.get('itemType').hasError('required')">Item Required!</small>
+                                    <small class="form-text text-muted alert alert-danger" *ngIf="itemForm.get('bidItemCodeId').touched && itemForm.get('bidItemCodeId').hasError('required')">Item Required!</small>
                             </div>
                                                     
                             <div class="col-md-2">
@@ -72,12 +111,17 @@
                                         <input disabled type="text" formControlName="adminFeeDue"  class="form-control" >
                                     </div>
                             </div> 
-                                             
+
+                       <!--     
+                            <div style="padding: 2px;" class="col-md-11">
+                                    <button [disabled]="itemForm.invalid && isNew" style="padding-right: 15px;" (click)="createItem()" class="btn btn-success pull-right">New</button>
+                                   
+                            </div>  -->
+                                
                             <div class="col-md-12">
-                                <button [disabled]="itemForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
+                                <button [disabled]="itemForm.invalid || !itemForm.dirty" style="padding-left: 15px;" (click)="processItem()"class="btn btn-success pull-right">Save</button>
                             </div>  
 
-                                                                               
                 </div>
             </form>                                              
         </div>   

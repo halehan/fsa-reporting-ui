@@ -39,6 +39,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import {
+  MatExpansionPanelHeader,
   MatAutocompleteModule,
   MatButtonModule,
   MatButtonToggleModule,
@@ -84,6 +85,7 @@ import { PurchaseOrderItemComponent } from './purchase-order-item/purchase-order
 import { ItemPaymentComponent } from './item-payment/item-payment.component';
 import { ItemListComponent } from './item-list/item-list.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { MatExpansionPanel } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -136,6 +138,7 @@ import { ItemDetailComponent } from './item-detail/item-detail.component';
     HttpModule,
     MomentModule,
     routing,
+    MatExpansionModule,
     MatButtonModule,
     MatMenuModule,
     MatCheckboxModule,

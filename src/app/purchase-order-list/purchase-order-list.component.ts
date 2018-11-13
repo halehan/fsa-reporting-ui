@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, OnInit, AfterViewInit,  ElementRef } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {MatPaginator, MatTableDataSource , MatSort} from '@angular/material';
+import {MatPaginator, MatTableDataSource , MatSort } from '@angular/material';
 
 import { PurchaseOrder, Dealer, CityAgency, BidType, Payment, BidNumber,
   ItemBidTypeCode, PoStatusType, Specification, AgencyType } from '../model/index';
@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { ItemPaymentComponent } from '../item-payment/item-payment.component';
 import { ItemListComponent } from '../item-list/item-list.component';
+
 import { PurchaseOrderDetailComponent } from '../purchase-order-detail/purchase-order-detail.component';
 
 
@@ -22,8 +23,8 @@ import { PurchaseOrderDetailComponent } from '../purchase-order-detail/purchase-
 
 export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
-  displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'spec', 'vehicleType',
-                      'poNumber', 'poIssueDate', 'edit', 'addPayment'];
+  displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
+                      'dateReported', 'poIssueDate', 'poAmount', 'edit', 'addPayment'];
 
   paymentColumns = ['paymentDate', 'paymentAmount', 'paymentNumber', 'paymentCheckNum', 'edit', 'delete'];
   poDataSource = new MatTableDataSource();
@@ -44,6 +45,9 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   agencyCodes: AgencyType[] = [];
 
   selectedPO: PurchaseOrder;
+  selectedPayCd: string;
+  selectedPoId: number;
+
   selectedPayment: Payment;
   currentBid: BidNumber;
   dateFailed: boolean;
@@ -58,8 +62,9 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   isNewPo: Boolean;
   bidId: String;
   bidType: string;
+  enableItemDetail: boolean;
 
-  @ViewChild('poFocus') nameField: ElementRef;
+  @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
 
   @ViewChild(ItemPaymentComponent) item: ItemPaymentComponent;
@@ -72,6 +77,8 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
               private dateFormatPipe: DateFormatPipe ) {
 
+                this.enableItemDetail = false;
+
                 console.log(moment.locale()); // en
                 moment.locale('en');
                 console.log(moment.locale()); // en
@@ -83,6 +90,49 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
 }
 
+newItem () {
+  this.itemList.chain();
+}
+
+onRowClicked(row) {
+
+  // this.poFocus.nativeElement.focus();
+  // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
+    this.enableItemDetail = false;
+
+    this.selectedPayCd = row.payCd;
+    this.selectedPoId = row.id;
+  console.log('Row clicked: ', row);
+  // this.poFocus.nativeElement.focus();
+
+  if (this.itemList !== undefined) {
+    this.itemList.setItemListRowSelected(false);
+  }
+
+  this.dateFailed = false;
+  this.isNewPo = false;
+
+  this.selectedPO = row;
+
+  this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
+  this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
+
+  this.selectedPayment = null;
+  this.showPayment = true;
+  this.showNewPayment = false;
+  this.fuck = false;
+
+  if (this.itemList !== undefined) {
+    this.itemList.getItems(row.id);
+  }
+
+  if (this.purchaseOrderDetailComponent !== undefined) {
+    this.purchaseOrderDetailComponent.getPurchaseOrder(row.id);
+  }
+
+
+}
+
 createFormGroup() {
 
   return new FormGroup({
@@ -91,17 +141,17 @@ createFormGroup() {
       poNumber: new FormControl('', Validators.required),
       poIssueDate: new FormControl('', Validators.required),
       dateReported: new FormControl('', Validators.required),
-      estimatedDelivery: new FormControl(),
+ //     estimatedDelivery: new FormControl(),
       cityAgency: new FormControl('', Validators.required),
       dealerName: new FormControl('', Validators.required),
-      spec: new FormControl('', Validators.required),
-      vehicleType: new FormControl('', Validators.required),
+  //    spec: new FormControl('', Validators.required),
+  //    vehicleType: new FormControl('', Validators.required),
       agencyFlag: new FormControl(),
       dealerFlag: new FormControl(),
       poComplete: new FormControl(),
-      qty: new FormControl(),
+ //     qty: new FormControl(),
       poAmount: new FormControl(),
-      actualPo: new FormControl(),
+  //    actualPo: new FormControl(),
       adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
       payCd: new FormControl(),
@@ -134,32 +184,6 @@ createPaymentFormGroup() {
 
 
 copyPaymentModelToForm() {
-
-  /*
-   id: number;
-    fsaReportId: number;
-    paymentDate: Date;
-    paymentAmount: number;
-    paymentNumber: number;
-    paymentCheckNum: number;
-    correction: number;
-    auditDifference: number;
-    lateFeeAmt: number;
-    lateFeeCheckNum: number;
-    lateFeeCheckDate: Date;
-    fsaRefundAmount: number;
-    fsaRefundCheckNum: number;
-    fsaRefundDate: Date;
-    fsaAlloc: number;
-    facAlloc: number;
-    ffcaAlloc: number;
-    totalAlloc: number;
-    comment: string;
-    updatedBy: string;
-    updatedDate: string;
-    createdBy: string;
-    createdDate: Date;
-    */
 
   if (this.selectedPayment != null) {
 
@@ -214,20 +238,20 @@ copyFormToModel() {
   this.selectedPO.poNumber = this.poForm.controls.poNumber.value;
   this.selectedPO.poIssueDate = this.poForm.controls.poIssueDate.value;
   this.selectedPO.dateReported = this.poForm.controls.dateReported.value;
-  this.selectedPO.estimatedDelivery = this.poForm.controls.estimatedDelivery.value;
+ // this.selectedPO.estimatedDelivery = this.poForm.controls.estimatedDelivery.value;
   this.selectedPO.cityAgency = this.poForm.controls.cityAgency.value;
   this.selectedPO.dealerName = this.poForm.controls.dealerName.value;
-  this.selectedPO.spec = this.poForm.controls.spec.value;
-  this.selectedPO.vehicleType  = this.poForm.controls.vehicleType.value;
+ // this.selectedPO.spec = this.poForm.controls.spec.value;
+//  this.selectedPO.vehicleType  = this.poForm.controls.vehicleType.value;
   this.selectedPO.agencyFlag  = this.poForm.controls.agencyFlag.value;
   this.selectedPO.dealerFlag = this.poForm.controls.dealerFlag.value;
   this.selectedPO.poComplete = this.poForm.controls.poComplete.value;
   this.selectedPO.poAmount = this.poForm.controls.poAmount.value;
-  this.selectedPO.actualPo = this.poForm.controls.actualPo.value;
+ // this.selectedPO.actualPo = this.poForm.controls.actualPo.value;
   this.selectedPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
   this.selectedPO.comments = this.poForm.controls.comments.value;
   this.selectedPO.payCd = this.poForm.controls.payCd.value;
-  this.selectedPO.qty = this.poForm.controls.qty.value;
+ // this.selectedPO.qty = this.poForm.controls.qty.value;
 
 }
 
@@ -244,23 +268,23 @@ if (this.selectedPO != null) {
   this.poForm.controls['poNumber'].patchValue(this.selectedPO.poNumber, {emitEvent : false});
   this.poForm.controls['poIssueDate'].patchValue(this.selectedPO.poIssueDate, {emitEvent : false});
   this.poForm.controls['dateReported'].patchValue(this.selectedPO.dateReported, {emitEvent : false});
-  this.poForm.controls['estimatedDelivery'].patchValue(this.selectedPO.estimatedDelivery, {emitEvent : false});
+//  this.poForm.controls['estimatedDelivery'].patchValue(this.selectedPO.estimatedDelivery, {emitEvent : false});
   this.poForm.controls['cityAgency'].patchValue(this.selectedPO.cityAgency, {emitEvent : false});
   this.poForm.controls['dealerName'].patchValue(this.selectedPO.dealerName, {emitEvent : false});
-  this.poForm.controls['spec'].patchValue(this.selectedPO.spec, {emitEvent : false});
-  this.poForm.controls['vehicleType'].patchValue(this.selectedPO.vehicleType, {emitEvent : false});
+ // this.poForm.controls['spec'].patchValue(this.selectedPO.spec, {emitEvent : false});
+ // this.poForm.controls['vehicleType'].patchValue(this.selectedPO.vehicleType, {emitEvent : false});
   this.poForm.controls['agencyFlag'].patchValue(this.selectedPO.agencyFlag, {emitEvent : false});
   this.poForm.controls['dealerFlag'].patchValue(this.selectedPO.dealerFlag, {emitEvent : false});
   this.poForm.controls['poComplete'].patchValue(this.selectedPO.poComplete, {emitEvent : false});
 
-  this.poForm.controls['qty'].patchValue(this.selectedPO.qty, {emitEvent : false});
+ // this.poForm.controls['qty'].patchValue(this.selectedPO.qty, {emitEvent : false});
   this.poForm.controls['poAmount'].patchValue(this.selectedPO.poAmount, {emitEvent : false});
-  this.poForm.controls['actualPo'].patchValue(this.selectedPO.actualPo, {emitEvent : false});
+ // this.poForm.controls['actualPo'].patchValue(this.selectedPO.actualPo, {emitEvent : false});
 
   this.poForm.controls['adminFeeDue'].patchValue(this.selectedPO.adminFeeDue, {emitEvent : false});
   this.poForm.controls['comments'].patchValue(this.selectedPO.comments, {emitEvent : false});
   this.poForm.controls['payCd'].patchValue(this.selectedPO.payCd, {emitEvent : false});
-  this.poService.getItem(this.selectedPO.bidNumber).subscribe(data => {this.specs = data; });
+ // this.poService.getItem(this.selectedPO.bidNumber).subscribe(data => {this.specs = data; });
    }
 
 }
@@ -270,9 +294,9 @@ partialClearPo() {
   this.poForm.controls['poNumber'].patchValue('12', {emitEvent : false});
   this.poForm.controls['poComplete'].patchValue('', {emitEvent : false});
 
-  this.poForm.controls['qty'].patchValue('', {emitEvent : false});
+ // this.poForm.controls['qty'].patchValue('', {emitEvent : false});
   this.poForm.controls['poAmount'].patchValue('', {emitEvent : false});
-  this.poForm.controls['actualPo'].patchValue('', {emitEvent : false});
+ // this.poForm.controls['actualPo'].patchValue('', {emitEvent : false});
 
   this.poForm.controls['adminFeeDue'].patchValue('', {emitEvent : false});
   this.poForm.controls['comments'].patchValue('', {emitEvent : false});
@@ -302,17 +326,15 @@ validateFormDates(g: FormGroup) {
 }
 
 editName() {
-  this.nameField.nativeElement.focus();
+  this.poFocus.nativeElement.focus();
 }
 
 refreshPurchaseOrderListHandler(bidId: string) {
   this.sendData(bidId);
-
 }
 
 refreshItemListHandler(bidId: string) {
   console.log('Called refreshItemListHandler');
-
 }
 
 
@@ -334,22 +356,40 @@ purchaserChange(event)  {
 
 sendData(bidId: string) {
 
-  this.poService.getByBidNumber(bidId)
-    .subscribe(po => {
-        this.purchaseOrders = po;
-        this.poDataSource.data = po;
-
-    });
+  this.refreshPoList(bidId);
 
 }
 
+refreshPoList(bidId: string) {
+
+  this.delay(1000).then(any => {
+    this.poService.getByBidNumber(bidId).subscribe(po => {
+      this.purchaseOrders = po;
+      this.poDataSource.data = po;
+
+      console.log(this.purchaseOrders.length);
+
+  });
+});
+
+}
+
+async delay(ms: number) {
+  await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
+}
+
+/*
 sleep(milliseconds) {
+  console.log('About to sleep for ' + milliseconds + 'milliSecs');
   const sleep = ( ms ) => {
     const end = +(new Date()) + ms;
-    while ( +(new Date()) < end ) { }
+    console.log('End Time to wake up ' + end);
+    while ( +(new Date()) < end ) {
+      console.log('Im Sleep');
+    }
    }
 }
-
+*/
 revert() {
   // Resets to blank object
   this.poForm.reset();
@@ -380,6 +420,7 @@ showFilter() {
   ngAfterViewInit() {
     this.poDataSource.sort = this.sort;
     this.poDataSource.paginator = this.paginator;
+
    // this.paymentDataSource.paginator = this.paymentPaginator;
    // this.paymentDataSource.sort = this.paymentSort;
   }
@@ -409,7 +450,7 @@ showFilter() {
   filterVehicleTypes(filterVal: string) {
     console.log(filterVal);
     console.log(this.selectedPO.bidNumber);
-    console.log(this.selectedPO.spec);
+  //  console.log(this.selectedPO.spec);
 
     this.poService.getItemType(this.selectedPO.bidNumber, filterVal)
     .subscribe(data => {
@@ -423,34 +464,31 @@ showFilter() {
     // reset the VehicleTypes
     this.itemTypeCodes = null;
 
-    this.poService.getItem(filterVal)
+ /*   this.poService.getItem(filterVal)
     .subscribe(data => {
         this.specs = data;
-    });
+    }); */
 
   }
 
   onSelect(po: PurchaseOrder): void {
 
+    this.poFocus.nativeElement.focus();
+
+    this.enableItemDetail = false;
+
+    this.selectedPayCd = po.payCd;
+    this.selectedPoId = po.id;
+
     this.dateFailed = false;
     this.isNewPo = false;
 
     this.selectedPO = po;
+    this.selectedPayCd = po.payCd;
+    this.selectedPoId = po.id;
 
     this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
     this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
-  //  this.selectedPO.estimatedDelivery =  this.formatDate(this.selectedPO.estimatedDelivery);
-
- /*   this.poService.getPoById(po.id)
-    .subscribe(poVal => {
-        this.selectedPO = poVal[0];
-        this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
-        this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
-        this.selectedPO.estimatedDelivery =  this.formatDate(this.selectedPO.estimatedDelivery);
-        console.log('this.selectedPo.actualPo' +  this.selectedPO.actualPo);
-        console.log('this.selectedPo.poAmount' + this.selectedPO.poAmount);
-        console.log('this.selectedPo.correction' + this.selectedPO.correction);
-    }); */
 
     this.selectedPayment = null;
     this.showPayment = true;
@@ -464,10 +502,10 @@ showFilter() {
 
     });
 
-    this.poService.getItemType(po.bidNumber, po.spec)
+ /*   this.poService.getItemType(po.bidNumber, po.spec)
     .subscribe(itemTypeCodes => {
         this.itemTypeCodes = itemTypeCodes;
-    });
+    }); */
 
     this.poService.getBids()
     .subscribe(bids => {
@@ -495,13 +533,16 @@ showFilter() {
         this.currentBid = bid[0];
     });
 
+    this.refreshPoList(filterVal);
 
+/*
     this.poService.getByBidNumber(filterVal)
     .subscribe(po => {
         this.purchaseOrders = po;
         this.poDataSource.data = po;
 
     });
+*/
 
     this.selectedPO = null;
 
@@ -512,6 +553,9 @@ showFilter() {
 }
 
   ngOnInit() {
+
+    this.selectedPayCd = '';
+    this.selectedPoId = 0;
 
     this.poForm = this.createFormGroup();
     this.paymentForm = this.createPaymentFormGroup();
@@ -579,19 +623,8 @@ showFilter() {
           this.itemTypeCodes = null;
           this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
           this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
-          console.log(this.currentBid.AdminFeeRate);
-    });
-          });
-
-   this.poForm.get('spec').valueChanges.subscribe(_spec => {
-          this.poService.getItemType(this.poForm.controls.bidNumber.value, _spec)
-                .subscribe(data => {this.itemTypeCodes = data; });
-              });
-
-  /*  this.poForm.get('poIssueDate').valueChanges.subscribe(_poIssueDate => {
-                  console.log(_poIssueDate);
-                  }); */
-
+          console.log(this.currentBid.AdminFeeRate);    });
+      });
   }
 
 
@@ -634,7 +667,6 @@ showFilter() {
     this.showPayment = true;
     this.fuck = true;
 
-    this.sleep(1000);
     this.paymentFocus.nativeElement.focus();
   }
 

@@ -1,12 +1,12 @@
 <div class="panel panel-primary">
 <!-- Default panel contents -->
         <div class="panel-heading">
-                <h4 class="panel-title">Purchase Order Details {{bidId}} {{poId}}</h4>
+                <h4 class="panel-title">Purchase Order Details {{bidId}} {{poId}} {{ enableItemDetail }}</h4>
         </div>
         <div class="panel-body">
 
                         <div class="card-content"> 
-                                        <form [formGroup]="poForm" (ngSubmit)="processPurchaseOrder()">
+                                        <form [formGroup]="poForm">
                                          <div class="row shadow p-3 mb-5 bg-white rounded">
                                        <!--     <mat-toolbar >
                                                      <span>Purchase Order New {{isNew}}</span>
@@ -27,14 +27,13 @@
                                                      <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('bidNumber').touched && poForm.get('bidNumber').hasError('required')">Bid Required!</small>
                                               </div>  
                                      
-                                             
-                                               <div class="col-md-2 topMargin">
-                                                 <div class="form-group input-group-sm form-black label-floating is-empty">  
+                                               <div class="col-md-4 topMargin">
+                                                  <div class="form-group input-group-sm form-black label-floating is-empty">  
                                                          <label class="label-small">P.O.Number</label>
-                                                         <input placeholder="PO Number" type="text" formControlName="poNumber"  required class="form-control" >
-                                                   </div>  
-                                                   <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
-                                                 </div> 
+                                                         <input #poFocus placeholder="PO Number" type="text" formControlName="poNumber"  required class="form-control" >
+                                                  </div>  
+                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
+                                                </div> 
                                      
                                                  <div class="col-md-2 topMargin">
                                                    <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -55,12 +54,12 @@
                                                      <small  *ngIf="poForm.get('dateReported').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
                                                   </div>
                                      
-                                                  <div class="col-md-2 topMargin">
+                                          <!--        <div class="col-md-2 topMargin">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">Estimated Delivery</label>
                                                          <input type="text" placeholder="Estimated Delivery" formControlName="estimatedDelivery" name="estimatedDelivery" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }"  class="form-control" />
                                                      </div>
-                                                  </div>  
+                                                  </div>  -->
                                             
                                                    <div class="col-md-6">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -148,13 +147,13 @@
                                                      </div>  
                                             
                                      
-                                             <div class="col-md-2">
+                                  <!--           <div class="col-md-2">
                                                              <div class="form-group input-group-sm form-black label-floating is-empty">
                                                                  <label class="label-small">Qty</label>
                                                                  <input  type="text" name="qty" required formControlName="qty"   class="form-control" >
                                                              </div>
                                                              <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('qty').touched && poForm.get('qty').hasError('required')">Qty Required!</small>
-                                             </div>
+                                             </div>  -->
                                      
                                              <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -187,8 +186,12 @@
                                          
                                                  <div class="col-md-12">
                                                        <!--  <button (click)="insertPurchaseOrder()" type="submit"  style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>  -->
-                                                         <button [disabled]="poForm.invalid" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
+                                                      
+                                                       <button [disabled]="poForm.invalid || !poForm.dirty" (click)="processPurchaseOrder()" style="padding-right: 15px;" class="btn btn-success pull-right">Save</button>
                                                  </div>
+
+                                                 <div class="col-md-1">
+                                                </div>  
                                             
                                      
                                              </div>

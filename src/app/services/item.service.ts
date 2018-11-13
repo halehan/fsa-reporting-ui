@@ -15,7 +15,10 @@ const agencyTypeUrl = Constants.SERVER_URL + 'api/agencyType/';
 
 const itemByIdUrl =  Constants.SERVER_URL + 'api/item/bid/';
 const itemUrl = Constants.SERVER_URL + 'api/item/';
+const derivedItemUrl = Constants.SERVER_URL + 'api/item/derived/';
 const feeUrl = Constants.SERVER_URL +  'api/fee/';
+const itemBidCodeByIdUrl = Constants.SERVER_URL +  'api/item/id/';
+
 
 // app.get("/api/item/bid/:bidId", fsaCodeServices.getItemTypeByBid);
 // app.get("/api/item/:bidId/:itemId", fsaCodeServices.getItemType);
@@ -64,8 +67,18 @@ getItemByBidId(bidId: string) {
 }
 
 // Small subset of items that are filtered based on the bidNumber and the ItemNumber from the code table FsaCppBidItemCodes 
-getItemType(bidNumber: string, itemId: string) {
+getItemType(bidNumber: string, itemId: number) {
   return this.http.get(itemUrl + bidNumber + '/' + itemId, this.jwt()).map((response: Response) => response.json());
+}
+
+getItemByBidCodeId(id: string) {
+  return this.http.get(itemBidCodeByIdUrl + id, this.jwt()).map((response: Response) => response.json());
+}
+
+getDerivedItem(bidNumber: string, itemNumber: number, itemType: string) {
+  const encoded = encodeURI(derivedItemUrl + bidNumber + '/' +  itemNumber + '/' + itemType);
+  return this.http.get(encoded,
+   this.jwt()).map((response: Response) => response.json());
 }
 
 getPayCode(agencyName: string) {
@@ -79,9 +92,13 @@ updatePayment(payment: Payment) {
 }
 
 updateItem(item: Item) {
-  const fug = itemUrl + item.id;
-
+ const fug = encodeURI(itemUrl);
  return this.http.put(fug, item, this.jwt()).map((response: Response) => response.json());
+}
+
+insertItem(item: Item) {
+  const fug = itemUrl;
+ return this.http.post(fug, item, this.jwt()).map((response: Response) => response.json());
 }
 
 private handleError (error: any) {
