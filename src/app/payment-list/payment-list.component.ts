@@ -80,6 +80,7 @@ onItemRowClicked(row) {
 
   console.log('Row clicked: ', row);
 
+  //Retrieve the payments for this row
 }
 
 
