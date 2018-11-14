@@ -1,7 +1,6 @@
 <div  class="panel panel-primary">
     <div class="panel-heading">
-        <h4 class="panel-title">Purchase Order Item Details </h4>
-     
+        <h4 class="panel-title">Purchase Order Item Details {{poId}}</h4>
     </div>
     <div class="panel-body">
         <div class="card-content"> 
@@ -112,12 +111,6 @@
                                     </div>
                             </div> 
 
-                       <!--     
-                            <div style="padding: 2px;" class="col-md-11">
-                                    <button [disabled]="itemForm.invalid && isNew" style="padding-right: 15px;" (click)="createItem()" class="btn btn-success pull-right">New</button>
-                                   
-                            </div>  -->
-                                
                             <div class="col-md-12">
                                 <button [disabled]="itemForm.invalid || !itemForm.dirty" style="padding-left: 15px;" (click)="processItem()"class="btn btn-success pull-right">Save</button>
                             </div>  

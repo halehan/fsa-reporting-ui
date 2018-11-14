@@ -15,7 +15,8 @@ import { ItemDetailComponent } from '../item-detail/item-detail.component';
 export class ItemListComponent implements OnInit {
 
   itemListDS = new MatTableDataSource();
-  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'edit', 'delete'];
+  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount',
+  'edit', 'delete'];
   @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
 
   @Input() poId: number;
@@ -41,7 +42,7 @@ export class ItemListComponent implements OnInit {
 
 refreshPoList(poId: number) {
 
- // this.enableItemDetail = false;
+
 
      this.delay(1000).then(any => {
      this.getItems(poId);

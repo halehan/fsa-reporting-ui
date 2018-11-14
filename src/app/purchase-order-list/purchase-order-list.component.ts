@@ -63,6 +63,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   bidId: String;
   bidType: string;
   enableItemDetail: boolean;
+  enableItemList: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -99,6 +100,7 @@ onRowClicked(row) {
   // this.poFocus.nativeElement.focus();
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
     this.enableItemDetail = false;
+    this.enableItemList = true;
 
     this.selectedPayCd = row.payCd;
     this.selectedPoId = row.id;
@@ -471,9 +473,17 @@ showFilter() {
 
   }
 
+  deletePo(po: PurchaseOrder): void {
+
+    console.log(po);
+
+  }
+
   onSelect(po: PurchaseOrder): void {
 
     this.poFocus.nativeElement.focus();
+
+    this.enableItemList = true;
 
     this.enableItemDetail = false;
 
@@ -644,6 +654,8 @@ showFilter() {
   }
 
   newPurchaseOrder() {
+    this.enableItemList = false;
+    this.enableItemDetail = false;
     this.isNewPo = true;
     this.purchaseOrderDetailComponent.newPo();
   }

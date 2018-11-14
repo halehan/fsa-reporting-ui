@@ -85,6 +85,8 @@ export class ItemDetailComponent implements OnInit {
 
   ngOnInit() {
 
+    console.log('poID = ' + this.poId);
+
     this.itemForm = this.createFormGroup();
     this.enableItemDetail = false;
 
@@ -285,7 +287,7 @@ export class ItemDetailComponent implements OnInit {
 
   createItem() {
 
-
+      this.postInitFees();
       this.isNew = true;
       this.newItem = new Item();
       this.itemForm = this.createFormGroup();
@@ -334,7 +336,7 @@ export class ItemDetailComponent implements OnInit {
       this.itemService.insertItem(this.newItem).subscribe(_item => {
           });
 
-        this.refreshItemList.emit(this.currentItem.fsaCppPurchaseOrderId);
+        this.refreshItemList.emit(this.poId);
 
          this.toastr.success('Item Insert Successful', 'Item Insert', {
           timeOut: 2000,

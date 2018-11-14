@@ -12,6 +12,8 @@ import { UserComponent } from './user/user.component';
 import { AtableListComponent } from './atable-list/atable-list.component';
 import { ReportsComponent } from './reports/reports.component';
 import { PaymentSearchComponent } from './payment-search/payment-search.component';
+import { PaymentComponent } from './payment/payment.component';
+
 
 
 const appRoutes: Routes = [
@@ -27,6 +29,7 @@ const appRoutes: Routes = [
     { path: 'bids', component: PurchaseOrderComponent, canActivate: [AuthGuard] },
     { path: 'list', component: AtableListComponent, canActivate: [AuthGuard] },
     { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+    { path: 'payments', component: PaymentComponent, canActivate: [AuthGuard] },
     { path: 'transactions/:bidId', component: PurchaseOrderComponent, canActivate: [AuthGuard]      },
 
     // otherwise redirect to home

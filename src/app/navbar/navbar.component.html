@@ -15,7 +15,11 @@
          </li>  -->
 
          <li class="nav-item  {{bidActive}}">
-            <a [routerLink]="['/bids']"  class="nav-link " href="#"><fa-icon [icon]="faCoins"></fa-icon>&nbsp; Purchase Orders</a>
+            <a [routerLink]="['/bids']"  class="nav-link " href="#"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp; Purchase Orders</a>
+          </li>
+          
+          <li class="nav-item  {{bidActive}}">
+            <a [routerLink]="['/payments']"  class="nav-link " href="#"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; Payment Processing</a>
           </li>
 
          <li class="nav-item  {{reportActive}}">

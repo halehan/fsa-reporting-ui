@@ -51,41 +51,46 @@
               </ng-container>
 
               <ng-container matColumnDef="dateReported">
-                    <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-                    <mat-cell fxFlex="100px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
+                    <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
+                    <mat-cell fxFlex="125px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
                   </ng-container>
           
               <ng-container matColumnDef="poIssueDate">
-                <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-                <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
+                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
+                <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="poAmount">
                     <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Amount </mat-header-cell>
                     <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poAmount}}</mat-cell>
               </ng-container>
+
+       <!--       <ng-container matColumnDef="adminFeeDue">
+                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> Admin Fee</mat-header-cell>
+                <mat-cell fxFlex="125px" *matCellDef="let row">{{row.adminFeeDue}}</mat-cell>
+          </ng-container> -->
     
-              <ng-container matColumnDef="edit">
+             <ng-container matColumnDef="edit">
                     <mat-header-cell fxFlex="75px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
           
                     <mat-cell fxFlex="75px" *matCellDef="let row">
-                      <button mat-icon-button color="primary" focusable="false" >
+                      <button mat-icon-button color="primary" focusable="false" (click)="onRowClicked(row)">
                             <i class="fa fa-pencil mat-icon"></i>
                         </button>  
                     </mat-cell>
               </ng-container>
     
                 <ng-container matColumnDef="addPayment">
-                        <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Add Item </mat-header-cell>
+                        <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
                         <mat-cell fxFlex="100px" *matCellDef="let row">
-                            <button mat-icon-button color="primary" focusable="false" (click)="newItem(row)">
-                                <i class="fa fa-plus mat-icon"></i>
+                            <button mat-icon-button color="primary" focusable="false" (click)="deletePo(row)">
+                              <i class="fa fa-trash-o  mat-icon"></i>
                             </button>  
                         </mat-cell>
                 </ng-container>
-            
+              
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: displayedColumns"  [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="onRowClicked(row)"></mat-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns"  [ngClass]="{'highlight': selectedRowIndex == row.id}" ></mat-row>
           
             </mat-table>
                     <mat-paginator 
@@ -104,7 +109,7 @@
 
       <app-purchase-order-detail [enableItemDetail] = "enableItemDetail" [poId] = "selectedPO.id" [bidId]="selectedPO.bidNumber" [isNew]="isNewPo" (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="selectedPO"></app-purchase-order-detail> 
   <!--    <app-item-list [enableItemDetail] = "enableItemDetail" [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> -->
-      <app-item-list [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> 
+      <app-item-list [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  [hidden] = "!enableItemList" ></app-item-list> 
 
       <br> 
     

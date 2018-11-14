@@ -86,6 +86,10 @@ import { ItemPaymentComponent } from './item-payment/item-payment.component';
 import { ItemListComponent } from './item-list/item-list.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { MatExpansionPanel } from '@angular/material';
+import { PaymentComponent } from './payment/payment.component';
+import { PaymentListComponent } from './payment-list/payment-list.component';
+import { PaymentDetailComponent } from './payment-detail/payment-detail.component';
+
 
 @NgModule({
   declarations: [
@@ -114,6 +118,9 @@ import { MatExpansionPanel } from '@angular/material';
     ItemPaymentComponent,
     ItemListComponent,
     ItemDetailComponent,
+    PaymentComponent,
+    PaymentListComponent,
+    PaymentDetailComponent,
   ],
   imports: [
     BsDatepickerModule.forRoot(),
