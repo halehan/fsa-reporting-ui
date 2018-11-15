@@ -37,7 +37,7 @@
   
              <ng-container matColumnDef="itemAmount">
                     <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
-                    <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemAmount}}</mat-cell>
+                    <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemAmount | currency}}</mat-cell>
              </ng-container>
   
                <ng-container matColumnDef="edit">

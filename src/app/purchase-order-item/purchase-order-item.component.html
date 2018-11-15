@@ -26,7 +26,7 @@
   
       <ng-container matColumnDef="itemAmount">
         <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
-        <mat-cell fxFlex="100px" *matCellDef="let row">{{row.itemAmount}}</mat-cell>
+        <mat-cell fxFlex="100px" *matCellDef="let row">{{row.itemAmount | currency}}</mat-cell>
       </ng-container>
   
       <ng-container matColumnDef="qty">

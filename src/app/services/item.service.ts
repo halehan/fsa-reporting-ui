@@ -18,6 +18,8 @@ const itemUrl = Constants.SERVER_URL + 'api/item/';
 const derivedItemUrl = Constants.SERVER_URL + 'api/item/derived/';
 const feeUrl = Constants.SERVER_URL +  'api/fee/';
 const itemBidCodeByIdUrl = Constants.SERVER_URL +  'api/item/id/';
+const paymentByItemIdUrl = Constants.SERVER_URL +  'api/transaction/payment/';
+
 
 
 // app.get("/api/item/bid/:bidId", fsaCodeServices.getItemTypeByBid);
@@ -31,6 +33,12 @@ export class ItemService {
   constructor(
     private http: Http,
     private authenticationService: AuthenticationService) {
+}
+
+
+getPaymentByItemId(id: number) {
+  const localUrl: string = paymentByItemIdUrl + id;
+  return this.http.get(localUrl, this.jwt()).map((response: Response) => response.json());
 }
 
 

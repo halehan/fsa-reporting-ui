@@ -1,4 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter,  OnChanges, SimpleChanges, Input,
+  AfterContentInit, AfterViewChecked, TestabilityRegistry } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { PurchaseOrder, BidType , Payment} from '../model/index';
+import { BidNumber, Item, AdminFeeDistributionPct } from '../model/index';
+import { ContactRequest } from '../model/contact-request';
+import { PersonalData } from '../model/contact-request';
+import { PurchaseOrderService } from '../services/purchase-order.service';
+import { ItemService } from '../services/item.service';
+import { ToastrService } from 'ngx-toastr';
+import { ItemBidTypeCode } from '../model/itemBidTypeCode';
+import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
+import { AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-payment-detail',
@@ -7,9 +19,232 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentDetailComponent implements OnInit {
 
-  constructor() { }
+  paymentForm: FormGroup;
+  @Input() payCd: string;
+  @Input() bidType: string;
+  @Input() paymentId: number;
+  @Input() adminFeeRate: number;
+  @Input() test: number;
+
+  isNew: boolean;
+  showDetail: boolean;
+  fsaFeeObj: AdminFeeDistributionPct;
+  facFeeObj: AdminFeeDistributionPct;
+  ffcaFeeObj: AdminFeeDistributionPct;
+  fsaFee: number;
+  facFee: number;
+  ffcaFee: number;
+  newPayment: Payment;
+  currentPayment: Payment;
+
+  constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService,
+    private dateFormatPipe: DateFormatPipe) {
+    this.isNew = false;
+    this.showDetail = false;
+  }
+
+  newItemPayment () {
+    console.log('calling new Payment in payment-detail-component')
+    this.paymentForm = this.createFormGroup();
+  }
+
+  processPayment () {
+
+    if (this.isNew) {
+    //  this.copyFormToNewModel();
+      this.insertPayment();
+    } else {
+    //  this.copyFormToModel();
+      this.updatePayment();
+    }
+
+
+
+  }
+
+  insertPayment() {
+
+  }
+
+  updatePayment() {
+
+    this.copyFormToModel();
+
+    this.poService.updatePayment(this.currentPayment).subscribe(payment => {
+    });
+
+
+   // this.refreshPurchaseOrderList.emit(this.currentPO.bidNumber);
+
+     this.toastr.success('Payment Save Successful', 'Payment Update', {
+      timeOut: 2000,
+      });
+
+  }
+
+  initFees() {
+
+    this.itemService.getFee('FSA', this.bidType, this.payCd)
+    .subscribe(fsa => {
+        this.fsaFeeObj = fsa[0];
+        console.log(this.fsaFeeObj);
+    });
+
+    this.itemService.getFee('FAC', this.bidType, this.payCd )
+    .subscribe(fac => {
+        this.facFeeObj = fac[0];
+        console.log(this.facFeeObj);
+    });
+
+    this.itemService.getFee('FFCA', this.bidType, this.payCd )
+    .subscribe(ffca => {
+        this.ffcaFeeObj = ffca[0];
+        console.log(this.ffcaFeeObj);
+    });
+
+
+  }
 
   ngOnInit() {
+    this.paymentForm = this.createFormGroup();
+
+    this.formControlValueChanged();
   }
+
+  createFormGroup() {
+
+    return new FormGroup({
+
+      id:  new FormControl(),
+      fsaCppItemId:  new FormControl(),
+      paymentNumber:  new FormControl(),
+      paymentDate:  new FormControl('', Validators.required),
+      paymentCheckNumber: new FormControl(),
+      paymentAmount: new FormControl('', Validators.required),
+      correction: new FormControl(),
+      auditDifference: new FormControl(),
+      fsaAlloc: new FormControl({disabled: true}),
+      facAlloc: new FormControl({disabled: true}),
+      ffcaAlloc: new FormControl({disabled: true}),
+      totalAlloc: new FormControl({disabled: true}),
+      fsaRefundAmount: new FormControl(),
+      fsaRefundCheckNumber: new FormControl(),
+      lateFeeAmount: new FormControl(),
+      lateFeeCheckNumber: new FormControl(),
+      lateFeeCheckDate: new FormControl(),
+      comments: new FormControl()
+
+      });
+  }
+
+  copyModelToForm(row) {
+
+     this.paymentForm.controls['id'].patchValue(row.id, {emitEvent : false});
+     this.paymentForm.controls['fsaCppItemId'].patchValue(row.fsaCppItemId, {emitEvent : false});
+      this.paymentForm.controls['paymentNumber'].patchValue(row.paymentNumber, {emitEvent : false});
+      this.paymentForm.controls['paymentAmount'].patchValue(row.paymentAmount, {emitEvent : false});
+      this.paymentForm.controls['paymentDate'].patchValue(this.formatDate(row.paymentDate), {emitEvent : false});
+      this.paymentForm.controls['paymentCheckNumber'].patchValue(row.paymentCheckNum, {emitEvent : false});
+      this.paymentForm.controls['correction'].patchValue(row.correction, {emitEvent : false});
+      this.paymentForm.controls['fsaAlloc'].patchValue(row.fsaAlloc, {emitEvent : false});
+      this.paymentForm.controls['facAlloc'].patchValue(row.facAlloc, {emitEvent : false});
+      this.paymentForm.controls['ffcaAlloc'].patchValue(row.ffcaAlloc, {emitEvent : false});
+      this.paymentForm.controls['totalAlloc'].patchValue(row.totalAlloc, {emitEvent : false});
+      this.paymentForm.controls['fsaRefundAmount'].patchValue(row.fsaRefundAmount, {emitEvent : false});
+      this.paymentForm.controls['fsaRefundCheckNumber'].patchValue(row.fsaRefundCheckNum, {emitEvent : false});
+      this.paymentForm.controls['lateFeeAmount'].patchValue(row.lateFeeAmount, {emitEvent : false});
+      this.paymentForm.controls['lateFeeCheckNumber'].patchValue(row.lateFeeCheckNumber, {emitEvent : false});
+      this.paymentForm.controls['lateFeeCheckDate'].patchValue(row.lateFeeCheckDate, {emitEvent : false});
+      this.paymentForm.controls['comments'].patchValue(row.comments, {emitEvent : false});
+
+      this.formControlValueChanged();
+
+    }
+
+    copyFormToModel() {
+
+      this.currentPayment = new Payment();
+      
+      this.currentPayment.id = this.paymentForm.controls.id.value;
+      this.currentPayment.fsaCppItemId = this.paymentForm.controls.fsaCppItemId.value;
+      this.currentPayment.paymentNumber = this.paymentForm.controls.paymentNumber.value;
+      this.currentPayment.paymentAmount = this.paymentForm.controls.paymentAmount.value;
+      this.currentPayment.paymentDate = this.paymentForm.controls.paymentDate.value;
+      this.currentPayment.paymentCheckNum = this.paymentForm.controls.paymentCheckNumber.value;
+      this.currentPayment.correction = this.paymentForm.controls.correction.value;
+      this.currentPayment.fsaAlloc = this.paymentForm.controls.fsaAlloc.value;
+      this.currentPayment.facAlloc = this.paymentForm.controls.facAlloc.value;
+      this.currentPayment.ffcaAlloc = this.paymentForm.controls.ffcaAlloc.value;
+      this.currentPayment.totalAlloc = this.paymentForm.controls.totalAlloc.value;
+      this.currentPayment.fsaRefundAmount = this.paymentForm.controls.fsaRefundAmount.value;
+      this.currentPayment.lateFeeAmt = this.paymentForm.controls.lateFeeAmount.value;
+      this.currentPayment.lateFeeCheckDate = this.paymentForm.controls.lateFeeCheckDate.value;
+
+    }
+
+    formatDate(dateVal: Date) {
+      console.log(dateVal);
+    //  dateVal.setHours(2);
+      const myDate = this.dateFormatPipe.transform(dateVal);
+      console.log(myDate);
+      return myDate;
+
+    }
+
+
+  truncateDecimals(poAmount: number, places: number) {
+    const shift = Math.pow(10, places);
+   return ((poAmount * shift) | 0) / shift;
+  };
+
+  calculateAdminFee(poAmount: number) {
+   return this.truncateDecimals(poAmount * this.adminFeeRate, 2);
+  }
+
+  calculateFee(amount: number, fee: number) {
+    return this.truncateDecimals(amount * fee, 2);
+  }
+
+  formControlValueChanged() {
+
+    this.paymentForm.get('paymentAmount').valueChanges.subscribe(_amount => {
+
+      if ( this.ffcaFeeObj  === undefined) {
+        this.ffcaFee = 0;
+      } else {
+        this.ffcaFee = this.ffcaFeeObj.distributionPct;
+      }
+
+      if ( this.facFeeObj === undefined) {
+        this.facFee = 0;
+      } else {
+        this.facFee = this.facFeeObj.distributionPct;
+      }
+
+      if (this.fsaFeeObj === undefined) {
+        this.fsaFee = 0;
+      } else {
+        this.fsaFee = this.fsaFeeObj.distributionPct;
+      }
+
+      const _fsaFee: number = this.calculateFee(_amount, this.fsaFee);
+      const _facFee: number = this.calculateFee(_amount, this.facFee);
+      const _ffcaFee: number = this.calculateFee(_amount, this.ffcaFee);
+
+      const _totalAlloc: number = _fsaFee + _facFee + _ffcaFee;
+
+      this.paymentForm.controls['fsaAlloc'].patchValue(_fsaFee, {emitEvent : false});
+      this.paymentForm.controls['facAlloc'].patchValue(_facFee, {emitEvent : false});
+      this.paymentForm.controls['ffcaAlloc'].patchValue(_ffcaFee, {emitEvent : false});
+      this.paymentForm.controls['totalAlloc'].patchValue(this.truncateDecimals(_totalAlloc, 3), {emitEvent : false});
+
+   //   console.log('FAC Rate = ' + this.facFee);
+   //   console.log('FSA Rate = ' + this.fsaFee);
+   //   console.log('FFCA Rate = ' + this.ffcaFee);
+    //              console.log(_amount);
+                    });
+
+  }
+
 
 }

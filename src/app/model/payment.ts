@@ -2,6 +2,7 @@ export class Payment {
 
     id: number;
     fsaReportId: number;
+    fsaCppItemId: number;
     paymentDate: Date;
     paymentAmount: number;
     paymentNumber: number;

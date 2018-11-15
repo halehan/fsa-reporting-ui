@@ -36,8 +36,8 @@
               </ng-container>
           
               <ng-container matColumnDef="cityAgency">
-                <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header>Purchaser</mat-header-cell>
-                <mat-cell fxFlex="200px" *matCellDef="let row"> {{row.cityAgency}} </mat-cell>
+                <mat-header-cell fxFlex="225px" *matHeaderCellDef mat-sort-header>Purchaser</mat-header-cell>
+                <mat-cell fxFlex="225px" *matCellDef="let row"> {{row.cityAgency}} </mat-cell>
               </ng-container>
           
              <ng-container matColumnDef="dealerName">
@@ -46,23 +46,23 @@
               </ng-container>
           
               <ng-container matColumnDef="poNumber">
-                <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
-                <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
+                <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
+                <mat-cell fxFlex="200px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="dateReported">
-                    <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-                    <mat-cell fxFlex="125px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
+                    <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
+                    <mat-cell fxFlex="100px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
                   </ng-container>
           
               <ng-container matColumnDef="poIssueDate">
-                <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-                <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
+                <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
+                <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poIssueDate | dateFormatPipe}}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="poAmount">
-                    <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> PO Amount </mat-header-cell>
-                    <mat-cell fxFlex="125px" *matCellDef="let row">{{row.poAmount}}</mat-cell>
+                    <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Amount </mat-header-cell>
+                    <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poAmount | currency}}</mat-cell>
               </ng-container>
 
        <!--       <ng-container matColumnDef="adminFeeDue">
@@ -71,9 +71,9 @@
           </ng-container> -->
     
              <ng-container matColumnDef="edit">
-                    <mat-header-cell fxFlex="75px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
+                    <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
           
-                    <mat-cell fxFlex="75px" *matCellDef="let row">
+                    <mat-cell fxFlex="50px" *matCellDef="let row">
                       <button mat-icon-button color="primary" focusable="false" (click)="onRowClicked(row)">
                             <i class="fa fa-pencil mat-icon"></i>
                         </button>  
@@ -81,8 +81,8 @@
               </ng-container>
     
                 <ng-container matColumnDef="addPayment">
-                        <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
-                        <mat-cell fxFlex="100px" *matCellDef="let row">
+                        <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
+                        <mat-cell fxFlex="50px" *matCellDef="let row">
                             <button mat-icon-button color="primary" focusable="false" (click)="deletePo(row)">
                               <i class="fa fa-trash-o  mat-icon"></i>
                             </button>  

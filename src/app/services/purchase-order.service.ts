@@ -24,6 +24,8 @@ const adminFeeUrl = Constants.SERVER_URL + 'api/bidType/';
 
 
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -126,11 +128,6 @@ insertPurchaseOrder(purchaseOrder: PurchaseOrder) {
 
 updatePayment(payment: Payment) {
   const fug = paymentUrl + payment.id;
-//   const once = this.http.put(fug, JSON.stringify(user), this.jwt())
-//   .map(() => user);
-
-//   const dog =  this.http.put(fug, user, this.jwt()).map((response: Response) => response.json());
-//   return dog;
  return this.http.put(fug, payment, this.jwt()).map((response: Response) => response.json());
 }
 

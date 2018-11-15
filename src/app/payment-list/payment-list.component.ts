@@ -13,6 +13,7 @@ import 'moment/locale/pt-br';
 import { ItemPaymentComponent } from '../item-payment/item-payment.component';
 import { ItemListComponent } from '../item-list/item-list.component';
 import { ItemService } from '../services/item.service';
+import { PaymentDetailComponent } from '../payment-detail/payment-detail.component';
 
 @Component({
   selector: 'app-payment-list',
@@ -20,20 +21,25 @@ import { ItemService } from '../services/item.service';
   styleUrls: ['./payment-list.component.scss']
 })
 
-
 export class PaymentListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
                       'dateReported', 'poIssueDate', 'poAmount', 'adminFeeDue'];
-  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount'];
+  itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount'];
+  paymentColumns = ['paymentNumber', 'paymentCheckNum',  'fsaAlloc', 'facAlloc', 'ffcaAlloc', 'totalAlloc', 'paymentAmount', 'paymentDate'];
 
   poDataSource = new MatTableDataSource();
   itemListDS = new MatTableDataSource();
+  paymentListDS = new MatTableDataSource();
   purchaseOrders: PurchaseOrder[] = [];
 
   bidNumbers: BidNumber[] = [];
   bidTypes: BidType[] = [];
   bids: String[] = [];
+  payCd: string;
+  adminFee: number;
+  paymentId: number;
+  adminFeeRate: number;
 
   selectedPO: PurchaseOrder;
 
@@ -43,20 +49,31 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   bidType: string;
   enableItemDetail: boolean;
   enableItemList: boolean;
+  enablePaymentList: boolean;
+  enablePaymentDetail: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
 
   @ViewChild(ItemPaymentComponent) item: ItemPaymentComponent;
   @ViewChild(ItemListComponent) itemList: ItemListComponent;
+  @ViewChild(PaymentDetailComponent) paymentDetail: PaymentDetailComponent;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private poService: PurchaseOrderService, private itemService: ItemService, 
+  constructor(private poService: PurchaseOrderService, private itemService: ItemService,
               private dateFormatPipe: DateFormatPipe ) {
 
                 this.enableItemDetail = false;
+                this.enablePaymentDetail = false;
+
+
+}
+
+newPayment() {
+
+  this.paymentDetail.newItemPayment();
 
 }
 
@@ -72,24 +89,52 @@ getItems(poId: number) {
 
 }
 
+onPaymentRowClicked(row) {
+
+  console.log('Row clicked: ', row);
+  this.paymentId = row.id;
+  this.enablePaymentDetail  = true;
+
+  this.paymentDetail.copyModelToForm(row);
+
+}
+
 onItemRowClicked(row) {
 
   // this.poFocus.nativeElement.focus();
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
-    this.enableItemList = true;
+ //   this.enableItemList = true;
 
   console.log('Row clicked: ', row);
 
-  //Retrieve the payments for this row
+  // Retrieve the payments for this row
+
+  this.itemService.getPaymentByItemId(row.id)
+  .subscribe(items => {
+      this.paymentListDS.data = items;
+       this.enablePaymentList  = (items.length > 0 ? true : false);
+  });
+
+  this.paymentDetail.initFees();
 }
 
-
 onRowClicked(row) {
+
+  this.selectedPO = row;
+  this.payCd = row.payCd;
+  this.bidType = row.bidType;
+
+  this.poService.getAdminFee(row.bidNumber)
+  .subscribe(bid => {
+    this.adminFeeRate = bid[0].AdminFeeRate;
+  });
 
   // this.poFocus.nativeElement.focus();
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
     this.enableItemDetail = false;
-    this.enableItemList = true;
+  //  this.enableItemList = false;
+    this.enablePaymentDetail = false;
+    this.enablePaymentList = false;
 
   console.log('Row clicked: ', row);
   // this.poFocus.nativeElement.focus();
@@ -100,8 +145,7 @@ onRowClicked(row) {
  //   this.itemList.setItemListRowSelected(false);
  // }
 
-
-  this.selectedPO = row;
+ // this.adminFee = row.
 
   this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
   this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
@@ -166,7 +210,7 @@ async delay(ms: number) {
 
 showFilter() {
 
-  if (this.purchaseOrders.length > 0) {
+  if (this.poDataSource.data.length > 0) {
       return true;
   } else {
       return false;
@@ -245,6 +289,3 @@ showFilter() {
   }
 
 }
-
-
-
