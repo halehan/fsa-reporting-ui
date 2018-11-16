@@ -1,5 +1,4 @@
-import { Component, OnInit, Output, EventEmitter,  OnChanges, SimpleChanges, Input,
-   AfterContentInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input} from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PurchaseOrder } from '../model/index';
 import { BidNumber, Item, AdminFeeDistributionPct } from '../model/index';
@@ -10,6 +9,7 @@ import { ItemService } from '../services/item.service';
 import { ToastrService } from 'ngx-toastr';
 import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
+
 
 
 
@@ -39,6 +39,7 @@ export class ItemDetailComponent implements OnInit {
   @Input() poId: number;
   @Input() enableItemDetail: boolean;
   @Output() refreshItemList: EventEmitter<number> =   new EventEmitter();
+  @ViewChild('itemFocus') itemFocus: ElementRef;
 
   isNew: boolean;
   showDetail: boolean;
@@ -46,6 +47,17 @@ export class ItemDetailComponent implements OnInit {
   constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService) {
     this.isNew = false;
     this.showDetail = false;
+  }
+
+  focusItem () {
+
+    this.delay(100).then(any => {
+      this.itemFocus.nativeElement.focus();
+  });
+  }
+
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
   }
 
   postInitFees() {

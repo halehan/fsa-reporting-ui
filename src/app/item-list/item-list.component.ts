@@ -15,7 +15,7 @@ import { ItemDetailComponent } from '../item-detail/item-detail.component';
 export class ItemListComponent implements OnInit {
 
   itemListDS = new MatTableDataSource();
-  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount',
+  itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue',
   'edit', 'delete'];
   @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
 
@@ -57,6 +57,7 @@ async delay(ms: number) {
   chain () {
       this.enableItemDetail = true;
       this.itemDetail.createItem();
+      this.itemDetail.focusItem();
 
   }
 
@@ -98,6 +99,8 @@ async delay(ms: number) {
     this.setItemListRowSelected(true);
     this.itemDetail.getItem(item.id);
     console.log();
+
+    this.itemDetail.focusItem();
 
   }
 

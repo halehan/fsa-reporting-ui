@@ -1,5 +1,5 @@
 
-import { Component, ViewChild, OnInit, AfterViewInit, Output, EventEmitter,  OnChanges, SimpleChanges, Input  } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Output, EventEmitter, Input  } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import {BehaviorSubject, Observable} from 'rxjs';
 import { PurchaseOrder } from '../model/index';
@@ -22,6 +22,7 @@ import { ItemDetailComponent } from '../item-detail/item-detail.component';
 export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
 
   @Output() refreshPurchaseOrderList: EventEmitter<string> =   new EventEmitter();
+  @ViewChild('poFocus') poFocus: ElementRef;
   @Input() pox: PurchaseOrder;
   @Input() isNew: Boolean;
   @Input() bidId: String;
@@ -52,11 +53,17 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
 
   constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
     private dateFormatPipe: DateFormatPipe) { }
-/*
-get poAmount() {
-  return this.newPoForm.get('poAmount');
- }
-*/
+
+    focusPoDetail () {
+
+      this.delay(100).then(any => {
+        this.poFocus.nativeElement.focus();
+    });
+    }
+
+    async delay(ms: number) {
+      await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
+    }
 
 ngAfterViewInit() {
   console.log('Values on ngAfterViewInit():');
@@ -154,6 +161,7 @@ formControlValueChanged() {
     //      this.poService.getItem(_bidNumber).subscribe(data => {this.specs = data; });
           this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
           console.log(this.currentBid.AdminFeeRate);
+          this.poForm.controls['bidType'].patchValue(this.currentBid.BidType, {emitEvent : false});
           });
     });
 
@@ -220,6 +228,7 @@ createFormGroup() {
   //    spec: new FormControl('', Validators.required),
   //    vehicleType: new FormControl('', Validators.required),
       agencyFlag: new FormControl(),
+      bidType: new FormControl(),
       dealerFlag: new FormControl(),
       poComplete: new FormControl(),
       qty: new FormControl({required: true}),
@@ -234,6 +243,7 @@ createFormGroup() {
 copyFormToNewModel() {
 
   this.newPO.bidNumber = this.poForm.controls.bidNumber.value;
+  this.newPO.bidType = this.poForm.controls.bidType.value;
   this.newPO.poNumber = this.poForm.controls.poNumber.value;
   this.newPO.poIssueDate = this.poForm.controls.poIssueDate.value;
   this.newPO.dateReported = this.poForm.controls.dateReported.value;
@@ -256,6 +266,7 @@ copyFormToNewModel() {
 copyFormToModel() {
 
   this.currentPO.bidNumber = this.poForm.controls.bidNumber.value;
+  this.currentPO.bidType = this.poForm.controls.bidType.value;
   this.currentPO.poNumber = this.poForm.controls.poNumber.value;
   this.currentPO.poIssueDate = this.formatDate(this.poForm.controls.poIssueDate.value);
   this.currentPO.dateReported = this.formatDate(this.poForm.controls.dateReported.value);

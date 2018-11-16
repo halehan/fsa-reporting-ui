@@ -1,6 +1,7 @@
 <div  class="panel panel-primary">
   <div class="panel-heading">
-      <h4 class="panel-title">Payment Details {{paymentId}} {{adminFeeRate}}</h4>
+  <!--    <h4 class="panel-title">Payment Details {{paymentId}} {{adminFeeRate}} {{paymentNumber}}</h4>  -->
+      <h4 class="panel-title">Payment Details </h4>
   </div>
   <div class="panel-body">
       <div class="card-content"> 
@@ -17,7 +18,7 @@
                       <div class="col-md-2">
                         <div class="form-group input-group-sm form-black label-floating is-empty">
                                 <label class="label-small">Payment Amount</label>
-                                <input  type="text"  formControlName="paymentAmount"   class="form-control" >
+                                <input  #paymentFocus type="text"  formControlName="paymentAmount"   class="form-control" >
                         </div>
                 </div>   
 
@@ -117,7 +118,7 @@
                         <label class="label-small">Comments</label>
                        <input disabled type="text" formControlName="comments"  class="form-control" >
                       </div>
-                      </div>
+                      </div>  
         
                           <div class="col-md-12">
                               <button [disabled]="paymentForm.invalid || !paymentForm.dirty" style="padding-left: 15px;" (click)="processPayment()" class="btn btn-success pull-right">Save</button>

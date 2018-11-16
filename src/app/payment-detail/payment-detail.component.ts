@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter,  OnChanges, SimpleChanges, Input,
+import { Component, OnInit, Output, ViewChild, ElementRef, EventEmitter,  OnChanges, SimpleChanges, Input,
   AfterContentInit, AfterViewChecked, TestabilityRegistry } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PurchaseOrder, BidType , Payment} from '../model/index';
@@ -20,11 +20,16 @@ import { AfterViewInit } from '@angular/core';
 export class PaymentDetailComponent implements OnInit {
 
   paymentForm: FormGroup;
+  @Output() refreshPaymentList: EventEmitter<number> =   new EventEmitter();
+  @ViewChild('paymentFocus') paymentFocus: ElementRef;
   @Input() payCd: string;
   @Input() bidType: string;
   @Input() paymentId: number;
   @Input() adminFeeRate: number;
   @Input() test: number;
+  @Input() poId: number;   // leave this for now
+  @Input() itemId: number;
+  @Input() paymentNumber: number;
 
   isNew: boolean;
   showDetail: boolean;
@@ -43,18 +48,33 @@ export class PaymentDetailComponent implements OnInit {
     this.showDetail = false;
   }
 
+  focusPayment () {
+
+    this.delay(100).then(any => {
+      this.paymentFocus.nativeElement.focus();
+  });
+
+  }
+
   newItemPayment () {
     console.log('calling new Payment in payment-detail-component')
     this.paymentForm = this.createFormGroup();
+    this.showDetail = true;
+    this.isNew = true;
+
+    this.formControlValueChanged();
+    this.focusPayment();
+
+
   }
 
   processPayment () {
 
+    this.copyFormToModel();
+
     if (this.isNew) {
-    //  this.copyFormToNewModel();
       this.insertPayment();
     } else {
-    //  this.copyFormToModel();
       this.updatePayment();
     }
 
@@ -64,17 +84,26 @@ export class PaymentDetailComponent implements OnInit {
 
   insertPayment() {
 
+    this.poService.createPayment(this.currentPayment).subscribe(_payment => {
+    });
+
+      this.isNew = false;
+      this.refreshPaymentList.emit(this.itemId);
+
+     this.toastr.success('Payment Save Successful', 'Payment Insert', {
+      timeOut: 2000,
+      });
+
   }
 
   updatePayment() {
-
-    this.copyFormToModel();
 
     this.poService.updatePayment(this.currentPayment).subscribe(payment => {
     });
 
 
-   // this.refreshPurchaseOrderList.emit(this.currentPO.bidNumber);
+    this.refreshPaymentList.emit(this.itemId);
+
 
      this.toastr.success('Payment Save Successful', 'Payment Update', {
       timeOut: 2000,
@@ -106,9 +135,9 @@ export class PaymentDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.paymentForm = this.createFormGroup();
 
-    this.formControlValueChanged();
   }
 
   createFormGroup() {
@@ -117,6 +146,7 @@ export class PaymentDetailComponent implements OnInit {
 
       id:  new FormControl(),
       fsaCppItemId:  new FormControl(),
+      fsaCppPurchaseOrderId: new FormControl(),
       paymentNumber:  new FormControl(),
       paymentDate:  new FormControl('', Validators.required),
       paymentCheckNumber: new FormControl(),
@@ -139,8 +169,11 @@ export class PaymentDetailComponent implements OnInit {
 
   copyModelToForm(row) {
 
-     this.paymentForm.controls['id'].patchValue(row.id, {emitEvent : false});
-     this.paymentForm.controls['fsaCppItemId'].patchValue(row.fsaCppItemId, {emitEvent : false});
+     // this.paymentForm = this.createFormGroup();
+
+      this.paymentForm.controls['id'].patchValue(row.id, {emitEvent : false});
+      this.paymentForm.controls['fsaCppPurchaseOrderId'].patchValue(row.fsaCppPurchaseOrderId, {emitEvent : false});
+      this.paymentForm.controls['fsaCppItemId'].patchValue(row.fsaCppItemId, {emitEvent : false});
       this.paymentForm.controls['paymentNumber'].patchValue(row.paymentNumber, {emitEvent : false});
       this.paymentForm.controls['paymentAmount'].patchValue(row.paymentAmount, {emitEvent : false});
       this.paymentForm.controls['paymentDate'].patchValue(this.formatDate(row.paymentDate), {emitEvent : false});
@@ -164,10 +197,18 @@ export class PaymentDetailComponent implements OnInit {
     copyFormToModel() {
 
       this.currentPayment = new Payment();
-      
+
+    //  this.paymentNumber  = (this.isNew ? this.paymentNumber + 1 :  this.paymentNumber);
+
+      if (this.isNew) {
+        this.paymentNumber = this.paymentNumber  + 1;
+        this.currentPayment.paymentNumber = this.paymentNumber
+      }
+
       this.currentPayment.id = this.paymentForm.controls.id.value;
-      this.currentPayment.fsaCppItemId = this.paymentForm.controls.fsaCppItemId.value;
-      this.currentPayment.paymentNumber = this.paymentForm.controls.paymentNumber.value;
+      this.currentPayment.fsaCppPurchaseOrderId = this.poId;
+      this.currentPayment.fsaCppItemId = this.itemId;
+
       this.currentPayment.paymentAmount = this.paymentForm.controls.paymentAmount.value;
       this.currentPayment.paymentDate = this.paymentForm.controls.paymentDate.value;
       this.currentPayment.paymentCheckNum = this.paymentForm.controls.paymentCheckNumber.value;
@@ -205,6 +246,10 @@ export class PaymentDetailComponent implements OnInit {
     return this.truncateDecimals(amount * fee, 2);
   }
 
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
+  }
+
   formControlValueChanged() {
 
     this.paymentForm.get('paymentAmount').valueChanges.subscribe(_amount => {
@@ -238,10 +283,6 @@ export class PaymentDetailComponent implements OnInit {
       this.paymentForm.controls['ffcaAlloc'].patchValue(_ffcaFee, {emitEvent : false});
       this.paymentForm.controls['totalAlloc'].patchValue(this.truncateDecimals(_totalAlloc, 3), {emitEvent : false});
 
-   //   console.log('FAC Rate = ' + this.facFee);
-   //   console.log('FSA Rate = ' + this.fsaFee);
-   //   console.log('FFCA Rate = ' + this.ffcaFee);
-    //              console.log(_amount);
                     });
 
   }

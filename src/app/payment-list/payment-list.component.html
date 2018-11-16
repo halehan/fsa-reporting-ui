@@ -24,7 +24,8 @@
           
           </div>  
 
-        
+          <div class="panel-body">            
+            <div class="card-content">     
   <div>
        
       <mat-table *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
@@ -85,6 +86,9 @@
 
 </div>          
 
+</div>
+</div>
+
 <br> 
 
 <div [hidden] = "!enableItemList" class="panel panel-default">
@@ -101,8 +105,8 @@
           </ng-container>
             
           <ng-container matColumnDef="itemDescription">
-              <mat-header-cell class="pull-left" fxFlex="350px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
-              <mat-cell fxFlex="350px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
+              <mat-header-cell class="pull-left" fxFlex="300px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
+              <mat-cell fxFlex="300px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="itemMake">
@@ -111,8 +115,8 @@
               </ng-container>
             
           <ng-container matColumnDef="itemModel">
-                  <mat-header-cell class="pull-left" fxFlex="200px" *matHeaderCellDef mat-sort-header> Item Model </mat-header-cell>
-                  <mat-cell fxFlex="200px" *matCellDef="let itemList">{{itemList.itemModelNumber}}</mat-cell>
+                  <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Item Model </mat-header-cell>
+                  <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemModelNumber}}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="itemType">
@@ -129,6 +133,11 @@
                   <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
                   <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemAmount  | currency }}</mat-cell>
            </ng-container>
+
+           <ng-container matColumnDef="adminFeeDue">
+            <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Admin Fee </mat-header-cell>
+            <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.adminFeeDue | currency}}</mat-cell>
+         </ng-container>
 
              <ng-container matColumnDef="edit">
               <mat-header-cell class="pull-left" fxFlex="50px" *matHeaderCellDef mat-sort-header> Edit </mat-header-cell> 
@@ -163,11 +172,11 @@
       
       </mat-table>
 
-      <mat-paginator 
-          [length]="1000"
+    <!--  <mat-paginator 
+          [length]="20" 
           [pageSize]="5"
-          [pageSizeOptions]="[5, 25, 100, 500]">
-      </mat-paginator>
+          [pageSizeOptions]="[5, 10, 20]">
+      </mat-paginator> -->
 
 <br><hr> 
   </div>
@@ -255,11 +264,11 @@
         
         </mat-table>
   
-        <mat-paginator 
+    <!--    <mat-paginator 
             [length]="1000"
             [pageSize]="5"
             [pageSizeOptions]="[5, 25, 100, 500]">
-        </mat-paginator>
+        </mat-paginator>  -->
   
   <br><hr> 
     </div>
@@ -267,10 +276,11 @@
   </div>
 
   <div class="new-po form-group col-md-8">
-    <button mat-button (click)="newItemPayment()" type="submit"  class="mat-flat-button btn-success insert-button">New Payment</button>  
+    <button mat-button (click)="newPayment()" type="submit"  class="mat-flat-button btn-success insert-button">New Payment</button>  
   </div>
 
-    <app-payment-detail [payCd] = "payCd" [bidType] = "bidType"  [paymentId] = "paymentId" [adminFeeRate] = "adminFeeRate" [hidden] = "!enablePaymentDetail"></app-payment-detail>
+    <app-payment-detail [paymentNumber] = "paymentNumber" [itemId] = "itemId" [poId] = "poId" [payCd] = "payCd" [bidType] = "bidType"  [paymentId] = "paymentId" [adminFeeRate] = "adminFeeRate" 
+    [hidden] = "!enablePaymentDetail" (refreshPaymentList)="refreshPaymentListHandler($event)"></app-payment-detail>
 
 </div>
 </div>  

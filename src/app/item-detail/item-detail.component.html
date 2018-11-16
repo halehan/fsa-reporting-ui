@@ -1,12 +1,12 @@
 <div  class="panel panel-primary">
     <div class="panel-heading">
-        <h4 class="panel-title">Purchase Order Item Details {{poId}}</h4>
+        <h4 class="panel-title">Purchase Order Item Details</h4>
     </div>
     <div class="panel-body">
         <div class="card-content"> 
             <form [formGroup]="itemForm" >
                 <div class="row shadow p-3 mb-5 bg-white rounded">
-
+                <!--
                         <div class="col-md-2">
                                 <div class="form-group input-group-sm form-black label-floating is-empty">
                                         <label class="label-small">Item Number</label>
@@ -42,7 +42,7 @@
                                 </div>
                         </div>
 
-                        
+                -->
 
                             <div class="col-md-6">
                                     <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -72,7 +72,7 @@
                             <div class="col-md-2">
                                     <div class="form-group input-group-sm form-black label-floating is-empty">
                                         <label class="label-small">Qty</label>
-                                        <input  type="text"  required formControlName="qty"   class="form-control" >
+                                        <input #itemFocus type="text"  required formControlName="qty"   class="form-control" >
                                     </div>
                             </div> 
 

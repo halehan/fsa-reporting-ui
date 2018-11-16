@@ -25,7 +25,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
                       'dateReported', 'poIssueDate', 'poAmount', 'adminFeeDue'];
-  itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount'];
+  itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue'];
   paymentColumns = ['paymentNumber', 'paymentCheckNum',  'fsaAlloc', 'facAlloc', 'ffcaAlloc', 'totalAlloc', 'paymentAmount', 'paymentDate'];
 
   poDataSource = new MatTableDataSource();
@@ -39,6 +39,9 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   payCd: string;
   adminFee: number;
   paymentId: number;
+  paymentNumber: number;  // just send the rowcount of paymentListDS
+  poId: number;
+  itemId: number;
   adminFeeRate: number;
 
   selectedPO: PurchaseOrder;
@@ -61,6 +64,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) itemPaginator: MatPaginator;
 
   constructor(private poService: PurchaseOrderService, private itemService: ItemService,
               private dateFormatPipe: DateFormatPipe ) {
@@ -74,6 +78,8 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 newPayment() {
 
   this.paymentDetail.newItemPayment();
+ 
+  this.enablePaymentDetail = true;
 
 }
 
@@ -93,10 +99,24 @@ onPaymentRowClicked(row) {
 
   console.log('Row clicked: ', row);
   this.paymentId = row.id;
+  this.poId = row.fsaCppPurchaseOrderId;
   this.enablePaymentDetail  = true;
 
   this.paymentDetail.copyModelToForm(row);
 
+  this.paymentDetail.focusPayment();
+
+}
+
+refreshPaymentListHandler(itemId: number) {
+  this.delay(1000).then(any => {
+    this.itemService.getPaymentByItemId(itemId)
+  .subscribe(items => {
+      this.paymentListDS.data = items;
+       this.enablePaymentList  = (items.length > 0 ? true : false);
+       this.paymentNumber = items.length;
+  });
+});
 }
 
 onItemRowClicked(row) {
@@ -106,6 +126,8 @@ onItemRowClicked(row) {
  //   this.enableItemList = true;
 
   console.log('Row clicked: ', row);
+  this.itemId = row.id;
+  this.poId = row.fsaCppPurchaseOrderId;
 
   // Retrieve the payments for this row
 
@@ -113,6 +135,7 @@ onItemRowClicked(row) {
   .subscribe(items => {
       this.paymentListDS.data = items;
        this.enablePaymentList  = (items.length > 0 ? true : false);
+       this.paymentNumber = items.length;
   });
 
   this.paymentDetail.initFees();
@@ -238,6 +261,8 @@ showFilter() {
 
   onSelect(po: PurchaseOrder): void {
 
+    this.itemListDS.paginator = this.itemPaginator;
+
     this.poFocus.nativeElement.focus();
 
     this.enableItemList = true;
@@ -245,6 +270,8 @@ showFilter() {
     this.enableItemDetail = false;
 
     this.selectedPO = po;
+
+    this.poId = po.id;
 
     this.selectedPO.poIssueDate = this.formatDate(this.selectedPO.poIssueDate);
     this.selectedPO.dateReported = this.formatDate(this.selectedPO.dateReported);
@@ -269,6 +296,9 @@ showFilter() {
 }
 
   ngOnInit() {
+
+    this.poDataSource.paginator = this.paginator;
+
 
 /*    this.poService.getBidType()
     .subscribe(_bidType => {

@@ -23,9 +23,6 @@ const poByIdUrl = Constants.SERVER_URL + 'api/transaction/';
 const adminFeeUrl = Constants.SERVER_URL + 'api/bidType/';
 
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })

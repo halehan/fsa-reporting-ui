@@ -1,6 +1,6 @@
 <div [hidden] = "!enableList" class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Purchase Order Items {{poId}} {{enableItemDetail}} {{enableList}} </h3>
+      <h3 class="panel-title">Purchase Order Items </h3>
     </div>
     <div class="panel-body">
         <mat-table  #table [dataSource]="itemListDS" matSort>
@@ -11,8 +11,8 @@
             </ng-container>
               
             <ng-container matColumnDef="itemDescription">
-                <mat-header-cell class="pull-left" fxFlex="300px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
-                <mat-cell fxFlex="300px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
+                <mat-header-cell class="pull-left" fxFlex="275px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
+                <mat-cell fxFlex="275px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="itemMake">
@@ -31,13 +31,18 @@
             </ng-container>
   
             <ng-container matColumnDef="qty">
-                    <mat-header-cell class="pull-left" fxFlex="125px"  *matHeaderCellDef mat-sort-header> Qty </mat-header-cell>
-                    <mat-cell fxFlex="125px" *matCellDef="let itemList">{{itemList.qty}}</mat-cell>
+                    <mat-header-cell class="pull-left" fxFlex="75px"  *matHeaderCellDef mat-sort-header> Qty </mat-header-cell>
+                    <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.qty}}</mat-cell>
             </ng-container>
   
              <ng-container matColumnDef="itemAmount">
-                    <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
-                    <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemAmount | currency}}</mat-cell>
+                    <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
+                    <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemAmount | currency}}</mat-cell>
+             </ng-container>
+
+             <ng-container matColumnDef="adminFeeDue">
+                <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Admin Fee </mat-header-cell>
+                <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.adminFeeDue | currency}}</mat-cell>
              </ng-container>
   
                <ng-container matColumnDef="edit">

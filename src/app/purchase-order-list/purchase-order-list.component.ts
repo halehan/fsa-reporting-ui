@@ -64,6 +64,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   bidType: string;
   enableItemDetail: boolean;
   enableItemList: boolean;
+  enablePoList: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -79,7 +80,8 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
               private dateFormatPipe: DateFormatPipe ) {
 
                 this.enableItemDetail = false;
-
+                this.enablePoList = false;
+ 
                 console.log(moment.locale()); // en
                 moment.locale('en');
                 console.log(moment.locale()); // en
@@ -132,6 +134,7 @@ onRowClicked(row) {
     this.purchaseOrderDetailComponent.getPurchaseOrder(row.id);
   }
 
+  this.purchaseOrderDetailComponent.focusPoDetail();
 
 }
 
@@ -330,6 +333,8 @@ validateFormDates(g: FormGroup) {
 editName() {
   this.poFocus.nativeElement.focus();
 }
+
+
 
 refreshPurchaseOrderListHandler(bidId: string) {
   this.sendData(bidId);
@@ -541,6 +546,7 @@ showFilter() {
     this.poService.getAdminFee(filterVal)
     .subscribe(bid => {
         this.currentBid = bid[0];
+        this.enablePoList  = (bid.length > 0 ? true : false);
     });
 
     this.refreshPoList(filterVal);

@@ -1,5 +1,11 @@
+.container {
+ // background-color: #e2ece4;
+  max-width: 1150px;
+  width: 1150px;
+}
+
 hr {
-  width: 1225px;
+  width: 1150px;
 }
 
 .form-control{
@@ -32,8 +38,8 @@ hr {
 
 .new-po {
   margin-left: 10px;
-  padding-left: 1100px;
-  padding-bottom: 25px;
+  padding-left: 1050px;
+  padding-bottom: 10px;
  
 }
 
@@ -62,25 +68,25 @@ hr {
 }
 
 .mat-footer-row{
-  width: 1225px;
+  width: 1150px;
   min-height: 1px;
 }
 
 .mat-header-row{
-  width: 1225px;
+  width: 1150px;
 }
 
 .mat-row{
-  width: 1225px;
+  width: 1150px;
   min-height: 1px;
 }
 
 .mat-header-cell{
-width: 1225px;
+width: 1150px;
 }
 
 .mat-table{
-  width: 1225px;
+  width: 1150px;
 }
 
 .mat-table-800{
@@ -97,7 +103,7 @@ width: 1225px;
 }
 
 .mat-header-cell{
-  width: 1225px;
+  width: 1150px;
 }
 
 .mat-icon{
@@ -107,11 +113,11 @@ width: 1225px;
 
 .mat-paginator{
   padding-top: 4px;
-  width: 1225px;
+  width: 1150px;
 }
 
 .mat-toolbar {
-  width: 1225px;
+  width: 1150px;
   height: 30px;
   padding-bottom: 4px;
 }
@@ -140,13 +146,15 @@ width: 1225px;
   padding-left: 0px;
 }
 
+/*
+
 .row {
 
   margin-left: -65px;
 
 }
 
-
+*/
 
 
 
