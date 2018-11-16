@@ -128,6 +128,7 @@ onItemRowClicked(row) {
   console.log('Row clicked: ', row);
   this.itemId = row.id;
   this.poId = row.fsaCppPurchaseOrderId;
+  this.enablePaymentDetail = false;
 
   // Retrieve the payments for this row
 

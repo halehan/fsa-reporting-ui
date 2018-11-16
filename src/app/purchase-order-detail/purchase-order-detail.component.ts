@@ -1,7 +1,7 @@
 
 import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Output, EventEmitter, Input  } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import {BehaviorSubject, Observable} from 'rxjs';
+
 import { PurchaseOrder } from '../model/index';
 import { Dealer, CityAgency, BidType, BidNumber, PoStatusType, Specification } from '../model/index';
 import { ContactRequest } from '../model/contact-request';

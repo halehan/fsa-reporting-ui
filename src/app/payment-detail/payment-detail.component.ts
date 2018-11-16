@@ -162,7 +162,7 @@ export class PaymentDetailComponent implements OnInit {
       lateFeeAmount: new FormControl(),
       lateFeeCheckNumber: new FormControl(),
       lateFeeCheckDate: new FormControl(),
-      comments: new FormControl()
+      comment: new FormControl()
 
       });
   }
@@ -187,8 +187,8 @@ export class PaymentDetailComponent implements OnInit {
       this.paymentForm.controls['fsaRefundCheckNumber'].patchValue(row.fsaRefundCheckNum, {emitEvent : false});
       this.paymentForm.controls['lateFeeAmount'].patchValue(row.lateFeeAmount, {emitEvent : false});
       this.paymentForm.controls['lateFeeCheckNumber'].patchValue(row.lateFeeCheckNumber, {emitEvent : false});
-      this.paymentForm.controls['lateFeeCheckDate'].patchValue(row.lateFeeCheckDate, {emitEvent : false});
-      this.paymentForm.controls['comments'].patchValue(row.comments, {emitEvent : false});
+      this.paymentForm.controls['lateFeeCheckDate'].patchValue(this.formatDate(row.lateFeeCheckDate), {emitEvent : false});
+      this.paymentForm.controls['comment'].patchValue(row.comment, {emitEvent : false});
 
       this.formControlValueChanged();
 
@@ -220,6 +220,7 @@ export class PaymentDetailComponent implements OnInit {
       this.currentPayment.fsaRefundAmount = this.paymentForm.controls.fsaRefundAmount.value;
       this.currentPayment.lateFeeAmt = this.paymentForm.controls.lateFeeAmount.value;
       this.currentPayment.lateFeeCheckDate = this.paymentForm.controls.lateFeeCheckDate.value;
+      this.currentPayment.comment = this.paymentForm.controls.comment.value;
 
     }
 

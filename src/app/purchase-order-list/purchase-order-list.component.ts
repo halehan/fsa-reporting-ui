@@ -65,6 +65,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   enableItemDetail: boolean;
   enableItemList: boolean;
   enablePoList: boolean;
+  enablePoDetail: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -81,7 +82,8 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
                 this.enableItemDetail = false;
                 this.enablePoList = false;
- 
+                this.enablePoDetail = false;
+                
                 console.log(moment.locale()); // en
                 moment.locale('en');
                 console.log(moment.locale()); // en

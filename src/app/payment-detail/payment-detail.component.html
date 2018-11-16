@@ -29,14 +29,14 @@
                               </div>
                       </div>   
 
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                               <div class="form-group input-group-sm form-black label-floating is-empty">
                                       <label class="label-small">Check Number</label>
                                       <input type="text"  formControlName="paymentCheckNumber"   class="form-control" >
                               </div>
                       </div>
 
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                               <div class="form-group input-group-sm form-black label-floating is-empty">
                                       <label class="label-small">Correction</label>
                                       <input type="text"   formControlName="correction"   class="form-control" >
@@ -109,14 +109,14 @@
                       <div class="col-md-2">
                         <div class="form-group input-group-sm form-black label-floating is-empty">
                         <label class="label-small">Late Fee Check Date</label>
-                       <input  type="text" formControlName="lateFeeCheckDate"  class="form-control" >
+                       <input  type="text" formControlName="lateFeeCheckDate"  class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" >
                       </div>
                       </div>
 
-                      <div class="col-md-2">
+                      <div class="col-md-6">
                         <div class="form-group input-group-sm form-black label-floating is-empty">
                         <label class="label-small">Comments</label>
-                       <input disabled type="text" formControlName="comments"  class="form-control" >
+                       <input  type="text" formControlName="comment"  class="form-control" >
                       </div>
                       </div>  
         
