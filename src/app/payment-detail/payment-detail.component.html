@@ -6,7 +6,7 @@
   <div class="panel-body">
       <div class="card-content"> 
           <form [formGroup]="paymentForm" >
-              <div class="row shadow p-3 mb-5 bg-white rounded">
+              <div class="row shadow p-3 mb-5 shade-bg rounded">
 
                       <div class="col-md-2">
                               <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -18,7 +18,7 @@
                       <div class="col-md-2">
                         <div class="form-group input-group-sm form-black label-floating is-empty">
                                 <label class="label-small">Payment Amount</label>
-                                <input  #paymentFocus type="text"  formControlName="paymentAmount"   class="form-control" >
+                                <input currencyMask #paymentFocus type="text"  formControlName="paymentAmount"   class="form-control" >
                         </div>
                 </div>   
 
@@ -46,48 +46,48 @@
                       <div class="col-md-2">
                               <div class="form-group input-group-sm form-black label-floating is-empty">
                                       <label class="label-small">Audit Difference</label>
-                                      <input type="text"   formControlName="auditDifference"   class="form-control" >
+                                      <input currencyMask type="text"   formControlName="auditDifference"   class="form-control" >
                               </div>
                       </div>
                           
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
-                                      <label class="label-small">Fsa Alloc</label>
-                                      <input disabled type="text"  required formControlName="fsaAlloc"   class="form-control" >
+                                      <label class="label-small">FSA Alloc</label>
+                                      <input currencyMask disabled type="text"  required formControlName="fsaAlloc"   class="form-control" >
                                   </div>
                           </div> 
 
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
-                                      <label class="label-small">Fac Alloc</label>
-                                      <input disabled  type="text"  required formControlName="facAlloc"  class="form-control" >
+                                      <label class="label-small">FAC Alloc</label>
+                                      <input currencyMask disabled  type="text"  required formControlName="facAlloc"  class="form-control" >
                                   </div>
                           </div> 
 
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
-                                      <label class="label-small">Ffca Fee</label>
-                                      <input disabled type="text"  formControlName="ffcaAlloc"  class="form-control" >
+                                      <label class="label-small">FFCA Fee</label>
+                                      <input currencyMask disabled type="text"  formControlName="ffcaAlloc"  class="form-control" >
                                   </div>
                           </div> 
 
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
                                       <label class="label-small">Total Fee</label>
-                                      <input disabled type="text"  formControlName="totalAlloc"  class="form-control" >
+                                      <input currencyMask disabled type="text"  formControlName="totalAlloc"  class="form-control" >
                                   </div>
                           </div> 
 
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
-                                      <label class="label-small">Fsa Refund Amount</label>
-                                      <input  type="text"  formControlName="fsaRefundAmount"  class="form-control" >
+                                      <label class="label-small">FSA Refund Amount</label>
+                                      <input currencyMask type="text"  formControlName="fsaRefundAmount"  class="form-control" >
                                   </div>
                           </div> 
 
                           <div class="col-md-2">
                                   <div class="form-group input-group-sm form-black label-floating is-empty">
-                                      <label class="label-small">Fsa Refund Check Number</label>
+                                      <label class="label-small">FSA Refund Check Number</label>
                                       <input  type="text" formControlName="fsaRefundCheckNumber"  class="form-control" >
                                   </div>
                           </div> 
@@ -95,7 +95,7 @@
                           <div class="col-md-2">
                             <div class="form-group input-group-sm form-black label-floating is-empty">
                                 <label class="label-small">Late Fee Anount</label>
-                                <input  type="text" formControlName="lateFeeAmount"  class="form-control" >
+                                <input currencyMask type="text" formControlName="lateFeeAmount"  class="form-control" >
                             </div>
                     </div> 
 

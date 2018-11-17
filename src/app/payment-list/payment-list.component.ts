@@ -24,7 +24,7 @@ import { PaymentDetailComponent } from '../payment-detail/payment-detail.compone
 export class PaymentListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
-                      'dateReported', 'poIssueDate', 'poAmount', 'adminFeeDue'];
+                      'poIssueDate', 'dateReported', 'poAmount', 'adminFeeDue'];
   itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue'];
   paymentColumns = ['paymentNumber', 'paymentCheckNum',  'fsaAlloc', 'facAlloc', 'ffcaAlloc', 'totalAlloc', 'paymentAmount', 'paymentDate'];
 
@@ -54,6 +54,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   enableItemList: boolean;
   enablePaymentList: boolean;
   enablePaymentDetail: boolean;
+  enableNewPayment: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -71,6 +72,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 
                 this.enableItemDetail = false;
                 this.enablePaymentDetail = false;
+                this.enableNewPayment = false;
 
 
 }
@@ -131,12 +133,12 @@ onItemRowClicked(row) {
   this.enablePaymentDetail = false;
 
   // Retrieve the payments for this row
-
   this.itemService.getPaymentByItemId(row.id)
   .subscribe(items => {
       this.paymentListDS.data = items;
        this.enablePaymentList  = (items.length > 0 ? true : false);
        this.paymentNumber = items.length;
+       this.enableNewPayment = true;
   });
 
   this.paymentDetail.initFees();
@@ -147,6 +149,7 @@ onRowClicked(row) {
   this.selectedPO = row;
   this.payCd = row.payCd;
   this.bidType = row.bidType;
+  this.enableNewPayment = false;
 
   this.poService.getAdminFee(row.bidNumber)
   .subscribe(bid => {

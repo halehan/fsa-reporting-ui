@@ -65,7 +65,7 @@ export class ItemDetailComponent implements OnInit {
     console.log(this.currentBid.BidNumber);
     console.log(this.currentBid.BidType);
 
-    this.adminFeeRate = this.currentBid.AdminFeeRate;
+    this.adminFeeRate = parseFloat(this.currentBid.AdminFeeRate);
 
     this.itemService.getItemByBidId(this.currentBid.BidNumber)
     .subscribe(items => {
@@ -225,8 +225,9 @@ export class ItemDetailComponent implements OnInit {
    return ((poAmount * shift) | 0) / shift;
   };
 
-  calculateAdminFee(poAmount: number) {
-   return this.truncateDecimals(poAmount * this.currentBid.AdminFeeRate, 2);
+  calculateAdminFee(poAmount: number, fee: number) {
+   // return poAmount * fee;
+    return this.truncateDecimals(poAmount * fee, 2);
   }
 
   calculateFee(amount: number, fee: number) {

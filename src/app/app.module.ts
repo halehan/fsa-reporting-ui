@@ -37,6 +37,7 @@ import { UserIdleModule } from 'angular-user-idle';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import {
   MatExpansionPanelHeader,
@@ -161,7 +162,8 @@ import { PaymentDetailComponent } from './payment-detail/payment-detail.componen
     MatProgressSpinnerModule,
     MatGridListModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxCurrencyModule
   ],
   providers: [
     AuthGuard,

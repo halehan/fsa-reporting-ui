@@ -1,15 +1,14 @@
 .container {
  // background-color: #e2ece4;
-  max-width: 1150px;
-  width: 1150px;
+ max-width: 960px;
+ padding-left: 25px;
+ padding-right: 10px;
+ margin-left: 25px;
+ padding-top: 20px;
 }
 
 hr {
   width: 1150px;
-}
-
-.bg-white {
-  background-color: #bedec8
 }
 
 .form-control{
@@ -126,6 +125,12 @@ width: 1150px;
   padding-bottom: 4px;
 }
 
+.mat-toolbar-row {
+  width: 1150px;
+  height: 30px;
+  padding-bottom: 4px;
+}
+
 .mat-row:hover {
   background-color: green;
 }
@@ -138,12 +143,6 @@ width: 1150px;
   width: 30px;
   height: 30px;
   line-height: 30px;
-}
-
-
-.card-content {
-  padding-left: 10px;
-  width: 1200px;
 }
 
 .pull-left {

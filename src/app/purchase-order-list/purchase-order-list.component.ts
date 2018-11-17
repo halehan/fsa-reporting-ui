@@ -24,7 +24,7 @@ import { PurchaseOrderDetailComponent } from '../purchase-order-detail/purchase-
 export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
-                      'dateReported', 'poIssueDate', 'poAmount', 'edit', 'addPayment'];
+                      'poIssueDate', 'dateReported', 'poAmount', 'edit', 'addPayment'];
 
   paymentColumns = ['paymentDate', 'paymentAmount', 'paymentNumber', 'paymentCheckNum', 'edit', 'delete'];
   poDataSource = new MatTableDataSource();
@@ -39,7 +39,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   showPayment: Boolean = false;
   showNewPayment: Boolean = false;
   bids: String[] = [];
-  fuck: Boolean = false;
+   fuck: Boolean = false;
   specs: Specification[] = [];
   poStatusTypeCodes: PoStatusType[] = [];
   agencyCodes: AgencyType[] = [];
@@ -83,7 +83,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
                 this.enableItemDetail = false;
                 this.enablePoList = false;
                 this.enablePoDetail = false;
-                
+
                 console.log(moment.locale()); // en
                 moment.locale('en');
                 console.log(moment.locale()); // en
@@ -105,6 +105,8 @@ onRowClicked(row) {
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
     this.enableItemDetail = false;
     this.enableItemList = true;
+    this.enablePoDetail = true;
+
 
     this.selectedPayCd = row.payCd;
     this.selectedPoId = row.id;
@@ -496,6 +498,7 @@ showFilter() {
 
     this.selectedPayCd = po.payCd;
     this.selectedPoId = po.id;
+    this.bidId = po.bidNumber;
 
     this.dateFailed = false;
     this.isNewPo = false;
@@ -662,9 +665,17 @@ showFilter() {
   }
 
   newPurchaseOrder() {
+
+    this.poService.getBids()
+    .subscribe(bids => {
+        this.bids = bids;
+        this.bidNumbers = bids;
+    });
+
     this.enableItemList = false;
     this.enableItemDetail = false;
     this.isNewPo = true;
+    this.enablePoDetail = true;
     this.purchaseOrderDetailComponent.newPo();
   }
 
@@ -691,7 +702,7 @@ showFilter() {
   }
 
   calculateAdminFee(poAmount: number) {
-    return this.truncateDecimals(poAmount * this.currentBid.AdminFeeRate, 2);
+    return this.truncateDecimals(poAmount * parseFloat(this.currentBid.AdminFeeRate), 2);
 
   }
 

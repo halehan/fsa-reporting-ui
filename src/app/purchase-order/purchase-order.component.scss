@@ -7,6 +7,10 @@ body {
     padding-top: 50px;
   }
 
+  
+
+  
+
   table {
     width: 100%;
   }
@@ -31,15 +35,28 @@ body {
   }
 
   .container {
+    
+    max-width: 1150px;
+    padding-left: 25px;
+    padding-right: 10px;
+    margin-left: 15px;
+    padding-top: 20px;
+
+  }
+/*
+  .container {
     margin-left: 30px;
     padding-top: 20px;
   
   }
-
+*/
   .mat-toolbar {
-    width: 1225px;
+    width: 1150px;
+    height: 40px;
+    padding-bottom: 4px;
   }
-/*
+
+  
   .mat-header-row{
     width: 1225px;
 }
@@ -48,7 +65,7 @@ body {
   width: 1225px;
   color: red;
 }
-  */
+  
   /*
    * Sidebar
    */

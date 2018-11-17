@@ -51,8 +51,8 @@
         </ng-container>
 
         <ng-container matColumnDef="dateReported">
-              <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-              <mat-cell fxFlex="100px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
+              <mat-header-cell fxFlex="120px" *matHeaderCellDef mat-sort-header> PO Reported Date </mat-header-cell>
+              <mat-cell fxFlex="120px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
             </ng-container>
     
         <ng-container matColumnDef="poIssueDate">
@@ -202,17 +202,17 @@
             </ng-container>
   
             <ng-container matColumnDef="fsaAlloc">
-                    <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header> Fsa Allocation </mat-header-cell>
+                    <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header> FSA Allocation </mat-header-cell>
                     <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.fsaAlloc  | currency }}</mat-cell>
                 </ng-container>
               
             <ng-container matColumnDef="facAlloc">
-                    <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Fac Allocation </mat-header-cell>
+                    <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> FAC Allocation </mat-header-cell>
                     <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.facAlloc  | currency }}</mat-cell>
             </ng-container>
   
             <ng-container matColumnDef="ffcaAlloc">
-                <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header>Ffca Alloc </mat-header-cell>
+                <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header>FFCA Alloc </mat-header-cell>
                 <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.ffcaAlloc  | currency }}</mat-cell>
             </ng-container>
 
@@ -275,7 +275,7 @@
     
   </div>
 
-  <div class="new-po form-group col-md-8">
+  <div  [hidden] = "!enableNewPayment" class="new-po form-group col-md-8">
     <button mat-button (click)="newPayment()" type="submit"  class="mat-flat-button btn-success insert-button">New Payment</button>  
   </div>
 

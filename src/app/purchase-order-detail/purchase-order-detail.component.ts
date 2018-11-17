@@ -28,6 +28,7 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
   @Input() bidId: String;
   @Input() poId: number;
   @Input() enableItemDetail: boolean;
+  @Input() enablePoDetail: boolean;
   @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
   @ViewChild(ItemListComponent) itemList: ItemListComponent;
 
@@ -118,7 +119,7 @@ truncateDecimals(poAmount: number, places: number) {
 };
 
 calculateAdminFee(poAmount: number) {
- return this.truncateDecimals(poAmount * this.currentBid.AdminFeeRate, 2);
+ return this.truncateDecimals(poAmount * parseFloat(this.currentBid.AdminFeeRate), 2);
 // return this.truncateDecimals(poAmount * .07, 2);
 
 }
@@ -385,7 +386,7 @@ getPurchaseOrder(id: number) {
   this.poService.getPoById(id)
     .subscribe(po => {
         this.currentPO = po[0];
-        console.log(this.currentPO.id);
+    //    console.log(this.currentPO.id);
         this.copyModelToForm();
     });
 

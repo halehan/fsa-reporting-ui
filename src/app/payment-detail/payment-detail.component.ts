@@ -149,7 +149,7 @@ export class PaymentDetailComponent implements OnInit {
       fsaCppPurchaseOrderId: new FormControl(),
       paymentNumber:  new FormControl(),
       paymentDate:  new FormControl('', Validators.required),
-      paymentCheckNumber: new FormControl(),
+      paymentCheckNumber: new FormControl('', Validators.required),
       paymentAmount: new FormControl('', Validators.required),
       correction: new FormControl(),
       auditDifference: new FormControl(),
@@ -277,12 +277,12 @@ export class PaymentDetailComponent implements OnInit {
       const _facFee: number = this.calculateFee(_amount, this.facFee);
       const _ffcaFee: number = this.calculateFee(_amount, this.ffcaFee);
 
-      const _totalAlloc: number = _fsaFee + _facFee + _ffcaFee;
+      const _totalAlloc: number =  _fsaFee + _facFee + _ffcaFee ;
 
       this.paymentForm.controls['fsaAlloc'].patchValue(_fsaFee, {emitEvent : false});
       this.paymentForm.controls['facAlloc'].patchValue(_facFee, {emitEvent : false});
       this.paymentForm.controls['ffcaAlloc'].patchValue(_ffcaFee, {emitEvent : false});
-      this.paymentForm.controls['totalAlloc'].patchValue(this.truncateDecimals(_totalAlloc, 3), {emitEvent : false});
+      this.paymentForm.controls['totalAlloc'].patchValue(_totalAlloc, {emitEvent : false});
 
                     });
 

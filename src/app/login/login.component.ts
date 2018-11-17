@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     // Start watch when time is up.
     this.userIdle.onTimeout().subscribe(() => // reset login status
     this.authenticationService.logout());
-  //  console.log('Time is up!');
+    console.log('Time is up!');
 
   }
 

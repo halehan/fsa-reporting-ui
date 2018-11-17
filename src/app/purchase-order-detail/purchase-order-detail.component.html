@@ -1,17 +1,24 @@
-<div class="tight panel panel-primary">
+<div  class="tight panel panel-primary">
 <!-- Default panel contents -->
         <div class="panel-heading">
              <!--   <h4 class="panel-title">Purchase Order Details {{bidId}} {{poId}} {{ enableItemDetail }}</h4>  -->
-             <h4 class="panel-title">Purchase Order Details</h4>
+             <h4 class="panel-title">Purchase Order Details {{enablePoDetail}}</h4>
         </div>
         <div class="panel-body">
 
-                        <div class="card-content"> 
+                        <div class="card-content shade-bg"> 
                                         <form [formGroup]="poForm">
-                                         <div class="row shadow p-3 mb-5 bg-white rounded">
+                                         <div class="row shadow p-3 mb-5 rounded shade-bg">
                                        <!--     <mat-toolbar >
                                                      <span>Purchase Order New {{isNew}}</span>
                                              </mat-toolbar>  -->
+
+                                             <div class="col-md-4 topMargin">
+                                                <div class="form-group input-group-sm form-black label-floating is-empty">  
+                                                       <label class="label-small">Vendor</label>
+                                                       <input  disabled type="text" formControlName="dealerName"  required class="form-control" >
+                                                </div>  
+                                              </div> 
                                      
                                               <div class="col-md-4 topMargin">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -159,7 +166,7 @@
                                              <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Amount</label>
-                                                         <input type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
+                                                         <input currencyMask type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
                                                      </div>
                                              </div>  
                                      
@@ -173,7 +180,7 @@
                                              <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">Admin Fee Due</label>
-                                                         <input type="number" disabled placeholder="$0.00"  formControlName="adminFeeDue"   class="form-control" >
+                                                         <input currencyMask type="text" disabled name="adminFeeDue"  formControlName="adminFeeDue"  class="form-control" >
                                                      </div>
                                              </div>  
                                      

@@ -51,8 +51,8 @@
               </ng-container>
 
               <ng-container matColumnDef="dateReported">
-                    <mat-header-cell fxFlex="110px" *matHeaderCellDef mat-sort-header> PO Issue Date </mat-header-cell>
-                    <mat-cell fxFlex="110px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
+                    <mat-header-cell fxFlex="120px" *matHeaderCellDef mat-sort-header> PO Reported Date  </mat-header-cell>
+                    <mat-cell fxFlex="120px" *matCellDef="let row">{{row.dateReported | dateFormatPipe}}</mat-cell>
                   </ng-container>
           
               <ng-container matColumnDef="poIssueDate">
@@ -102,7 +102,7 @@
           <br><hr> 
     
           <div class="new-po form-group col-md-8">
-                <button mat-button (click)="newPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O.</button>  
+                <button mat-button (click)="newPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O. </button>  
            </div>
 
       </div>          
@@ -115,11 +115,11 @@
         *ngIf="selectedPO"
       -->
 
-      <app-purchase-order-detail [enableItemDetail] = "enableItemDetail" [poId] = "selectedPO.id" [bidId]="selectedPO.bidNumber" [isNew]="isNewPo" (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" *ngIf="selectedPO"></app-purchase-order-detail> 
-  <!--    <app-item-list [enableItemDetail] = "enableItemDetail" [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> -->
+      <app-purchase-order-detail [hidden]="!enablePoDetail" [enableItemDetail] = "enableItemDetail" [poId] = "selectedPoId" [bidId]= "bidId" [isNew]="isNewPo" (refreshPurchaseOrderList)="refreshPurchaseOrderListHandler($event)" ></app-purchase-order-detail> 
+  <!--    <app-item-list [enableItemDetail] = "enableItemDetail" [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  ></app-item-list> *ngIf="selectedPO"    -->
       <app-item-list [currentBid] = "currentBid" [poId] = "selectedPoId"  [payCd] = "selectedPayCd"  [hidden] = "!enableItemList" ></app-item-list> 
 
-      <br> 
+      <br>  
     
     </div>
 </div>            
