@@ -9,6 +9,7 @@ import { faSignOutAlt, faTachometerAlt, faHome, faChartPie, faAddressBook, faCoi
 })
 export class NavbarComponent implements OnInit {
   appTitle = ' FSA Cooperative Purchasing Program Reporting';
+  appVersion = '1.0.0';
   homeActive = '';
   dashActive = '';
   profileActive = '';
