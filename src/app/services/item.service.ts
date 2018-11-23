@@ -19,6 +19,7 @@ const derivedItemUrl = Constants.SERVER_URL + 'api/item/derived/';
 const feeUrl = Constants.SERVER_URL +  'api/fee/';
 const itemBidCodeByIdUrl = Constants.SERVER_URL +  'api/item/id/';
 const paymentByItemIdUrl = Constants.SERVER_URL +  'api/transaction/payment/';
+const itemDeleteUrl =   Constants.SERVER_URL +  'api/item/delete/'; 
 
 
 
@@ -62,6 +63,10 @@ getItemByPo(poId: number) {
   return this.http.get(itemPoUrl + poId, this.jwt()).map((response: Response) => response.json());
 }
 
+// Get Item details per ItemNumber
+deleteItem(itemId: number) {
+  return this.http.get(itemDeleteUrl + itemId, this.jwt()).map((response: Response) => response.json());
+}
 
 // Get Item details per ItemNumber
 getItemById(itemId: number) {

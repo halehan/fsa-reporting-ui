@@ -235,7 +235,7 @@ export class PaymentDetailComponent implements OnInit {
 
 
   truncateDecimals(poAmount: number, places: number) {
-    const shift = Math.pow(10, places);
+    const shift = Math.pow(20, places);
    return ((poAmount * shift) | 0) / shift;
   };
 
@@ -273,11 +273,15 @@ export class PaymentDetailComponent implements OnInit {
         this.fsaFee = this.fsaFeeObj.distributionPct;
       }
 
-      const _fsaFee: number = this.calculateFee(_amount, this.fsaFee);
-      const _facFee: number = this.calculateFee(_amount, this.facFee);
-      const _ffcaFee: number = this.calculateFee(_amount, this.ffcaFee);
+      const _fsaFee: number = this.truncateDecimals(this.calculateFee(_amount, this.fsaFee), 2);
+      const _facFee: number = this.truncateDecimals(this.calculateFee(_amount, this.facFee), 2);
+      const _ffcaFee: number = this.truncateDecimals(this.calculateFee(_amount, this.ffcaFee), 2);
 
-      const _totalAlloc: number =  _fsaFee + _facFee + _ffcaFee ;
+      const _totalAlloc: number =  this.truncateDecimals(_fsaFee + _facFee + _ffcaFee, 2);
+
+      console.log('_fsaFee ' + _fsaFee);
+      console.log('_facFee ' + _facFee);
+      console.log('_ffcaFee' + _ffcaFee);
 
       this.paymentForm.controls['fsaAlloc'].patchValue(_fsaFee, {emitEvent : false});
       this.paymentForm.controls['facAlloc'].patchValue(_facFee, {emitEvent : false});

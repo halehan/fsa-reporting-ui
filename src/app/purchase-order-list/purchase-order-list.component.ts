@@ -95,6 +95,27 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
 
 }
 
+deletePurchaseOrder (row) {
+
+  if ( confirm('Are you sure you want to delete PO?  ' + row.poNumber + ' - ' + row.dealerName ) ) {
+
+    this.poService.deletePurchaseOrder(row.id).subscribe(po => {
+    });
+
+    this.enablePoDetail = false;
+    this.enableItemDetail = false;
+    this.enableItemList = false;
+
+    this.refreshPoList(row.bidNumber);
+
+     this.toastr.success('Purchase Order delete Successful', 'Purchase Delete', {
+      timeOut: 2000,
+      });
+
+  }
+
+}
+
 newItem () {
   this.itemList.chain();
 }
@@ -158,6 +179,7 @@ createFormGroup() {
       agencyFlag: new FormControl(),
       dealerFlag: new FormControl(),
       poComplete: new FormControl(),
+      poFinal: new FormControl(),
  //     qty: new FormControl(),
       poAmount: new FormControl(),
   //    actualPo: new FormControl(),
@@ -254,7 +276,7 @@ copyFormToModel() {
 //  this.selectedPO.vehicleType  = this.poForm.controls.vehicleType.value;
   this.selectedPO.agencyFlag  = this.poForm.controls.agencyFlag.value;
   this.selectedPO.dealerFlag = this.poForm.controls.dealerFlag.value;
-  this.selectedPO.poComplete = this.poForm.controls.poComplete.value;
+  this.selectedPO.poStatus = this.poForm.controls.poStatus.value;
   this.selectedPO.poAmount = this.poForm.controls.poAmount.value;
  // this.selectedPO.actualPo = this.poForm.controls.actualPo.value;
   this.selectedPO.adminFeeDue = this.poForm.controls.adminFeeDue.value;
@@ -284,7 +306,7 @@ if (this.selectedPO != null) {
  // this.poForm.controls['vehicleType'].patchValue(this.selectedPO.vehicleType, {emitEvent : false});
   this.poForm.controls['agencyFlag'].patchValue(this.selectedPO.agencyFlag, {emitEvent : false});
   this.poForm.controls['dealerFlag'].patchValue(this.selectedPO.dealerFlag, {emitEvent : false});
-  this.poForm.controls['poComplete'].patchValue(this.selectedPO.poComplete, {emitEvent : false});
+  this.poForm.controls['poStatus'].patchValue(this.selectedPO.poStatus, {emitEvent : false});
 
  // this.poForm.controls['qty'].patchValue(this.selectedPO.qty, {emitEvent : false});
   this.poForm.controls['poAmount'].patchValue(this.selectedPO.poAmount, {emitEvent : false});
@@ -301,7 +323,7 @@ if (this.selectedPO != null) {
 partialClearPo() {
 
   this.poForm.controls['poNumber'].patchValue('12', {emitEvent : false});
-  this.poForm.controls['poComplete'].patchValue('', {emitEvent : false});
+  this.poForm.controls['poStatus'].patchValue('', {emitEvent : false});
 
  // this.poForm.controls['qty'].patchValue('', {emitEvent : false});
   this.poForm.controls['poAmount'].patchValue('', {emitEvent : false});
@@ -373,7 +395,7 @@ sendData(bidId: string) {
 
 refreshPoList(bidId: string) {
 
-  this.delay(1000).then(any => {
+  this.delay(250).then(any => {
     this.poService.getByBidNumber(bidId).subscribe(po => {
       this.purchaseOrders = po;
       this.poDataSource.data = po;
@@ -389,18 +411,6 @@ async delay(ms: number) {
   await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
 }
 
-/*
-sleep(milliseconds) {
-  console.log('About to sleep for ' + milliseconds + 'milliSecs');
-  const sleep = ( ms ) => {
-    const end = +(new Date()) + ms;
-    console.log('End Time to wake up ' + end);
-    while ( +(new Date()) < end ) {
-      console.log('Im Sleep');
-    }
-   }
-}
-*/
 revert() {
   // Resets to blank object
   this.poForm.reset();
@@ -586,10 +596,10 @@ showFilter() {
       this.poStatusTypeCodes = codes;
   });
 
-    this.poService.getDealer()
+ /*   this.poService.getDealer()
     .subscribe(_dealers => {
         this.dealers = _dealers;
-    });
+    });  */
 
     this.poService.getCityAgency()
     .subscribe(_cityAgency => {

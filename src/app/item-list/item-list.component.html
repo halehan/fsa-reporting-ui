@@ -66,7 +66,7 @@
             <ng-container matColumnDef="delete">
                         <mat-header-cell fxFlex="50px" *matHeaderCellDef mat-sort-header> Delete </mat-header-cell>
                         <mat-cell fxFlex="50px" *matCellDef="let row">
-                            <button mat-icon-button color="primary" focusable="false" (click)="row.confirmEditCreate()">
+                            <button mat-icon-button color="primary" focusable="false" (click)="deleteItem(row)">
                                 <i class="fa fa-trash-o  mat-icon"></i>
                             </button>  
                         </mat-cell>

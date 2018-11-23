@@ -9,7 +9,7 @@ import { faSignOutAlt, faTachometerAlt, faHome, faChartPie, faAddressBook, faCoi
 })
 export class NavbarComponent implements OnInit {
   appTitle = ' FSA Cooperative Purchasing Program Reporting';
-  appVersion = '1.0.0';
+  appVersion = '1.0.1';
   homeActive = '';
   dashActive = '';
   profileActive = '';
@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
   reportActive = '';
   userActive = '';
   listActive = '';
+  searchActive = '';
   vis: boolean;
   styleCls = '';
 
@@ -40,6 +41,7 @@ export class NavbarComponent implements OnInit {
     this.bidActive = this.nav.getBidActive();
     this.reportActive = this.nav.getReportActive();
     this.userActive = this.nav.getUserActive();
+    this.searchActive = this.nav.getSearchActive();
 
   }
 

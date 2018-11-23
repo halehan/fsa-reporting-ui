@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import {MatPaginator, MatTableDataSource , MatSort} from '@angular/material';
 import { PurchaseOrder, Dealer, CityAgency, BidType, Payment, BidNumber,
   ItemBidTypeCode, PoStatusType, Specification, AgencyType, Item } from '../model/index';
+import { ToastrService } from 'ngx-toastr';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 import { ItemService } from '../services/item.service';
 import { ItemDetailComponent } from '../item-detail/item-detail.component';
@@ -33,10 +34,31 @@ export class ItemListComponent implements OnInit {
 
   rowSelected: boolean;
 
-  constructor( private itemService: ItemService) { }
+  constructor( private itemService: ItemService, private toastr: ToastrService) { }
 
   refreshItemListHandler(poId: number) {
     this.refreshPoList(poId);
+  }
+
+  deleteItem (row) {
+
+    if ( confirm('Are you sure you want to delete Item ? ' + row.id + '  ' + row.itemDescription ) ) {
+
+      this.itemService.deleteItem(row.id).subscribe(po => {
+      });
+
+  // this.enablePoDetail = false;
+      this.enableItemDetail = false;
+   //   this.enableItemList = false;
+
+    //  this.refreshPoList(row.bidNumber);
+
+       this.toastr.success('Payment delete Successful', 'Payment Delete', {
+        timeOut: 2000,
+        });
+
+    }
+
   }
 
 

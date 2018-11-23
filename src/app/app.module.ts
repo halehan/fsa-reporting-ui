@@ -90,6 +90,7 @@ import { MatExpansionPanel } from '@angular/material';
 import { PaymentComponent } from './payment/payment.component';
 import { PaymentListComponent } from './payment-list/payment-list.component';
 import { PaymentDetailComponent } from './payment-detail/payment-detail.component';
+import { SearchByCheckComponent } from './search-by-check/search-by-check.component';
 
 
 @NgModule({
@@ -122,6 +123,7 @@ import { PaymentDetailComponent } from './payment-detail/payment-detail.componen
     PaymentComponent,
     PaymentListComponent,
     PaymentDetailComponent,
+    SearchByCheckComponent,
   ],
   imports: [
     BsDatepickerModule.forRoot(),

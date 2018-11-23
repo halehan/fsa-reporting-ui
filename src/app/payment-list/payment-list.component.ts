@@ -67,7 +67,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatPaginator) itemPaginator: MatPaginator;
 
-  constructor(private poService: PurchaseOrderService, private itemService: ItemService,
+  constructor(private poService: PurchaseOrderService,  private itemService: ItemService,
               private dateFormatPipe: DateFormatPipe ) {
 
                 this.enableItemDetail = false;
@@ -80,7 +80,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 newPayment() {
 
   this.paymentDetail.newItemPayment();
- 
+
   this.enablePaymentDetail = true;
 
 }

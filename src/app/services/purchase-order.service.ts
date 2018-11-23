@@ -8,7 +8,6 @@ import { Dealer } from '../model/dealer';
 import { PoStatusType } from '../model/poStatusType';
 const url = Constants.SERVER_URL + 'api/transaction/bid/';
 const cityAgencyUrl = Constants.SERVER_URL + 'api/cityAgency/';
-const dealerUrl = Constants.SERVER_URL + 'api/dealer/';
 const poUrl =  Constants.SERVER_URL +  'api/transaction/';
 const bidTypeUrl =  Constants.SERVER_URL +  'api/bidType/';
 const paymentUrl =  Constants.SERVER_URL +  'api/transaction/payment/';
@@ -21,6 +20,9 @@ const poStatusTypeUrl = Constants.SERVER_URL + 'api/poStatusType/';
 const agencyTypeUrl = Constants.SERVER_URL + 'api/agencyType/';
 const poByIdUrl = Constants.SERVER_URL + 'api/transaction/';
 const adminFeeUrl = Constants.SERVER_URL + 'api/bidType/';
+const dealerUrl = Constants.SERVER_URL + 'api/dealer/';
+const dealerAssocUrl = Constants.SERVER_URL + 'api/dealer/assoc/';
+const deletePoUrl = Constants.SERVER_URL + 'api/transaction/delete/';
 
 
 @Injectable({
@@ -31,6 +33,10 @@ export class PurchaseOrderService {
   constructor(
     private http: Http,
     private authenticationService: AuthenticationService) {
+}
+
+deletePurchaseOrder(id: number) {
+  return this.http.get(deletePoUrl + id, this.jwt()).map((response: Response) => response.json());
 }
 
 createPayment(payment: Payment) {
@@ -117,6 +123,10 @@ getDealer() {
   return this.http.get(dealerUrl, this.jwt()).map((response: Response) => response.json());
 }
 
+getDealerAssoc(bidNumber: string) {
+  return this.http.get(dealerAssocUrl + bidNumber, this.jwt()).map((response: Response) => response.json());
+}
+
 /*
 insertPurchaseOrder(purchaseOrder: PurchaseOrder) {
   return this.http.post(insertPurchaseOrderUrl, purchaseOrder, this.jwt()).map((response: Response) => response.json());
@@ -137,9 +147,7 @@ private handleError (error: any) {
   return Observable.throw(errMsg);
 }
 
-delete(id: number) {
-  return this.http.delete(url + id, this.jwt()).map((response: Response) => response.json());
-}
+
 
 getByBidNumber(bidNumber: string): Observable<PurchaseOrder[]> {
   return this.http.get(url + bidNumber, this.jwt()).map((response: Response) => response.json());

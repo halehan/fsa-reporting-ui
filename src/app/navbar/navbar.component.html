@@ -23,6 +23,10 @@
             <a [routerLink]="['/payments']"  class="nav-link " href="#"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; Payment Processing</a>
           </li>
 
+          <li class="nav-item  {{bidActive}}">
+            <a [routerLink]="['/search']"  class="nav-link " href="#"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; Search Payments</a>
+          </li>
+
          <li class="nav-item  {{reportActive}}">
             <a [routerLink]="['/reports']"  class="nav-link" href="#"><fa-icon [icon]="faChartPie"></fa-icon>&nbsp; Reports</a>
           </li>
