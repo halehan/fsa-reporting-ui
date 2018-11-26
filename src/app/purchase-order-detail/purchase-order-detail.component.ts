@@ -115,8 +115,7 @@ this.formControlValueChanged();
 
 truncateDecimals(poAmount: number, places: number) {
   const shift = Math.pow(10, places);
-
-  return ((poAmount * shift) | 0) / shift;
+ return ((poAmount * shift) | 0) / shift;
 };
 
 calculateAdminFee(poAmount: number) {

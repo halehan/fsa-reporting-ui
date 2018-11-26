@@ -13,12 +13,14 @@ import { ItemDetailComponent } from '../item-detail/item-detail.component';
   templateUrl: './item-list.component.html',
   styleUrls: ['./item-list.component.scss']
 })
-export class ItemListComponent implements OnInit {
+export class ItemListComponent implements OnInit, AfterViewInit {
 
   itemListDS = new MatTableDataSource();
   itemColumns = ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue',
   'edit', 'delete'];
   @ViewChild(ItemDetailComponent) itemDetail: ItemDetailComponent;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Input() poId: number;
   @Input() fsaId: number;
@@ -51,7 +53,7 @@ export class ItemListComponent implements OnInit {
       this.enableItemDetail = false;
    //   this.enableItemList = false;
 
-    //  this.refreshPoList(row.bidNumber);
+      this.refreshPoList(row.fsaCppPurchaseOrderId);
 
        this.toastr.success('Payment delete Successful', 'Payment Delete', {
         timeOut: 2000,
@@ -63,7 +65,6 @@ export class ItemListComponent implements OnInit {
 
 
 refreshPoList(poId: number) {
-
 
 
      this.delay(1000).then(any => {
@@ -88,11 +89,21 @@ async delay(ms: number) {
 
     this.getItems(this.poId);
 
+  
+
+
    // console.log('BidNumber ' + this.currentBid.BidNumber);
   //  console.log('BidType ' + this.currentBid.BidType);
    // console.log('BidTitle ' + this.currentBid.BidTitle);
    // console.log('AdminFeeRate ' + this.currentBid.AdminFeeRate);
    // console.log('PO id ' + this.poId);
+
+  }
+
+  ngAfterViewInit() {
+
+    this.itemListDS.sort = this.sort;
+    this.itemListDS.paginator = this.paginator;
 
   }
 

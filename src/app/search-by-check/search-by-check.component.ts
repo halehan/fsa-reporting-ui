@@ -20,8 +20,8 @@ import { ItemListComponent } from '../item-list/item-list.component';
 })
 export class SearchByCheckComponent implements OnInit , AfterViewInit {
 
-  itemColumns = ['bidNumber', 'poNumber', 'checkNumber', 'cityAgency',  'dealerName', 
-   'dateReported', 'poAmount'];
+  itemColumns = ['bidNumber', 'poNumber', 'checkNumber', 'cityAgency',  'dealerName',
+   'dateReported', 'poAmount', 'adminFeeDue'];
 
   displayColsGrouping  = ['paymentCheckNum', 'dealerName', 'POS',  'AdminFee'];
 
