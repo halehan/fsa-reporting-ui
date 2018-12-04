@@ -31,6 +31,8 @@ export class PurchaseOrderComponent implements OnInit {
   this.nav.bidActive = 'active';
   this.nav.userActive = '';
   this.nav.reportActive = '';
+  this.nav.searchActive = '';
+  this.nav.paymentsActive = '';
 
 
     if (this.bids.length === 0) {

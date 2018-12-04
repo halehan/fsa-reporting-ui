@@ -255,10 +255,18 @@ showFilter() {
 
   formatDate(dateVal: Date) {
     console.log(dateVal);
+    console.log(dateVal.toLocaleString());
   //  dateVal.setHours(2);
     const myDate = this.dateFormatPipe.transform(dateVal);
     console.log(myDate);
-    return myDate;
+
+    moment.locale();         // en
+    moment().format('LT');
+    const a = moment(dateVal.toLocaleString());
+    const b = a.add(8, 'hour');
+    const myDate2 = this.dateFormatPipe.transform(b);
+
+    return myDate2;
 
   }
 

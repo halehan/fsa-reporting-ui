@@ -1,7 +1,10 @@
 <nav class=" navbar-expand-lg navbar-dark navbar-inverse fixed-top bg-inverse ">
 
   <a class="navbar-brand" href="#">{{appTitle}} </a>
-  <a class="navbar-brand" style="font-size: 1rem;" href="#">Version  - {{appVersion}}</a>
+  <a class="navbar-brand" style="font-size: 1rem;" href="#">Version  - {{appVersion}}  - {{idleState}}</a>
+  <a class="navbar-brand" style="font-size: 1rem; " href="#">Build Date  - {{buildDate}}  </a>
+
+  <button [hidden] = "idleState == 'Started'" style="padding-left: 15px;" (click)="junk()" class="btn btn-warning ">Continue</button>
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
 
@@ -19,11 +22,11 @@
             <a [routerLink]="['/bids']"  class="nav-link " href="#"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp; Purchase Orders</a>
           </li>
           
-          <li class="nav-item  {{bidActive}}">
+          <li class="nav-item  {{paymentsActive}}">
             <a [routerLink]="['/payments']"  class="nav-link " href="#"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; Payment Processing</a>
           </li>
 
-          <li class="nav-item  {{bidActive}}">
+          <li class="nav-item  {{searchActive}}">
             <a [routerLink]="['/search']"  class="nav-link " href="#"><i class="fa fa-money" aria-hidden="true"></i>&nbsp; Search Payments</a>
           </li>
 

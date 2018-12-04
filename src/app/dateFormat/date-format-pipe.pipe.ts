@@ -10,7 +10,7 @@ export class DateFormatPipe extends DatePipe implements PipeTransform {
   transform(value: any, args?: any): any {
     console.log(value);
 
-    return super.transform(value, 'MM/dd/yyyy');
+    return super.transform(value, 'MM/dd/yyyy', '+0430');
   }
 
 }

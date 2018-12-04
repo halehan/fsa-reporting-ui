@@ -12,6 +12,7 @@ import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 import { ItemListComponent } from '../item-list/item-list.component';
 import { ItemDetailComponent } from '../item-detail/item-detail.component';
+import * as moment from 'moment';
 
 
 @Component({
@@ -139,14 +140,7 @@ formControlValueChanged() {
      console.log('Kick off Po Final validation');
       }
     });
-/*
-  this.poForm.valueChanges.subscribe(
-      _poAmount => {
-      console.log('poAmount changed ' + _poAmount);
-          if ( _poAmount >= 0) {
-            this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
-          }
-  }); */
+
 
   this.poForm.get('poAmount').valueChanges.subscribe(
     _poAmount => {
@@ -156,16 +150,6 @@ formControlValueChanged() {
       }
     });
 
-    /*
-
-   this.poForm.get('poAmount').valueChanges.subscribe(
-      _actualPo => {
-        if ( _actualPo > 0) {
-        console.log(this.calculateAdminFee(_actualPo));
-        this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_actualPo)});
-        }
-      });
-*/
    this.poForm.get('cityAgency').valueChanges.subscribe(
         _cityAgency => {
           this.poService.getPayCode(_cityAgency).subscribe(cd => {
@@ -197,13 +181,29 @@ getSuck() {
 
 formatDate(dateVal: Date) {
   console.log(dateVal);
+  const myDate = this.dateFormatPipe.transform(dateVal);
+  console.log(myDate);
+
+  moment.locale();         // en
+  moment().format('LT');
+  const a = moment(dateVal.toLocaleString());
+  const b = a.add(8, 'hour');
+  const myDate2 = this.dateFormatPipe.transform(b);
+
+  return myDate2;
+
+}
+
+/*
+formatDate(dateVal: Date) {
+  console.log(dateVal);
 //  dateVal.setHours(2);
   const myDate = this.dateFormatPipe.transform(dateVal);
   console.log(myDate);
   return myDate;
 
 }
-
+*/
 copyModelToForm() {
 
   if (this.currentPO != null) {
@@ -215,6 +215,8 @@ copyModelToForm() {
 
     this.poForm.controls['bidNumber'].patchValue(this.currentPO.bidNumber, {emitEvent : false});
     this.poForm.controls['poNumber'].patchValue(this.currentPO.poNumber, {emitEvent : false});
+  //  this.poForm.controls['poIssueDate'].patchValue(this.currentPO.poIssueDate, {emitEvent : false});
+  //  this.poForm.controls['dateReported'].patchValue(this.currentPO.dateReported, {emitEvent : false});
     this.poForm.controls['poIssueDate'].patchValue(this.formatDate(this.currentPO.poIssueDate), {emitEvent : false});
     this.poForm.controls['dateReported'].patchValue(this.formatDate(this.currentPO.dateReported), {emitEvent : false});
     this.poForm.controls['estimatedDelivery'].patchValue(this.currentPO.estimatedDelivery, {emitEvent : false});
@@ -245,11 +247,11 @@ createFormGroup() {
 
       bidNumber:  new FormControl('', Validators.required),
       poNumber: new FormControl('', Validators.required),
-      poIssueDate: new FormControl('', Validators.required),
-      dateReported: new FormControl('', Validators.required),
+      poIssueDate: new FormControl(),
+      dateReported: new FormControl(),
       estimatedDelivery: new FormControl(),
-      cityAgency: new FormControl('', Validators.required),
-      dealerName: new FormControl('', Validators.required),
+      cityAgency: new FormControl(),
+      dealerName: new FormControl(),
   //    spec: new FormControl('', Validators.required),
   //    vehicleType: new FormControl('', Validators.required),
       agencyFlag: new FormControl(),
@@ -257,7 +259,7 @@ createFormGroup() {
       dealerFlag: new FormControl(),
       poStatus: new FormControl(),
       poFinal: new FormControl(),
-      qty: new FormControl({required: true}),
+      qty: new FormControl(),
       poAmount: new FormControl(),
       actualPo: new FormControl(),
       adminFeeDue: new FormControl({disabled: true}),
@@ -296,7 +298,7 @@ copyFormToModel() {
   this.currentPO.poNumber = this.poForm.controls.poNumber.value;
   this.currentPO.poIssueDate = this.formatDate(this.poForm.controls.poIssueDate.value);
   this.currentPO.dateReported = this.formatDate(this.poForm.controls.dateReported.value);
-  this.currentPO.estimatedDelivery = this.formatDate(this.poForm.controls.estimatedDelivery.value);
+ // this.currentPO.estimatedDelivery = this.formatDate(this.poForm.controls.estimatedDelivery.value);
   this.currentPO.cityAgency = this.poForm.controls.cityAgency.value;
   this.currentPO.dealerName = this.poForm.controls.dealerName.value;
   // this.currentPO.spec = this.poForm.controls.spec.value;
@@ -316,8 +318,18 @@ copyFormToModel() {
 
 validateFormDates(g: FormGroup) {
 
-  const poDate: Date = g.get('poIssueDate').value;
-  const reporteddate: Date = g.get('dateReported').value;
+  const poDate: Date =  g.get('poIssueDate').value;
+  const reporteddate: Date =  g.get('dateReported').value;
+
+  if (!g.get('dateReported').pristine) {
+    console.log(reporteddate);
+  }
+
+  if (!g.get('poIssueDate').pristine) {
+    console.log(poDate);
+
+  }
+
   const isValid:  boolean = reporteddate > poDate;
 
  return isValid ? null : {mismatch: true};
@@ -356,7 +368,15 @@ revert() {
       timeOut: 2000,
       });
 
+      this._markFormPristine(this.poForm);
+
   }
+
+  private _markFormPristine(form: FormGroup ): void {
+    Object.keys(form.controls).forEach(control => {
+        form.controls[control].markAsPristine();
+    });
+}
 
   updatePo() {
 
@@ -369,6 +389,12 @@ revert() {
      this.toastr.success('Purchase Order Save Successful', 'Purchase Update', {
       timeOut: 2000,
       });
+
+      console.log(this.poForm.pristine.valueOf());
+
+      this._markFormPristine(this.poForm);
+
+      console.log(this.poForm.pristine.valueOf());
 
   }
 

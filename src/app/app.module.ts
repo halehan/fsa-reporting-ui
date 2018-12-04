@@ -38,6 +38,8 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxCurrencyModule } from 'ngx-currency';
+import * as moment from 'moment';
+import {NgIdleModule} from '@ng-idle/core'
 
 import {
   MatExpansionPanelHeader,
@@ -127,6 +129,7 @@ import { SearchByCheckComponent } from './search-by-check/search-by-check.compon
   ],
   imports: [
     BsDatepickerModule.forRoot(),
+    NgIdleModule.forRoot(),
     FontAwesomeModule,
     GoogleChartsModule,
     BrowserModule,

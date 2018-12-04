@@ -36,8 +36,10 @@ export class ReportsComponent implements OnInit {
   this.nav.profileActive = '';
   this.nav.listActive = '';
   this.nav.bidActive = '';
-  this.nav.userActive = ' ';
+  this.nav.userActive = '';
   this.nav.reportActive = 'active';
+  this.nav.searchActive = '';
+  this.nav.paymentsActive = '';
 
 
 

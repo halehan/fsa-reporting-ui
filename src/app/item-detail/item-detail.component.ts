@@ -240,11 +240,13 @@ export class ItemDetailComponent implements OnInit {
 
       this.itemForm.controls['itemNumber'].patchValue(this.currentItem.itemNumber, {emitEvent : false});
       this.itemForm.controls['bidItemCodeId'].patchValue(this.currentItem.bidItemCodeId, {emitEvent : false});
+
       this.itemForm.controls['itemType'].patchValue(this.currentItem.itemType, {emitEvent : false});
-      this.itemForm.controls['itemAmount'].patchValue(this.currentItem.itemAmount, {emitEvent : false});
       this.itemForm.controls['itemModelNumber'].patchValue(this.currentItem.itemModelNumber, {emitEvent : false});
       this.itemForm.controls['itemDescription'].patchValue(this.currentItem.itemDescription, {emitEvent : false});
       this.itemForm.controls['itemMake'].patchValue(this.currentItem.itemMake, {emitEvent : false});
+      this.itemForm.controls['itemAmount'].patchValue(this.currentItem.itemAmount, {emitEvent : false});
+
       this.itemForm.controls['qty'].patchValue(this.currentItem.qty, {emitEvent : false});
       this.itemForm.controls['adminFeeDue'].patchValue(this.currentItem.adminFeeDue, {emitEvent : false});
       this.itemForm.controls['fsafee'].patchValue(this.currentItem.fsaFee, {emitEvent : false});

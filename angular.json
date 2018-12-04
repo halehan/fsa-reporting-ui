@@ -23,9 +23,9 @@
             "styles": [
               "src/styles.css",
               "src/wcso-theme.scss",
-              "node_modules/ngx-toastr/toastr.css",
               "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css" 
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"  
             ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js"

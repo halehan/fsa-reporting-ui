@@ -11,11 +11,12 @@ import { ToastrService } from 'ngx-toastr';
 import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
 import { AfterViewInit } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-payment-detail',
   templateUrl: './payment-detail.component.html',
-  styleUrls: ['./payment-detail.component.scss']
+  styleUrls: ['./payment-detail.component.css']
 })
 export class PaymentDetailComponent implements OnInit {
 
@@ -187,7 +188,7 @@ export class PaymentDetailComponent implements OnInit {
       this.paymentForm.controls['fsaRefundCheckNumber'].patchValue(row.fsaRefundCheckNum, {emitEvent : false});
       this.paymentForm.controls['lateFeeAmount'].patchValue(row.lateFeeAmount, {emitEvent : false});
       this.paymentForm.controls['lateFeeCheckNumber'].patchValue(row.lateFeeCheckNumber, {emitEvent : false});
-      this.paymentForm.controls['lateFeeCheckDate'].patchValue(this.formatDate(row.lateFeeCheckDate), {emitEvent : false});
+      this.paymentForm.controls['lateFeeCheckDate'].patchValue(row.lateFeeCheckDate, {emitEvent : false});
       this.paymentForm.controls['comment'].patchValue(row.comment, {emitEvent : false});
 
       this.formControlValueChanged();
@@ -226,10 +227,17 @@ export class PaymentDetailComponent implements OnInit {
 
     formatDate(dateVal: Date) {
       console.log(dateVal);
-    //  dateVal.setHours(2);
+      console.log(dateVal.toLocaleString());
       const myDate = this.dateFormatPipe.transform(dateVal);
       console.log(myDate);
-      return myDate;
+
+      moment.locale();         // en
+      moment().format('LT');
+      const a = moment(dateVal.toLocaleString());
+      const b = a.add(8, 'hour');
+      const myDate2 = this.dateFormatPipe.transform(b);
+
+      return myDate2;
 
     }
 
@@ -252,6 +260,13 @@ export class PaymentDetailComponent implements OnInit {
   }
 
   formControlValueChanged() {
+
+    this.paymentForm.get('paymentDate').valueChanges.subscribe(_paymentDate => {
+
+      this.paymentForm.controls['paymentDate'].patchValue(this.formatDate(_paymentDate), {emitEvent : false});
+
+    });
+
 
     this.paymentForm.get('paymentAmount').valueChanges.subscribe(_amount => {
 

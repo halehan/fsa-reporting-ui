@@ -21,6 +21,8 @@ export class UserComponent implements OnInit {
   this.nav.bidActive = '';
   this.nav.userActive = 'active';
   this.nav.reportActive = '';
+  this.nav.searchActive = '';
+  this.nav.paymentsActive = '';
 
   }
 

@@ -7,6 +7,12 @@ import { UserService } from '../services/user.service';
 import { ContentService } from '../services/content.service';
 import { NavbarService } from '../navbar/navbar.service';
 
+import {HttpModule } from '@angular/http';
+import {Idle, DEFAULT_INTERRUPTSOURCES} from '@ng-idle/core';
+import {NgIdleModule} from '@ng-idle/core';
+import { AuthenticationService } from '../services/authentication.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,7 +23,15 @@ export class HomeComponent implements OnInit {
   messages: Message[] = [];
   contents: Content[] = [];
 
-  constructor(public nav: NavbarService, private contentService: ContentService, private userService: UserService ) { }
+  idleState = 'Not started.';
+  timedOut = false;
+  lastPing?: Date = null;
+
+  constructor(private authenticationService: AuthenticationService,
+    public nav: NavbarService,  private contentService: ContentService, private userService: UserService ) {
+
+  }
+
 
   ngOnInit() {
     this.nav.dashActive = '';
@@ -26,6 +40,8 @@ export class HomeComponent implements OnInit {
     this.nav.reportActive = '';
     this.nav.bidActive = '';
     this.nav.userActive = '';
+    this.nav.searchActive = '';
+    this.nav.paymentsActive = '';
     this.nav.show();
 
     this.contentService.getByName('HomePage').subscribe(res => {

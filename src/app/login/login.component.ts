@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserIdleService } from 'angular-user-idle';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -13,8 +12,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   error = '';
 
-  constructor(private userIdle: UserIdleService,
-              private router: Router,
+  constructor(private router: Router,
               private authenticationService: AuthenticationService) { }
 
 
@@ -23,38 +21,9 @@ export class LoginComponent implements OnInit {
     this.authenticationService.logout();
 
   }
-              ngOnInit() {
+    ngOnInit() {
 
-    // reset login status
-    this.authenticationService.logout();
-
-      // Start watching for user inactivity.
-    this.userIdle.startWatching();
-
-    // Start watching when user idle is starting.
-    this.userIdle.onTimerStart().subscribe(count => console.log(count));
-
-    // Start watch when time is up.
-    this.userIdle.onTimeout().subscribe(() => // reset login status
-    this.authenticationService.logout());
-    console.log('Time is up!');
-
-  }
-
-  stop() {
-    this.userIdle.stopTimer();
-  }
-
-  stopWatching() {
-    this.userIdle.stopWatching();
-  }
-
-  startWatching() {
-    this.userIdle.startWatching();
-  }
-
-  restart() {
-    this.userIdle.resetTimer();
+    this.logout();
   }
 
   login() {

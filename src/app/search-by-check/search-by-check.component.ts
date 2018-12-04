@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import 'moment/locale/pt-br';
 import { ItemPaymentComponent } from '../item-payment/item-payment.component';
 import { ItemListComponent } from '../item-list/item-list.component';
+import { NavbarService } from '../navbar/navbar.service';
 
 @Component({
   selector: 'app-search-by-check',
@@ -20,8 +21,8 @@ import { ItemListComponent } from '../item-list/item-list.component';
 })
 export class SearchByCheckComponent implements OnInit , AfterViewInit {
 
-  itemColumns = ['bidNumber', 'poNumber', 'checkNumber', 'cityAgency',  'dealerName',
-   'dateReported', 'poAmount', 'adminFeeDue'];
+  itemColumns = ['bidNumber', 'poNumber', 'checkNumber', 'cityAgency',  'dealerName', 'itemNumber',
+   'itemType', 'dateReported', 'poAmount'];
 
   displayColsGrouping  = ['paymentCheckNum', 'dealerName', 'POS',  'AdminFee'];
 
@@ -43,13 +44,25 @@ checkNumberForm: FormGroup;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator
+  @ViewChild(MatSort) listSort: MatSort;
+  @ViewChild(MatPaginator) listPaginator: MatPaginator
 
-  constructor(private searchService: SearchService, private dateFormatPipe: DateFormatPipe ) {
+  constructor(public nav: NavbarService, private searchService: SearchService, private dateFormatPipe: DateFormatPipe ) {
 
     }
 
   ngOnInit() {
     this.checkNumberForm = this.createFormGroup();
+
+    this.nav.dashActive = '';
+    this.nav.homeActive = '';
+    this.nav.profileActive = '';
+    this.nav.reportActive = '';
+    this.nav.bidActive = '';
+    this.nav.userActive = '';
+    this.nav.searchActive = 'active';
+    this.nav.paymentsActive = '';
+    this.nav.show();
   }
 
   createFormGroup() {
@@ -59,8 +72,15 @@ checkNumberForm: FormGroup;
 
   ngAfterViewInit() {
 
-    this.poDataSource.sort = this.sort;
-    this.poDataSource.paginator = this.paginator;
+   // this.poDataSource.sort = this.sort;
+   // this.poDataSource.paginator = this.paginator;
+
+   this.poPaymentList.sort = this.sort;
+   this.poPaymentList.paginator = this.paginator;
+
+   // this.poPaymentList.sort = this.listSort;
+  //  this.poPaymentList.paginator = this.listPaginator;
+
     this.enableItemList = false;
 
 

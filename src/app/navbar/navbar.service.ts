@@ -15,6 +15,7 @@ export class NavbarService {
   reportActive = '';
   userActive = '';
   searchActive = '';
+  paymentsActive = '';
 
     constructor(private authService: AuthenticationService) { this.vis = false; this.count = this.count + 1}
 
@@ -28,6 +29,7 @@ export class NavbarService {
    getReportActive() {return this.reportActive}
    getUserActive() {return this.userActive}
    getSearchActive() {return this.searchActive}
+   getPaymentsActive() {return this.paymentsActive}
 
    logout() {
 
