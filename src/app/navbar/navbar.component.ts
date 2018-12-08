@@ -15,8 +15,8 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   appTitle = ' FSA Cooperative Purchasing Program Reporting';
-  appVersion = '1.0.6 '
-  buildDate =  '12/3/2018 20:30:00'
+  appVersion = '1.0.6.RC-1'
+  buildDate =  '12/5/2018 19:49:33'
   homeActive = '';
   dashActive = '';
   profileActive = '';
@@ -61,10 +61,10 @@ export class NavbarComponent implements OnInit {
      // sets an idle timeout of 5 seconds, for testing purposes.
      this.idle.setIdle(1800);
      // sets a timeout period of 5 seconds. after 10 seconds of inactivity, the user will be considered timed out.
-     this.idle.setTimeout(300);
+     this.idle.setTimeout(120);
      // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
      this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
- 
+
      this.idle.onIdleEnd.subscribe(() => this.idleState = 'No longer idle.');
      this.idle.onTimeout.subscribe(() => {
      this.idleState = 'Timed out!';

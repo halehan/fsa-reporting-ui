@@ -93,13 +93,13 @@
               <mat-row *matRowDef="let row; columns: displayedColumns"  [ngClass]="{'highlight': selectedRowIndex == row.id}" ></mat-row>
           
             </mat-table>
-                    <mat-paginator 
+                    <mat-paginator [hidden] = "!enablePoList"
                         [length]="1000"
                         [pageSize]="5"
                         [pageSizeOptions]="[5, 25, 100, 500]">
                     </mat-paginator>
           
-          <br><hr> 
+          <br>
     
           <div class="new-po form-group col-md-8">
                 <button mat-button (click)="newPurchaseOrder()" type="submit"  class="mat-flat-button btn-success insert-button">New P.O. </button>  

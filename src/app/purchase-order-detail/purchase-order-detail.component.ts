@@ -61,6 +61,7 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
       this.delay(100).then(any => {
         this.poFocus.nativeElement.focus();
     });
+
     }
 
     async delay(ms: number) {
@@ -250,7 +251,7 @@ createFormGroup() {
       poIssueDate: new FormControl(),
       dateReported: new FormControl(),
       estimatedDelivery: new FormControl(),
-      cityAgency: new FormControl(),
+      cityAgency: new FormControl('', Validators.required),
       dealerName: new FormControl(),
   //    spec: new FormControl('', Validators.required),
   //    vehicleType: new FormControl('', Validators.required),
@@ -330,7 +331,7 @@ validateFormDates(g: FormGroup) {
 
   }
 
-  const isValid:  boolean = reporteddate > poDate;
+  const isValid:  boolean = reporteddate >= poDate;
 
  return isValid ? null : {mismatch: true};
 
@@ -356,6 +357,7 @@ revert() {
 
   insertPo() {
     this.newPO.createdBy = this.getCurrentUserName();
+    this.newPO.updatedBy = this.getCurrentUserName();
 
     this.isNew = false;
 
@@ -379,6 +381,8 @@ revert() {
 }
 
   updatePo() {
+
+    this.currentPO.updatedBy = this.getCurrentUserName();
 
     this.poService.updatePurchaseOrder(this.currentPO).subscribe(po => {
     });

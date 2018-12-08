@@ -6,19 +6,9 @@
         </div>
         <div class="panel-body">
 
-                        <div class="card-content shade-bg"> 
+                        <div style="line-height: .5;" class="card-content shade-bg"> 
                                         <form [formGroup]="poForm">
                                          <div class="row shadow p-3 mb-5 rounded shade-bg">
-                                       <!--     <mat-toolbar >
-                                                     <span>Purchase Order New {{isNew}}</span>
-                                             </mat-toolbar>  -->
-
-                                         <!--    <div class="col-md-4 topMargin">
-                                                <div class="form-group input-group-sm form-black label-floating is-empty">  
-                                                       <label class="label-small">Vendor</label>
-                                                       <input  disabled type="text" formControlName="dealerName"  required class="form-control" >
-                                                </div>  
-                                              </div>   -->
                                      
                                               <div class="col-md-4 topMargin">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -72,7 +62,7 @@
                                                    <div class="col-md-6">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                              <label class="label-small" for="cityAgencySelect">Purchaser</label>
-                                                             <select placeholder="Purchaser"  formControlName="cityAgency" class="form-control input-group-sm"   id="cityAgencySelect">
+                                                             <select placeholder="Purchaser"  formControlName="cityAgency" class="form-control input-group-sm" required id="cityAgencySelect">
                                                              <!--        <option  selected>{{ pox.cityAgency }} 
                                                                          </option>  -->
                                                                  <option *ngFor="let ca of cityAgencies" value= {{ca.cityAgencyName}} >

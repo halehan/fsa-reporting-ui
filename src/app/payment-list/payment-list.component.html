@@ -28,7 +28,7 @@
             <div class="card-content">     
   <div>
        
-      <mat-table *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
+      <mat-table [hidden] = "!showFilter()" *ngIf="poDataSource" #table [dataSource]="poDataSource" matSort>
 
         <ng-container matColumnDef="bidNumber">
           <mat-header-cell class="pull-left" fxFlex="125px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
@@ -46,8 +46,8 @@
         </ng-container>
     
         <ng-container matColumnDef="poNumber">
-          <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
-          <mat-cell fxFlex="200px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
+          <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
+          <mat-cell fxFlex="175px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="dateReported">
@@ -75,7 +75,7 @@
      
     
       </mat-table>
-              <mat-paginator 
+              <mat-paginator [hidden] = "!showFilter()"
                   [length]="1000"
                   [pageSize]="5"
                   [pageSizeOptions]="[5, 25, 100, 500]">
@@ -94,6 +94,7 @@
 <div [hidden] = "!enableItemList" class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Purchase Order Items</h3>
+    
 
   </div>
   <div class="panel-body">
@@ -185,8 +186,9 @@
 
 
 <div [hidden] = "!enablePaymentList" class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Payments</h3>
+    <div  class="panel-heading">
+      <h3 style="width: 945px;" class="panel-title">Payments  - Item: {{itemNumber}} - Item Type: {{itemType}}  </h3>
+     
     </div>
     <div class="panel-body">
         <mat-table  #table [dataSource]="paymentListDS" matSort>

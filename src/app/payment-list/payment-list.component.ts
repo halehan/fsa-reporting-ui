@@ -42,6 +42,8 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   paymentNumber: number;  // just send the rowcount of paymentListDS
   poId: number;
   itemId: number;
+  itemNumber: number;
+  itemType: string;
   adminFeeRate: number;
 
   selectedPO: PurchaseOrder;
@@ -129,6 +131,8 @@ onItemRowClicked(row) {
 
   console.log('Row clicked: ', row);
   this.itemId = row.id;
+  this.itemNumber = row.itemNumber;
+  this.itemType = row.itemType;
   this.poId = row.fsaCppPurchaseOrderId;
   this.enablePaymentDetail = false;
 

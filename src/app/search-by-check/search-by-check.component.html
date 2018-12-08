@@ -1,63 +1,48 @@
 <app-navbar></app-navbar>
 
-<div class="container">
-    <div class="row">
-      <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-        <h1></h1>
 
-        <mat-toolbar>
+<div class="container pt-2">
+        <div class="row">
+              <div class="col mt-5">
+              
+        <mat-toolbar style="margin-top: 20px;">
             <span>Search by Check  </span>
         </mat-toolbar>
         
         <div class="container">
-    
             <div class="example-header">
           
               <form [formGroup]="checkNumberForm">
-                  <div class="row">
+                  <div class="row ">
                     <div class="col-md-2">
-                    <!--    <div  class="col-md-12 form-group form-black label-floating is-empty gap">
-                                <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
-          
-                              
-                        </div>  -->
-          
+                    
                         <mat-form-field class="gap" >
                             <input matInput formControlName="checkNumber"  placeholder="Check Number">
                         </mat-form-field>  
           
                     </div>
           
-                    <div class="new-po form-group col-md-2">
-                          <button [disabled]="checkNumberForm.pristine" mat-button (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
+                    <div class="new-po form-group col-md-4 ml-5 mt-2">
+                        <button [disabled]="checkNumberForm.pristine" mat-button (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
                     </div>
-                       
-                     
-                    
-                    </div>  
-                    </form>
+                   </div>  
+              </form>
           
-          <div class="panel-body">            
-          <div class="card-content">
+          <div [hidden] = "!enablePoList" class="centered">            
+          <div>
             <div [hidden] = "!enablePoList">
           
-           
-                 
-                <mat-table #table [dataSource]="poDataSource" matSort>
-          
-                    <ng-container matColumnDef="bidNumber">
-                        <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Bid Number </mat-header-cell>
-                        <mat-cell fxFlex="150px" *matCellDef="let row"> {{row.bidNumber}} </mat-cell>
-                      </ng-container>
+        
+                <mat-table  style="padding-left: 50px;"  #table [dataSource]="poDataSource" matSort>
           
                     <ng-container matColumnDef="paymentCheckNum">
-                        <mat-header-cell class="pull-left" fxFlex="150px" *matHeaderCellDef mat-sort-header> Check Number </mat-header-cell>
-                        <mat-cell fxFlex="150px" *matCellDef="let row"> {{row.paymentCheckNum}} </mat-cell>
+                        <mat-header-cell style="padding-left: 50px;"  class="pull-left" fxFlex="200px" *matHeaderCellDef mat-sort-header> Check Number </mat-header-cell>
+                        <mat-cell style="padding-left: 50px;"  fxFlex="200px" *matCellDef="let row"> {{row.paymentCheckNum}} </mat-cell>
                       </ng-container>
           
                       <ng-container matColumnDef="dealerName">
-                          <mat-header-cell fxFlex="325px" *matHeaderCellDef mat-sort-header> Vendor </mat-header-cell>
-                          <mat-cell fxFlex="325px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
+                          <mat-header-cell fxFlex="400px" *matHeaderCellDef mat-sort-header> Vendor </mat-header-cell>
+                          <mat-cell fxFlex="400px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
                         </ng-container>
               
                        <ng-container matColumnDef="POS">
@@ -65,17 +50,14 @@
                           <mat-cell fxFlex="200px" *matCellDef="let row"> {{row.POS}} </mat-cell>
                         </ng-container>
               
-                 
-              
-                  <ng-container matColumnDef="AdminFee">
-                    <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header>Payment Fee Total </mat-header-cell>
-                    <mat-cell fxFlex="200px" *matCellDef="let row">{{row.AdminFee | currency}}</mat-cell>
-                  </ng-container>
+                        <ng-container matColumnDef="AdminFee">
+                           <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header>Payment Fee Total </mat-header-cell>
+                           <mat-cell fxFlex="200px" *matCellDef="let row">{{row.AdminFee | currency}}</mat-cell>
+                        </ng-container>
           
-                 
-                  <mat-header-row *matHeaderRowDef="displayColsGrouping"></mat-header-row>
+                
+                <mat-header-row *matHeaderRowDef="displayColsGrouping"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayColsGrouping"  [ngClass]="{'highlight': selectedRowIndex == row.id}" (click)="onRowClicked(row)"></mat-row>
-              
                 </mat-table>
                      
               <br>
@@ -95,13 +77,13 @@
             
               </div>
               <div class="panel-body">
-                  <mat-table *ngIf="poPaymentList"  #table [dataSource]="poPaymentList" matSort>
+                  <mat-table style="width: 1150px;" *ngIf="poPaymentList"  #table [dataSource]="poPaymentList" matSort>
           
                     
             
                       <ng-container matColumnDef="bidNumber">
-                          <mat-header-cell class="pull-left" fxFlex="100px"  *matHeaderCellDef mat-sort-header>Bid Number </mat-header-cell>
-                          <mat-cell fxFlex="100px" *matCellDef="let itemList"> {{itemList.bidNumber}} </mat-cell>
+                          <mat-header-cell style="width: 1150px;" class="pull-left" fxFlex="100px"  *matHeaderCellDef mat-sort-header>Bid Number </mat-header-cell>
+                          <mat-cell style="width: 1150px;" fxFlex="100px" *matCellDef="let itemList"> {{itemList.bidNumber}} </mat-cell>
                       </ng-container>
                         
                       <ng-container matColumnDef="poNumber">
@@ -147,8 +129,8 @@
                  
                      
                           
-                      <mat-header-row  *matHeaderRowDef="itemColumns"></mat-header-row>
-                      <mat-row *matRowDef="let itemList; columns: itemColumns;"  [ngClass]="{'highlight': selectedRowIndex == itemList.id}"  (click)="onItemRowClicked(itemList)"></mat-row>
+                      <mat-header-row style="width: 1150px;" *matHeaderRowDef="itemColumns"></mat-header-row>
+                      <mat-row style="width: 1150px;" *matRowDef="let itemList; columns: itemColumns;"  [ngClass]="{'highlight': selectedRowIndex == itemList.id}"  (click)="onItemRowClicked(itemList)"></mat-row>
                   
                   </mat-table>
 
@@ -168,9 +150,7 @@
           </div>
           </div>            
           
-     
-
-      </main>
+     </div>
     </div>
   </div>
 

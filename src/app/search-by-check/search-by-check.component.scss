@@ -1,132 +1,91 @@
-body {
-  padding-top: 50px;
-}
-
-
-
-
-
-table {
-  width: 100%;
-}
-
-.sweet {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 2.0;
-}
-
-
-/*
- * Typography
- */
-
-h1 {
-  margin-top: 21px;
-  margin-bottom: 21px;
-  padding-bottom: 9px;
-  border-bottom: 1px solid #eee;
-}
-
-.container {
-  
-  max-width: 1150px;
-  padding-left: 25px;
-  padding-right: 10px;
-  margin-left: 15px;
-  padding-top: 20px;
-
-}
-/*
-.container {
-  margin-left: 30px;
-  padding-top: 20px;
-
-}
-*/
-.mat-toolbar {
+hr {
   width: 1150px;
-  height: 40px;
-  padding-bottom: 4px;
 }
 
+.form-control{
+
+  font-size: 13px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+}
+
+.label-small {
+  vertical-align: super;
+  font-size: 13px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+
+.gap{
+  padding-top: 15px;
+  padding-left: 10px;
+}
+
+
+.new-po {
+  
+  padding-left: 100px;
+  padding-bottom: 10px;
+ 
+}
+
+.example-header{
+  padding-top: 1px;
+  padding-bottom: 2px;
+  width: 450px;
+
+}
+
+.mat-cell{
+  font-size: 12px;
+}
+
+.mat-cell:first-child{
+    padding-left: 1px;
+
+}
+
+.mat-footer-row{
+  width: 1000px;
+  min-height: 2px;
+}
 
 .mat-header-row{
-  width: 1225px;
+  width: 1000px;
+}
+
+.mat-row{
+  width: 1000px;
+  min-height: 25px;
 }
 
 .mat-header-cell{
-width: 1225px;
-
+width: 1150px;
 }
 
-/*
- * Sidebar
- */
-
-.sidebar {
-  width: 200px;
-  position: fixed;
-  top: 51px;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  padding: 20px;
-  overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-  border-right: 2px solid #eee;
+.mat-table{
+  width: 1000 px;
 }
 
-/* Sidebar navigation */
-.sidebar {
-  padding-left: 0;
-  padding-right: 0;
+.mat-table-800{
+  width: 800px;
+  margin-left: 200px;
 }
 
-.sidebar .nav {
-  margin-bottom: 20px;
+.mat-800{
+  width: 800px;
 }
 
-.sidebar .nav-item {
-  width: 100%;
-}
-
-.sidebar .nav-item + .nav-item {
-  margin-left: 5;
-}
-
-.sidebar .nav-link {
-  border-radius: 0;
-}
-
-/*
- * Dashboard
- */
-
- /* Placeholders */
-.placeholders {
-  padding-bottom: 3rem;
-}
-
-.placeholder img {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
-
-.nav-pills .nav-link.active, .nav-pills .nav-item.show .nav-link {
-  color: #fff;
-  cursor: default;
-  background-color: #27880d !important;
-}
-
-a {
-color: #27880d;
-text-decoration: none;
-}
-
-.bg-faded {
- background-color: #000000 white; 
+.mat-table-payment{
+  width: 800px;
 }
 
 .mat-header-cell{
@@ -145,7 +104,7 @@ text-decoration: none;
 
 .mat-toolbar {
   width: 1150px;
-  height: 30px;
+  height: 40px;
   padding-bottom: 4px;
 }
 
@@ -171,85 +130,4 @@ text-decoration: none;
 
 .pull-left {
   padding-left: 0px;
-}
-
-.label-small {
-  vertical-align: super;
-  font-size: 13px;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-
-
-
-.gap{
-  padding-top: 15px;
-  padding-left: 10px;
-}
-
-
-.new-po {
-  margin-left: 10px;
-  padding-left: 1050px;
-  padding-bottom: 10px;
- 
-}
-
-
-.insert-button-div {
-  margin-left: 100px;
-  padding-left: 900px;
-  padding-bottom: 25px;
- 
-}
-
-.example-header{
-  padding-top: 1px;
-  padding-bottom: 2px;
-  width: 450px;
-
-}
-
-.mat-cell{
-  font-size: 12px;
-}
-
-.mat-cell:first-child{
-    padding-left: 1px;
-
-}
-
-.mat-footer-row{
-  width: 1150px;
-  min-height: 1px;
-}
-
-.mat-header-row{
-  width: 1150px;
-}
-
-.mat-row{
-  width: 1150px;
-  min-height: 25px;
-}
-
-.mat-header-cell{
-width: 1150px;
-}
-
-.mat-table{
-  width: 1150px;
-}
-
-.mat-table-800{
-  width: 800px;
-  margin-left: 200px;
-}
-
-.mat-800{
-  width: 800px;
-}
-
-.mat-table-payment{
-  width: 800px;
 }

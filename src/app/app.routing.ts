@@ -11,7 +11,6 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { UserComponent } from './user/user.component';
 import { AtableListComponent } from './atable-list/atable-list.component';
 import { ReportsComponent } from './reports/reports.component';
-import { PaymentSearchComponent } from './payment-search/payment-search.component';
 import { PaymentComponent } from './payment/payment.component';
 import { SearchByCheckComponent } from './search-by-check/search-by-check.component';
 
@@ -19,7 +18,6 @@ import { SearchByCheckComponent } from './search-by-check/search-by-check.compon
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
   //  { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard] },
-    { path: 'paymentSearch', component: PaymentSearchComponent, canActivate: [AuthGuard] },
     { path: 'register', component: RegisterComponent },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },

@@ -7,21 +7,10 @@ body {
     padding-top: 50px;
   }
 
-  
-
-  
-
   table {
     width: 100%;
   }
 
-  .sweet {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 2.0;
-  }
-  
   
   /*
    * Typography
@@ -33,7 +22,7 @@ body {
     padding-bottom: 9px;
     border-bottom: 1px solid #eee;
   }
-
+/*
   .container {
     
     max-width: 1150px;
@@ -43,13 +32,13 @@ body {
     padding-top: 20px;
 
   }
-/*
+  */
+
   .container {
-    margin-left: 30px;
-    padding-top: 20px;
+    max-width: 1150px;
   
   }
-*/
+
   .mat-toolbar {
     width: 1150px;
     height: 40px;
@@ -58,11 +47,11 @@ body {
 
   
   .mat-header-row{
-    width: 1225px;
+    width: 1150px;
 }
 
 .mat-header-cell{
-  width: 1225px;
+  width: 1150px;
   color: red;
 }
   

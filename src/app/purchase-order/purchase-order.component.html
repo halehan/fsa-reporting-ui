@@ -1,18 +1,22 @@
 <app-navbar></app-navbar>
 
-<div class="container">
-    <div class="row">
-      <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-        <h1></h1>
 
-        <mat-toolbar>
+<div class="container pt-2">
+    <div class="row">
+          <div class="col  mt-5">
+          
+        <mat-toolbar style="margin-top: 20px;">
             <span>Purchase Orders  </span>
         </mat-toolbar>
-        
-     <app-purchase-order-list></app-purchase-order-list>  
-     
+    
+      </div>
 
-      </main>
+      <div class="row">
+          <div class="col pt-1">
+              <app-purchase-order-list></app-purchase-order-list>  
+            </div>
+      </div>
+     
     </div>
   </div>
 

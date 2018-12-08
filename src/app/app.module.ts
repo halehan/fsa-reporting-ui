@@ -83,7 +83,6 @@ import { PurchaseOrderListComponent } from './purchase-order-list/purchase-order
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { ReportsComponent } from './reports/reports.component';
 import { DateFormatPipe } from './dateFormat/date-format-pipe.pipe';
-import { PaymentSearchComponent } from './payment-search/payment-search.component';
 import { PurchaseOrderItemComponent } from './purchase-order-item/purchase-order-item.component';
 import { ItemPaymentComponent } from './item-payment/item-payment.component';
 import { ItemListComponent } from './item-list/item-list.component';
@@ -117,7 +116,6 @@ import { SearchByCheckComponent } from './search-by-check/search-by-check.compon
     PurchaseOrderDetailComponent,
     ReportsComponent,
     DateFormatPipe,
-    PaymentSearchComponent,
     PurchaseOrderItemComponent,
     ItemPaymentComponent,
     ItemListComponent,

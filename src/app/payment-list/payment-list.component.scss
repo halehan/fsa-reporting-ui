@@ -1,5 +1,5 @@
 hr {
-    width: 1225px;
+    width: 1150px;
   }
 
 
@@ -63,42 +63,29 @@ hr {
   }
   
   .mat-footer-row{
-    width: 1225px;
+    width: 1150px;
     min-height: 1px;
   }
   
   .mat-header-row{
-    width: 1225px;
+    width: 1150px;
   }
   
   .mat-row{
-    width: 1225px;
+    width: 1150px;
     min-height: 30px;
   }
   
   .mat-header-cell{
-  width: 1225px;
+  width: 1150px;
   }
   
   .mat-table{
-    width: 1225px;
+    width: 1150px;
   }
-  
-  .mat-table-800{
-    width: 800px;
-    margin-left: 200px;
-  }
-  
-  .mat-800{
-    width: 800px;
-  }
-  
-  .mat-table-payment{
-    width: 800px;
-  }
-  
+
   .mat-header-cell{
-    width: 1225px;
+    width: 1150px;
   }
   
   .mat-icon{
@@ -108,11 +95,11 @@ hr {
   
   .mat-paginator{
     padding-top: 4px;
-    width: 1225px;
+    width: 1150px;
   }
   
   .mat-toolbar {
-    width: 1225px;
+    width: 1150px;
     height: 30px;
     padding-bottom: 4px;
   }
@@ -128,9 +115,15 @@ hr {
   
   .card-content {
     padding-left: 10px;
-    width: 1200px;
+    width: 1150px;
   }
   
   .pull-left {
     padding-left: 0px;
+  }
+
+  .mat-icon-button {
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
   }
