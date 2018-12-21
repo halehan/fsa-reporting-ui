@@ -2,6 +2,9 @@ hr {
     width: 1150px;
   }
 
+  .row {
+    width: 700px;
+  }
 
   .form-control{
   
@@ -114,7 +117,7 @@ hr {
   
   
   .card-content {
-    padding-left: 10px;
+  //  padding-left: 10px;
     width: 1150px;
   }
   
@@ -126,4 +129,11 @@ hr {
     width: 25px;
     height: 25px;
     line-height: 25px;
+  }
+
+  .container {
+    width: 100%;
+    padding-right: 15px; 
+    margin-right: auto; 
+    margin-left: auto; 
   }

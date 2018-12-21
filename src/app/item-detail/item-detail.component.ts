@@ -9,6 +9,7 @@ import { ItemService } from '../services/item.service';
 import { ToastrService } from 'ngx-toastr';
 import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
+import Dinero from '../../../node_modules/dinero.js/build/esm/dinero.js';
 
 
 
@@ -47,6 +48,7 @@ export class ItemDetailComponent implements OnInit {
   constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService) {
     this.isNew = false;
     this.showDetail = false;
+    const price = Dinero({ amount: 5000, currency: 'USD' })
   }
 
   focusItem () {
@@ -221,8 +223,10 @@ export class ItemDetailComponent implements OnInit {
   }
 
   truncateDecimals(poAmount: number, places: number) {
-    const shift = Math.pow(10, places);
-   return ((poAmount * shift) | 0) / shift;
+ //   const shift = Math.pow(10, places);
+  //  const number: suck = poAmount.toFixed(places);
+ //  return ((poAmount * shift) | 0) / shift;
+ return Number(poAmount.toFixed(places));
   };
 
   calculateAdminFee(poAmount: number, fee: number) {

@@ -23,6 +23,7 @@ const adminFeeUrl = Constants.SERVER_URL + 'api/bidType/';
 const dealerUrl = Constants.SERVER_URL + 'api/dealer/';
 const dealerAssocUrl = Constants.SERVER_URL + 'api/dealer/assoc/';
 const deletePoUrl = Constants.SERVER_URL + 'api/transaction/delete/';
+const paymentSearchUrl =  Constants.SERVER_URL + 'api/transaction/bid/';
 
 
 @Injectable({
@@ -50,7 +51,6 @@ createPurchaseOrder(purchaseOrder: PurchaseOrder) {
 updatePurchaseOrder(purchasOrder: PurchaseOrder) {
   return this.http.put(poUrl,  purchasOrder, this.jwt()).map((response: Response) => response.json());
  }
-
 
 getPostatusType(): Observable<PoStatusType[]> {
   return this.http.get(poStatusTypeUrl, this.jwt()).map((response: Response) =>
@@ -93,6 +93,26 @@ getBids() {
 
 getBidType() {
   return this.http.get(bidTypeUrl, this.jwt()).map((response: Response) => response.json());
+}
+
+getByBidNumber(bidNumber: string): Observable<PurchaseOrder[]> {
+  return this.http.get(url + bidNumber, this.jwt()).map((response: Response) => response.json());
+}
+
+searchPayment(bidNumber: string, status: string) {
+
+  if (status.toUpperCase( ) === 'ALL') {
+    console.log('paid and unpaid checked.  Want to see all');
+  // Default behavior want to see all of them
+  } else if (status.toUpperCase( ) === 'PAID') {
+    console.log('paid chosen.  Want to see Paid');
+   // show only the paid PO's
+  } else if (status.toUpperCase( ) === 'UNPAID') {
+    console.log('unpaid chosen.  Want to see UnPaid');
+    // just show the paid
+  }
+
+  return this.http.get(paymentSearchUrl + bidNumber + '/' + status.toUpperCase(), this.jwt()).map((response: Response) => response.json());
 }
 
 getBidNumber() {
@@ -147,11 +167,6 @@ private handleError (error: any) {
   return Observable.throw(errMsg);
 }
 
-
-
-getByBidNumber(bidNumber: string): Observable<PurchaseOrder[]> {
-  return this.http.get(url + bidNumber, this.jwt()).map((response: Response) => response.json());
-}
 
 private jwt() {
   // create authorization header with jwt token

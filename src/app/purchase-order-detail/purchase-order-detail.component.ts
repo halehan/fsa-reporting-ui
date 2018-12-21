@@ -116,8 +116,10 @@ this.formControlValueChanged();
 }
 
 truncateDecimals(poAmount: number, places: number) {
-  const shift = Math.pow(10, places);
- return ((poAmount * shift) | 0) / shift;
+ // const shift = Math.pow(10, places);
+ // const suck = poAmount.toFixed(places);
+ // return ((poAmount * shift) | 0) / shift;
+ return Number(poAmount.toFixed(places));
 };
 
 calculateAdminFee(poAmount: number) {
@@ -130,6 +132,19 @@ newPo() {
   this.newPO = new PurchaseOrder();
   this.poForm = this.createFormGroup();
   this.formControlValueChanged();
+
+  this.poService.getAdminFee(this.bidId).subscribe(bid => {this.currentBid = bid[0];
+    console.log(this.currentBid.AdminFeeRate);
+    this.poForm.controls['bidType'].patchValue(this.currentBid.BidType, {emitEvent : false});
+    });
+
+
+  this.poService.getDealerAssoc(this.bidId)
+        .subscribe(_dealers => {
+            this.dealers = _dealers;
+        });
+
+        this.poForm.controls['bidNumber'].patchValue(this.bidId, {emitEvent : false});
 }
 
 formControlValueChanged() {

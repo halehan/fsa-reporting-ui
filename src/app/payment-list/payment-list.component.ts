@@ -23,7 +23,7 @@ import { PaymentDetailComponent } from '../payment-detail/payment-detail.compone
 
 export class PaymentListComponent implements OnInit, AfterViewInit {
 
-  displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber',
+  displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber', 'poStatus',
                       'poIssueDate', 'dateReported', 'poAmount', 'adminFeeDue'];
   itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue'];
   paymentColumns = ['paymentNumber', 'paymentCheckNum',  'fsaAlloc', 'facAlloc', 'ffcaAlloc', 'totalAlloc', 'paymentAmount', 'paymentDate'];
@@ -45,18 +45,20 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   itemNumber: number;
   itemType: string;
   adminFeeRate: number;
+  poStatus: string;
 
   selectedPO: PurchaseOrder;
 
   currentBid: BidNumber;
 
-  bidId: String;
+  bidId: string;
   bidType: string;
   enableItemDetail: boolean;
   enableItemList: boolean;
   enablePaymentList: boolean;
   enablePaymentDetail: boolean;
   enableNewPayment: boolean;
+  enableSearch: boolean;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -75,7 +77,19 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
                 this.enableItemDetail = false;
                 this.enablePaymentDetail = false;
                 this.enableNewPayment = false;
+                this.poStatus = 'All';
 
+
+}
+
+search() {
+
+  console.log(this.bidId);
+  console.log(this.poStatus);
+
+  this.enableSearch = false;
+
+  this.refreshPoList(this.bidId, this.poStatus);
 
 }
 
@@ -188,8 +202,8 @@ onRowClicked(row) {
 
 }
 
-refreshPurchaseOrderListHandler(bidId: string) {
-  this.sendData(bidId);
+refreshPurchaseOrderListHandler(bidId: string, status: string) {
+  this.sendData(bidId, status);
 }
 
 refreshItemListHandler(bidId: string) {
@@ -213,16 +227,16 @@ purchaserChange(event)  {
 }
 
 
-sendData(bidId: string) {
+sendData(bidId: string, status: string) {
 
-  this.refreshPoList(bidId);
+ this.refreshPoList(bidId, status);
 
 }
 
-refreshPoList(bidId: string) {
+refreshPoList(bidId: string, status: string) {
 
   this.delay(1000).then(any => {
-    this.poService.getByBidNumber(bidId).subscribe(po => {
+    this.poService.searchPayment(bidId, status).subscribe(po => {
    //   this.purchaseOrders = po;
       this.poDataSource.data = po;
 
@@ -298,12 +312,30 @@ showFilter() {
 
   }
 
-  filterBids(filterVal: string) {
-    console.log(filterVal);
+  statusClicked(val: string) {
 
-    this.refreshPoList(filterVal);
+    this.enableSearch = true;
+    this.poStatus = val;
+    console.log('Val = ' + val);
+
+  }
+
+  unPaidClicked(val: boolean) {
+    this.enableSearch = true;
+
+    console.log('Unpaid = ' + val);
+
+  }
+
+  filterBids(filterVal: string) {
+    this.bidId = filterVal;
+    this.enableSearch = true;
+
+
+ //   this.refreshPoList(filterVal);
 
     this.selectedPO = null;
+
 
 }
 

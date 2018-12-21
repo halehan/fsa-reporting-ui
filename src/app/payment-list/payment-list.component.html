@@ -3,24 +3,66 @@
   <div class="example-header">
       
         <div class="row">
-          <div class="col-md-12">
-              <div  class="col-md-12 form-group form-black label-floating is-empty gap">
-                      <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
+
+              <div  class="col-md-6 gap">
+                    <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>  
 
                       <select required  (change)="filterBids($event.target.value)" class="form-control"  
                               id="bidTypeNnumberSelect2">
                               <option>Select Bid</option>
                           <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
                                       {{bn.BidNumber}} - {{bn.BidTitle}}
-                        </option>  
-                      </select>
+                           </option>  
+                       </select>
+              </div>
+              <div style=" margin-left: 20px;" class="col-md-2 gap">
+                    <label style="padding-left: 5px;" for="status2">PO Status</label>  
+                    <select required (change)="statusClicked($event.target.value)" class="form-control"  
+                              id="status">
+                                <option>All</option>
+                                <option>Paid</option>
+                                <option>Unpaid</option>
+                    </select>
               </div>
 
+              <div style="margin-top: 30px; margin-left: 15px;" class="col-md-2 gap">
+                    <button mat-button [disabled]="!enableSearch"  (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
+              </div>
+
+           <!--   <div style="margin-top: 5px; margin-left: 20px;" class="col-md-1 gap">
+                    <input  class="form-check-input" (change)="paidClicked($event.target.value)" type="checkbox" id="inlineCheckbox1" [(ngModel)]="paid" >
+                    <label class="form-check-label" for="inlineCheckbox1">Paid</label>
+              </div>
+
+              <div style="margin-top: 5px;" class="col-md-1 gap">
+                    <input class="form-check-input" (change)="unPaidClicked($event.target.value)" type="checkbox" id="inlineCheckbox2" [(ngModel)]="unpaid"  >
+                    <label class="form-check-label" for="inlineCheckbox2">Unpaid</label>
+              </div>
+
+              <div style="margin-left: 15px;" class="col-md-2 gap">
+                    <button mat-button [disabled]="!enableSearch"  (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
+              </div>
+            -->
+         <!--           <div class="col-md-4">
+                            <div class="form-group input-group-sm form-black label-floating is-empty">
+                                
+                                <div style="padding-top: 5px;" class="form-group input-group-sm form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="paid"  name="paid" value="X">
+                                    <label class="form-check-label" for="inlineCheckbox1">Paid</label>
+                                  </div>
+                                  <div class="form-group input-group-sm form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="unpaid"  value="X">
+                                    <label class="form-check-label" for="inlineCheckbox2">Unpaid</label>
+                                 </div>
+                            </div>
+                          </div>   -->
+          
+
               <mat-form-field class="gap" *ngIf="showFilter()">
-                  <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Search">
+                  <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
               </mat-form-field>  
              
-            </div>
+         <!--   </div>  -->
           
           </div>  
 
@@ -41,14 +83,19 @@
         </ng-container>
     
        <ng-container matColumnDef="dealerName">
-          <mat-header-cell fxFlex="275px" *matHeaderCellDef mat-sort-header> Vendor </mat-header-cell>
-          <mat-cell fxFlex="275px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
+          <mat-header-cell fxFlex="200px" *matHeaderCellDef mat-sort-header> Vendor </mat-header-cell>
+          <mat-cell fxFlex="200px" *matCellDef="let row">{{row.dealerName}}</mat-cell>
         </ng-container>
     
         <ng-container matColumnDef="poNumber">
-          <mat-header-cell fxFlex="175px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
-          <mat-cell fxFlex="175px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
+          <mat-header-cell fxFlex="150px" *matHeaderCellDef mat-sort-header> PO Number </mat-header-cell>
+          <mat-cell fxFlex="150px" *matCellDef="let row">{{row.poNumber}}</mat-cell>
         </ng-container>
+
+        <ng-container matColumnDef="poStatus">
+            <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Status </mat-header-cell>
+            <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poStatus}}</mat-cell>
+          </ng-container>
 
         <ng-container matColumnDef="dateReported">
               <mat-header-cell fxFlex="120px" *matHeaderCellDef mat-sort-header> PO Reported Date </mat-header-cell>
@@ -66,8 +113,8 @@
         </ng-container>
 
        <ng-container matColumnDef="adminFeeDue">
-          <mat-header-cell fxFlex="125px" *matHeaderCellDef mat-sort-header> Admin Fee</mat-header-cell>
-          <mat-cell fxFlex="125px" *matCellDef="let row">{{row.adminFeeDue  | currency }}</mat-cell>
+          <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> Admin Fee</mat-header-cell>
+          <mat-cell fxFlex="100px" *matCellDef="let row">{{row.adminFeeDue  | currency }}</mat-cell>
     </ng-container> 
        
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -81,7 +128,9 @@
                   [pageSizeOptions]="[5, 25, 100, 500]">
               </mat-paginator>
     
-    <br><hr> 
+    <br>
+    
+    <hr [hidden] = "!enableItemList"> 
 
 
 </div>          
@@ -121,8 +170,8 @@
           </ng-container>
 
           <ng-container matColumnDef="itemType">
-              <mat-header-cell class="pull-left" fxFlex="200px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
-              <mat-cell fxFlex="200px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
+              <mat-header-cell class="pull-left" fxFlex="175px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
+              <mat-cell fxFlex="175px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="qty">

@@ -243,8 +243,9 @@ export class PaymentDetailComponent implements OnInit {
 
 
   truncateDecimals(poAmount: number, places: number) {
-    const shift = Math.pow(20, places);
-   return ((poAmount * shift) | 0) / shift;
+ //   const shift = Math.pow(20, places);
+    return Number(poAmount.toFixed(places));
+  // return ((poAmount * shift) | 0) / shift;
   };
 
   calculateAdminFee(poAmount: number) {

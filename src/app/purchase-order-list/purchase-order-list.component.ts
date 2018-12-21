@@ -498,7 +498,7 @@ showFilter() {
 
   }
 
-  onSelect(po: PurchaseOrder): void {
+  onSelectPurchaseOrder(po: PurchaseOrder): void {
 
     this.poFocus.nativeElement.focus();
 
@@ -557,6 +557,8 @@ showFilter() {
 
   filterBids(filterVal: string) {
     console.log(filterVal);
+
+    this.bidId = filterVal;
 
     this.poService.getAdminFee(filterVal)
     .subscribe(bid => {
@@ -691,7 +693,7 @@ showFilter() {
 
 
   newPayment(po: PurchaseOrder) {
-    this.onSelect(po);
+    this.onSelectPurchaseOrder(po);
     this.selectedPayment = new Payment();
     this.selectedPayment.fsaReportId = po.id;
     this.showPayment = true;
