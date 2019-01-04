@@ -186,9 +186,13 @@ export class PaymentDetailComponent implements OnInit {
       this.paymentForm.controls['totalAlloc'].patchValue(row.totalAlloc, {emitEvent : false});
       this.paymentForm.controls['fsaRefundAmount'].patchValue(row.fsaRefundAmount, {emitEvent : false});
       this.paymentForm.controls['fsaRefundCheckNumber'].patchValue(row.fsaRefundCheckNum, {emitEvent : false});
-      this.paymentForm.controls['lateFeeAmount'].patchValue(row.lateFeeAmount, {emitEvent : false});
-      this.paymentForm.controls['lateFeeCheckNumber'].patchValue(row.lateFeeCheckNumber, {emitEvent : false});
-      this.paymentForm.controls['lateFeeCheckDate'].patchValue(row.lateFeeCheckDate, {emitEvent : false});
+      this.paymentForm.controls['lateFeeAmount'].patchValue(row.lateFeeAmt, {emitEvent : false});
+      this.paymentForm.controls['lateFeeCheckNumber'].patchValue(row.lateFeeCheckNum, {emitEvent : false});
+      if (! (row.lateFeeCheckDate === undefined || row.lateFeeCheckDate === null) ) {
+        this.paymentForm.controls['lateFeeCheckDate'].patchValue( this.formatDate(row.lateFeeCheckDate), {emitEvent : false});
+       }
+
+  //    this.paymentForm.controls['lateFeeCheckDate'].patchValue( this.formatDate(row.lateFeeCheckDate), {emitEvent : false});
       this.paymentForm.controls['comment'].patchValue(row.comment, {emitEvent : false});
 
       this.formControlValueChanged();
@@ -221,13 +225,13 @@ export class PaymentDetailComponent implements OnInit {
       this.currentPayment.fsaRefundAmount = this.paymentForm.controls.fsaRefundAmount.value;
       this.currentPayment.lateFeeAmt = this.paymentForm.controls.lateFeeAmount.value;
       this.currentPayment.lateFeeCheckDate = this.paymentForm.controls.lateFeeCheckDate.value;
+      this.currentPayment.lateFeeCheckNum = this.paymentForm.controls.lateFeeCheckNumber.value;
       this.currentPayment.comment = this.paymentForm.controls.comment.value;
 
     }
 
     formatDate(dateVal: Date) {
       console.log(dateVal);
-      console.log(dateVal.toLocaleString());
       const myDate = this.dateFormatPipe.transform(dateVal);
       console.log(myDate);
 

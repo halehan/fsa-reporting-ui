@@ -120,19 +120,16 @@ newItem () {
   this.itemList.chain();
 }
 
-onRowClicked(row) {
+onRowClicked(row: any): void {
 
-  // this.poFocus.nativeElement.focus();
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
     this.enableItemDetail = false;
     this.enableItemList = true;
     this.enablePoDetail = true;
 
-
     this.selectedPayCd = row.payCd;
     this.selectedPoId = row.id;
-  console.log('Row clicked: ', row);
-  // this.poFocus.nativeElement.focus();
+    console.log('Row clicked: ', row);
 
   if (this.itemList !== undefined) {
     this.itemList.setItemListRowSelected(false);
@@ -689,6 +686,7 @@ showFilter() {
     this.isNewPo = true;
     this.enablePoDetail = true;
     this.purchaseOrderDetailComponent.newPo();
+
   }
 
 

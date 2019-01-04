@@ -58,6 +58,8 @@
                                                          <input type="text" placeholder="Estimated Delivery" formControlName="estimatedDelivery" name="estimatedDelivery" bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }"  class="form-control" />
                                                      </div>
                                                   </div>  -->
+
+                                                 
                                             
                                                    <div class="col-md-6">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -85,7 +87,7 @@
                                                      </div>
                                                      <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('dealerName').touched && poForm.get('dealerName').hasError('required')">Vendor Required!</small>
                                                    </div>
-                                     
+
                                      
                                                    <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
@@ -100,28 +102,26 @@
                                                           </div>
                                                      </div>
                                                    </div> 
+
+                                                   <div class="col-md-2">
+                                                        <div class="form-group input-group-sm form-black label-floating is-empty">
+                                                            <label class="label-small">PO Completed</label>
                                         
-                                                    <div class="col-md-2">
-                                                     <div class="form-group input-group-sm form-black label-floating is-empty">
-                                                         <label class="label-small">PO Completed</label>
+                                                            <select   class="form-control"  formControlName="poStatus" id="poCompleteSelect">
+                                                                 <option>No</option>
+                                                                 <option *ngFor="let code of poStatusTypeCodes" >
+                                                                        {{ code.poStatusTypeCode}} 
+                                                                  </option>  
+                                                                </select>
+                                                        </div>
+                                                        <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poStatus').touched && poForm.get('poStatus').hasError('required')">PO Status Required!</small>
+                                                 </div>  
                                      
-                                                         <select   class="form-control"  formControlName="poStatus" id="poCompleteSelect">
-                                                               <!--      <option  selected>{{ pox.poComplete }} 
-                                                                         </option>  -->
-                                                              <option *ngFor="let code of poStatusTypeCodes" >
-                                                                     {{ code.poStatusTypeCode}} 
-                                                               </option>  
-                                                             </select>
-                                                     </div>
-                                                     <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poStatus').touched && poForm.get('poStatus').hasError('required')">PO Status Required!</small>
-                                                     </div>  
-                                            
-                                
-                                     
+                                        
                                              <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Amount</label>
-                                                         <input currencyMask type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
+                                                         <input placeholder="$.00" style="text-align: right" type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
                                                      </div>
                                              </div>  
                                      

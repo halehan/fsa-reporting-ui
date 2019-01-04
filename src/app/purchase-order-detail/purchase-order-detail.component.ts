@@ -273,7 +273,7 @@ createFormGroup() {
       agencyFlag: new FormControl(),
       bidType: new FormControl(),
       dealerFlag: new FormControl(),
-      poStatus: new FormControl(),
+      poStatus: new FormControl('No'),
       poFinal: new FormControl(),
       qty: new FormControl(),
       poAmount: new FormControl(),
@@ -371,6 +371,7 @@ revert() {
   }
 
   insertPo() {
+
     this.newPO.createdBy = this.getCurrentUserName();
     this.newPO.updatedBy = this.getCurrentUserName();
 
