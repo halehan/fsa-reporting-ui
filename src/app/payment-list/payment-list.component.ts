@@ -25,7 +25,10 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['bidNumber', 'cityAgency',  'dealerName', 'poNumber', 'poStatus',
                       'poIssueDate', 'dateReported', 'poAmount', 'adminFeeDue'];
-  itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty', 'itemAmount', 'adminFeeDue'];
+
+  itemColumns =    ['itemNumber', 'itemDescription',  'itemType', 'itemMake', 'itemModel', 'qty',
+                    'itemAmount', 'adminFeeDue', 'paymentAmount', 'balance'];
+
   paymentColumns = ['paymentNumber', 'paymentCheckNum',  'fsaAlloc', 'facAlloc', 'ffcaAlloc', 'totalAlloc', 'paymentAmount', 'paymentDate'];
 
   poDataSource = new MatTableDataSource();
@@ -46,6 +49,7 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   itemType: string;
   adminFeeRate: number;
   poStatus: string;
+  poSearchVal: string;
 
   selectedPO: PurchaseOrder;
 
@@ -59,6 +63,9 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
   enablePaymentDetail: boolean;
   enableNewPayment: boolean;
   enableSearch: boolean;
+  selectedRowIndex: number;
+  selectedRowIndexItems: number;
+  selectedRowIndexPayment: number;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -78,19 +85,54 @@ export class PaymentListComponent implements OnInit, AfterViewInit {
                 this.enablePaymentDetail = false;
                 this.enableNewPayment = false;
                 this.poStatus = 'All';
+}
 
+resetControls() {
+
+  this.enableItemList = false;
+  this.enableItemDetail = false
+  this.enableItemList = false;
+  this.enablePaymentList = false;
+  this.enablePaymentDetail = false;
+  this.enableNewPayment = false;
 
 }
 
 search() {
 
+  this.selectedRowIndex = -1;
+  this.selectedRowIndexItems = -1;
+  this.selectedRowIndexPayment = -1;
+
+  this.resetControls();
+
+
+
   console.log(this.bidId);
   console.log(this.poStatus);
 
   this.enableSearch = false;
+ // this.poSearchVal = '';
 
+ if (!(this.isEmpty(this.poSearchVal)) ) {
+    console.log('poSearch valid ', this.poSearchVal);
+
+    this.delay(1000).then(any => {
+      this.poService.searchPaymentByPo(this.poSearchVal).subscribe(po => {
+        this.poDataSource.data = po;
+
+        console.log(this.purchaseOrders.length);
+    });
+  });
+
+ } else {
   this.refreshPoList(this.bidId, this.poStatus);
+ }
 
+}
+
+isEmpty(str: string) {
+  return (!str || 0 === str.length);
 }
 
 newPayment() {
@@ -114,6 +156,8 @@ getItems(poId: number) {
 }
 
 onPaymentRowClicked(row) {
+
+  this.selectedRowIndexPayment = row.id;
 
   console.log('Row clicked: ', row);
   this.paymentId = row.id;
@@ -139,6 +183,8 @@ refreshPaymentListHandler(itemId: number) {
 
 onItemRowClicked(row) {
 
+  this.selectedRowIndexItems = row.id;
+
   // this.poFocus.nativeElement.focus();
   // Set the Po Item Detail screen to hidden until the Item is selected on the Item list
  //   this.enableItemList = true;
@@ -153,7 +199,7 @@ onItemRowClicked(row) {
   // Retrieve the payments for this row
   this.itemService.getPaymentByItemId(row.id)
   .subscribe(items => {
-      this.paymentListDS.data = items;
+        this.paymentListDS.data = items;
        this.enablePaymentList  = (items.length > 0 ? true : false);
        this.paymentNumber = items.length;
        this.enableNewPayment = true;
@@ -165,6 +211,7 @@ onItemRowClicked(row) {
 onRowClicked(row) {
 
   this.selectedPO = row;
+  this.selectedRowIndex = row.id;
   this.payCd = row.payCd;
   this.bidType = row.bidType;
   this.enableNewPayment = false;
@@ -208,6 +255,11 @@ refreshPurchaseOrderListHandler(bidId: string, status: string) {
 
 refreshItemListHandler(bidId: string) {
   console.log('Called refreshItemListHandler');
+}
+
+valueChange(event)  {
+  const newVal = event.target.value;
+  console.log(newVal);
 }
 
 
@@ -320,6 +372,14 @@ showFilter() {
 
   }
 
+  poValueChanged(val: string) {
+
+    this.enableSearch = true;
+    this.poSearchVal = val;
+    console.log('Val = ' + val);
+
+  }
+
   unPaidClicked(val: boolean) {
     this.enableSearch = true;
 
@@ -344,6 +404,10 @@ showFilter() {
 }
 
   ngOnInit() {
+
+    this.selectedRowIndex = -1;
+    this.selectedRowIndexItems = -1;
+    this.selectedRowIndexPayment = -1;
 
     this.poDataSource.paginator = this.paginator;
 

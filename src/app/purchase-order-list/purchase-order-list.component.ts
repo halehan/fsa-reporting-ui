@@ -13,6 +13,7 @@ import { ItemPaymentComponent } from '../item-payment/item-payment.component';
 import { ItemListComponent } from '../item-list/item-list.component';
 
 import { PurchaseOrderDetailComponent } from '../purchase-order-detail/purchase-order-detail.component';
+import { SearchByCheckComponent } from '../search-by-check/search-by-check.component';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   showPayment: Boolean = false;
   showNewPayment: Boolean = false;
   bids: String[] = [];
-   fuck: Boolean = false;
+  fuck: Boolean = false;
   specs: Specification[] = [];
   poStatusTypeCodes: PoStatusType[] = [];
   agencyCodes: AgencyType[] = [];
@@ -66,6 +67,8 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
   enableItemList: boolean;
   enablePoList: boolean;
   enablePoDetail: boolean;
+  enableSearch: boolean;
+  poSearchVal: string;
 
   @ViewChild('poFocus') poFocus: ElementRef;
   @ViewChild('paymentFocus') paymentFocus: ElementRef;
@@ -94,6 +97,40 @@ export class PurchaseOrderListComponent implements OnInit, AfterViewInit {
     this.myDate = new Date();
 
 }
+
+statusClicked(val: string) {
+
+  this.enableSearch = true;
+  this.poSearchVal = val;
+  console.log('Val = ' + val);
+
+}
+
+search() {
+
+  console.log(this.bidId);
+  console.log(this.poSearchVal);
+
+  this.delay(250).then(any => {
+    this.poService.getPoByPoId(this.poSearchVal).subscribe(po => {
+      this.purchaseOrders = po;
+      this.poDataSource.data = po;
+
+      console.log(this.purchaseOrders.length);
+
+      this.enablePoList  = (this.purchaseOrders.length > 0 ? true : false);
+      this.enablePoDetail =  false;
+      this.enableItemList = false;
+
+  });
+});
+
+ // this.enableSearch = false;
+
+
+}
+
+
 
 deletePurchaseOrder (row) {
 
@@ -130,6 +167,14 @@ onRowClicked(row: any): void {
     this.selectedPayCd = row.payCd;
     this.selectedPoId = row.id;
     console.log('Row clicked: ', row);
+
+    // this.bidId = row.bidId;
+
+    this.poService.getAdminFee(row.bidNumber)
+    .subscribe(bid => {
+        this.currentBid = bid[0];
+    //    this.enablePoList  = (bid.length > 0 ? true : false);
+    });
 
   if (this.itemList !== undefined) {
     this.itemList.setItemListRowSelected(false);
@@ -552,10 +597,21 @@ showFilter() {
 
   }
 
+  resetView() {
+
+    this.enablePoDetail = false
+    this.enableItemDetail = false;
+    this.enableItemList = false;
+   // this.enablePoList: boolean;
+    this.enablePoDetail =  false;
+
+  }
+
   filterBids(filterVal: string) {
     console.log(filterVal);
 
     this.bidId = filterVal;
+    this.resetView();
 
     this.poService.getAdminFee(filterVal)
     .subscribe(bid => {

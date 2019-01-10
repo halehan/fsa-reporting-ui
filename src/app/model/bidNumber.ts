@@ -4,5 +4,7 @@ export class BidNumber {
     BidType: string;
     BidTitle: string;
     AdminFeeRate: string;
+    StartDate: Date;
+    EndDate: Date;
 
 }

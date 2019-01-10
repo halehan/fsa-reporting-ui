@@ -1,10 +1,10 @@
 <div class="container">
     
-  <div class="example-header">
+  <div class="search-header">
       
         <div class="row">
 
-              <div  class="col-md-6 gap">
+              <div  class="col-md-4 gap">
                     <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>  
 
                       <select required  (change)="filterBids($event.target.value)" class="form-control"  
@@ -25,46 +25,21 @@
                     </select>
               </div>
 
-              <div style="margin-top: 30px; margin-left: 15px;" class="col-md-2 gap">
+              <div style="margin-top: 10px;  margin-left: 10px;" class="col-md-2 gap">
+                <mat-form-field class="gap" >
+                  <input matInput (keyup)="poValueChanged($event.target.value)" [ngModel]="poSearchVal"  placeholder="PO Number">
+                </mat-form-field>  
+               </div>
+
+              <div style="margin-top: 30px; margin-left: 85px;" class="col-md-2 gap">
                     <button mat-button [disabled]="!enableSearch"  (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
               </div>
-
-           <!--   <div style="margin-top: 5px; margin-left: 20px;" class="col-md-1 gap">
-                    <input  class="form-check-input" (change)="paidClicked($event.target.value)" type="checkbox" id="inlineCheckbox1" [(ngModel)]="paid" >
-                    <label class="form-check-label" for="inlineCheckbox1">Paid</label>
-              </div>
-
-              <div style="margin-top: 5px;" class="col-md-1 gap">
-                    <input class="form-check-input" (change)="unPaidClicked($event.target.value)" type="checkbox" id="inlineCheckbox2" [(ngModel)]="unpaid"  >
-                    <label class="form-check-label" for="inlineCheckbox2">Unpaid</label>
-              </div>
-
-              <div style="margin-left: 15px;" class="col-md-2 gap">
-                    <button mat-button [disabled]="!enableSearch"  (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
-              </div>
-            -->
-         <!--           <div class="col-md-4">
-                            <div class="form-group input-group-sm form-black label-floating is-empty">
-                                
-                                <div style="padding-top: 5px;" class="form-group input-group-sm form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" formControlName="paid"  name="paid" value="X">
-                                    <label class="form-check-label" for="inlineCheckbox1">Paid</label>
-                                  </div>
-                                  <div class="form-group input-group-sm form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" formControlName="unpaid"  value="X">
-                                    <label class="form-check-label" for="inlineCheckbox2">Unpaid</label>
-                                 </div>
-                            </div>
-                          </div>   -->
-          
 
               <mat-form-field class="gap" *ngIf="showFilter()">
                   <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
               </mat-form-field>  
-             
-         <!--   </div>  -->
           
-          </div>  
+        </div>  
 
           <div class="panel-body">            
             <div class="card-content">     
@@ -118,7 +93,7 @@
     </ng-container> 
        
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns"  [ngClass]="{'highlight': selectedRowIndex == row.id}"  (click)="onRowClicked(row)"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"   [ngClass]="{'highlight': selectedRowIndex == row.id}"  (click)="onRowClicked(row)"></mat-row>
      
     
       </mat-table>
@@ -142,7 +117,7 @@
 
 <div [hidden] = "!enableItemList" class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Purchase Order Items</h3>
+    <h3 style="font-size: 1.25rem;" class="panel-title">Purchase Order Items</h3>
     
 
   </div>
@@ -155,13 +130,13 @@
           </ng-container>
             
           <ng-container matColumnDef="itemDescription">
-              <mat-header-cell class="pull-left" fxFlex="300px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
-              <mat-cell fxFlex="300px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
+              <mat-header-cell class="pull-left" fxFlex="250px"   *matHeaderCellDef mat-sort-header>Item Description</mat-header-cell>
+              <mat-cell fxFlex="250px" *matCellDef="let itemList"> {{itemList.itemDescription}} </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="itemMake">
-                  <mat-header-cell class="pull-left" fxFlex="200px"  *matHeaderCellDef mat-sort-header> Item Make </mat-header-cell>
-                  <mat-cell fxFlex="200px" *matCellDef="let itemList">{{itemList.itemMake}}</mat-cell>
+                  <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header> Item Make </mat-header-cell>
+                  <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemMake}}</mat-cell>
               </ng-container>
             
           <ng-container matColumnDef="itemModel">
@@ -170,8 +145,8 @@
           </ng-container>
 
           <ng-container matColumnDef="itemType">
-              <mat-header-cell class="pull-left" fxFlex="175px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
-              <mat-cell fxFlex="175px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
+              <mat-header-cell class="pull-left" fxFlex="150px"  *matHeaderCellDef mat-sort-header> Item Type </mat-header-cell>
+              <mat-cell fxFlex="150px" *matCellDef="let itemList">{{itemList.itemType}}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="qty">
@@ -180,13 +155,23 @@
           </ng-container>
 
            <ng-container matColumnDef="itemAmount">
-                  <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
-                  <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemAmount  | currency }}</mat-cell>
+                  <mat-header-cell class="pull-left" fxFlex="75px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
+                  <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.itemAmount  | currency }}</mat-cell>
            </ng-container>
 
            <ng-container matColumnDef="adminFeeDue">
-            <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Admin Fee </mat-header-cell>
-            <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.adminFeeDue | currency}}</mat-cell>
+            <mat-header-cell class="pull-left" fxFlex="75px" *matHeaderCellDef mat-sort-header> Admin Fee </mat-header-cell>
+            <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.adminFeeDue | currency}}</mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="balance">
+            <mat-header-cell class="pull-left" fxFlex="75px" *matHeaderCellDef mat-sort-header> Balance </mat-header-cell>
+            <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.balance | currency}}</mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="paymentAmount">
+            <mat-header-cell class="pull-left" fxFlex="75px" *matHeaderCellDef mat-sort-header> Payment Amount </mat-header-cell>
+            <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.paymentAmount | currency}}</mat-cell>
          </ng-container>
 
              <ng-container matColumnDef="edit">
@@ -199,8 +184,8 @@
           </ng-container>
 
           <ng-container matColumnDef="payment">
-              <mat-header-cell class="pull-left" fxFlex="70px" *matHeaderCellDef mat-sort-header>Payment</mat-header-cell> 
-              <mat-cell fxFlex="70px" *matCellDef="let row">
+              <mat-header-cell class="pull-left" fxFlex="50px" *matHeaderCellDef mat-sort-header>Payment</mat-header-cell> 
+              <mat-cell fxFlex="50px" *matCellDef="let row">
                   <button mat-icon-button color="primary" focusable="false" (click)="onSelect(row)">
                       <i class="fa fa-money" aria-hidden="true"></i>
                   </button>  
@@ -218,7 +203,7 @@
               
                 
           <mat-header-row  *matHeaderRowDef="itemColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: itemColumns;"  [ngClass]="{'highlight': selectedRowIndex == row.id}"  (click)="onItemRowClicked(row)"></mat-row>
+          <mat-row *matRowDef="let row; columns: itemColumns;"  [ngClass]="{'highlight': selectedRowIndexItems == row.id}"  (click)="onItemRowClicked(row)"></mat-row>
       
       </mat-table>
 
@@ -236,7 +221,7 @@
 
 <div [hidden] = "!enablePaymentList" class="panel panel-default">
     <div  class="panel-heading">
-      <h3 style="width: 945px;" class="panel-title">Payments  - Item: {{itemNumber}} - Item Type: {{itemType}}  </h3>
+      <h3 style="width: 945px; font-size: 1.25rem;" class="panel-title">Payments  - Item: {{itemNumber}} - Item Type: {{itemType}}  </h3>
      
     </div>
     <div class="panel-body">
@@ -311,7 +296,7 @@
                 -->
                   
             <mat-header-row  *matHeaderRowDef="paymentColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: paymentColumns;"  [ngClass]="{'highlight': selectedRowIndex == row.id}"  (click)="onPaymentRowClicked(row)"></mat-row>
+            <mat-row *matRowDef="let row; columns: paymentColumns;"  [ngClass]="{'highlight': selectedRowIndexPayment == row.id}"  (click)="onPaymentRowClicked(row)"></mat-row>
         
         </mat-table>
   

@@ -21,7 +21,7 @@ const itemBidCodeByIdUrl = Constants.SERVER_URL +  'api/item/id/';
 const paymentByItemIdUrl = Constants.SERVER_URL +  'api/transaction/payment/';
 const itemDeleteUrl =   Constants.SERVER_URL +  'api/item/delete/';
 const itemDeleteByPoUrl =   Constants.SERVER_URL +  'api/item/delete/po';
-
+const itemAmtByPoId =   Constants.SERVER_URL +  'api/item/sum/';
 
 
 // app.get("/api/item/bid/:bidId", fsaCodeServices.getItemTypeByBid);
@@ -35,6 +35,11 @@ export class ItemService {
   constructor(
     private http: Http,
     private authenticationService: AuthenticationService) {
+}
+
+getItemAmountByPoId(id: number) {
+  const localUrl: string = itemAmtByPoId + id;
+  return this.http.get(localUrl, this.jwt()).map((response: Response) => response.json());
 }
 
 

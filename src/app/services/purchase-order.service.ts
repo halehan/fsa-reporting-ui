@@ -19,11 +19,13 @@ const specTypeUrl = Constants.SERVER_URL + 'api/specification/';
 const poStatusTypeUrl = Constants.SERVER_URL + 'api/poStatusType/';
 const agencyTypeUrl = Constants.SERVER_URL + 'api/agencyType/';
 const poByIdUrl = Constants.SERVER_URL + 'api/transaction/';
+const poByPoIdUrl = Constants.SERVER_URL + 'api/transaction/po/';
 const adminFeeUrl = Constants.SERVER_URL + 'api/bidType/';
 const dealerUrl = Constants.SERVER_URL + 'api/dealer/';
 const dealerAssocUrl = Constants.SERVER_URL + 'api/dealer/assoc/';
 const deletePoUrl = Constants.SERVER_URL + 'api/transaction/delete/';
 const paymentSearchUrl =  Constants.SERVER_URL + 'api/transaction/bid/';
+const paymentSearchByPoUrl =  Constants.SERVER_URL + 'api/transaction/bid/po/';
 
 
 @Injectable({
@@ -63,6 +65,10 @@ getByLogin(loginId: string): Observable<any> {
 
 getPoById(id: number): Observable<PurchaseOrder> {
   return this.http.get(poByIdUrl + id, this.jwt()).map((response: Response) => response.json());
+}
+
+getPoByPoId(id: string): Observable<PurchaseOrder[]> {
+  return this.http.get(poByPoIdUrl + id, this.jwt()).map((response: Response) => response.json());
 }
 
 getAdminFee(id: string) {
@@ -113,6 +119,10 @@ searchPayment(bidNumber: string, status: string) {
   }
 
   return this.http.get(paymentSearchUrl + bidNumber + '/' + status.toUpperCase(), this.jwt()).map((response: Response) => response.json());
+}
+
+searchPaymentByPo(poNumber: string) {
+  return this.http.get(paymentSearchByPoUrl + poNumber, this.jwt()).map((response: Response) => response.json());
 }
 
 getBidNumber() {

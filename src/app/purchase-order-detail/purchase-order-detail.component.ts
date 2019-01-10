@@ -7,6 +7,7 @@ import { Dealer, CityAgency, BidType, BidNumber, PoStatusType, Specification } f
 import { ContactRequest } from '../model/contact-request';
 import { PersonalData } from '../model/contact-request';
 import { PurchaseOrderService } from '../services/purchase-order.service';
+import { ItemService } from '../services/item.service';
 import { ToastrService } from 'ngx-toastr';
 import { ItemBidTypeCode } from '../model/itemBidTypeCode';
 import { DateFormatPipe } from '../dateFormat/date-format-pipe.pipe';
@@ -50,11 +51,25 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
   poStatusTypeCodes: PoStatusType[] = [];
   // newPoForm: FormGroup;
   poForm: FormGroup;
-  dateFailed: boolean;
-  currentBid: BidNumber;
 
-  constructor(private poService: PurchaseOrderService, private toastr: ToastrService, private fb: FormBuilder,
-    private dateFormatPipe: DateFormatPipe) { }
+  datePoIssueValid: boolean;
+  datePoIssueBidValid: boolean;
+
+  datePoReportedBidValid: boolean;
+  datePoReportedValid: boolean;
+
+  poIssueDateErrorMsg: string;
+  poReportedDateErrorMsg: string;
+
+  currentBid: BidNumber;
+  messagePoIssueDate: string;
+  messagePoReportedDate: string;
+
+  messagePoFinal: string;
+  poFinalValid: boolean;
+
+  constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService,
+    private fb: FormBuilder, private dateFormatPipe: DateFormatPipe) { }
 
     focusPoDetail () {
 
@@ -71,6 +86,10 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
 ngAfterViewInit() {
   console.log('Values on ngAfterViewInit():');
   console.log('itemList:', this.itemList);
+  console.log('poId', this.poId);
+
+  this.formControlValueChanged();
+
 }
 
 newItem() {
@@ -81,7 +100,7 @@ newItem() {
 
 ngOnInit() {
 
-  this.poForm = this.createFormGroup();
+  
 
   this.getPurchaseOrder(this.poId);
 
@@ -94,7 +113,6 @@ this.poService.getDealer()
 .subscribe(_dealers => {
      this.dealers = _dealers;
 });
-
 
   this.poService.getCityAgency()
   .subscribe(_cityAgency => {
@@ -111,7 +129,7 @@ this.poService.getDealer()
       this.bidNumbers = _bidNum;
   });
 
-this.formControlValueChanged();
+  this.poForm = this.createFormGroup();
 
 }
 
@@ -131,6 +149,16 @@ calculateAdminFee(poAmount: number) {
 newPo() {
   this.newPO = new PurchaseOrder();
   this.poForm = this.createFormGroup();
+
+  this.datePoIssueValid = true;
+  this.datePoIssueBidValid = true;
+
+  this.datePoReportedBidValid = true;
+  this.datePoReportedValid = true;
+  this.poFinalValid = true;
+
+  this.messagePoFinal = '';
+
   this.formControlValueChanged();
 
   this.poService.getAdminFee(this.bidId).subscribe(bid => {this.currentBid = bid[0];
@@ -147,16 +175,142 @@ newPo() {
         this.poForm.controls['bidNumber'].patchValue(this.bidId, {emitEvent : false});
 }
 
+
 formControlValueChanged() {
+
+ this.poForm.get('poIssueDate').valueChanges.subscribe(
+    _issueDate => {
+
+      const startDate    = moment(this.currentBid.StartDate, 'YYYY-MM-DD');
+      const endDate      = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
+      const poIssueDate  = moment(_issueDate, 'YYYY-MM-DD');
+      const dateReported = moment(this.poForm.controls.dateReported.value, 'MM/DD/YYYY');
+
+      const poIssueDateValid: boolean =
+           poIssueDate.isBetween(startDate, endDate);
+
+      let poIssueDateAfterValid: boolean;
+      poIssueDateAfterValid = true;
+
+      if (!(this.poForm.controls.dateReported.value == null)) {
+        poIssueDateAfterValid = poIssueDate.isBefore(dateReported);
+      }
+
+       console.log('po Issue Date Valid? ', poIssueDateValid);
+       console.log('po Issue Date > Reported Date? ', poIssueDateAfterValid);
+
+      this.poForm.controls['poIssueDate'].patchValue(_issueDate, {emitEvent : false});
+
+        if (poIssueDateAfterValid && poIssueDateValid) {
+            this.datePoIssueValid = true;
+            this.datePoIssueBidValid = true;
+            this.poForm.controls['poIssueDate'].setErrors(null, {emitEvent : false});
+            this.messagePoIssueDate = '';
+        } else if (!poIssueDateAfterValid) {
+            this.datePoIssueValid = false;
+            this.poForm.controls['poIssueDate'].setErrors(_issueDate, {emitEvent : false});
+            this.messagePoIssueDate = 'PO Issue Date must be before Reported Date ';
+        } else {
+          this.datePoIssueBidValid = false;
+          this.poForm.controls['poIssueDate'].setErrors(_issueDate, {emitEvent : false});
+          this.messagePoIssueDate = 'PO Issue Date is not within the date range for the respective bid ';
+      }
+
+      return poIssueDateValid && poIssueDateAfterValid ? null : {mismatch: true};
+    });
+
+  this.poForm.get('dateReported').valueChanges.subscribe(
+      _dateReported => {
+
+        const startDate      = moment(this.currentBid.StartDate, 'YYYY-MM-DD');
+        const endDate        = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
+        const poDateReported = moment(_dateReported, 'YYYY-MM-DD');
+        const poIssueDate    = moment(this.poForm.controls.poIssueDate.value, 'MM/DD/YYYY');
+
+        const poDateReportedDateBidValid: boolean =
+          poDateReported.isBetween(startDate, endDate);
+
+        let poDateReportedDateAfterValid: boolean;
+        poDateReportedDateAfterValid = true;
+
+        if (!(this.poForm.controls.poIssueDate.value == null)) {
+          poDateReportedDateAfterValid = poIssueDate.isBefore(poDateReported); }
+
+        console.log('po Issue Date Valid? ', poDateReportedDateBidValid);
+
+        this.poForm.controls['dateReported'].patchValue(_dateReported, {emitEvent : false});
+
+        if (poDateReportedDateBidValid && poDateReportedDateAfterValid) {
+          this.datePoReportedValid = true;
+          this.datePoReportedBidValid = true;
+          this.poForm.controls['dateReported'].setErrors(null, {emitEvent : false});
+          this.messagePoReportedDate = '';
+      } else if (!poDateReportedDateAfterValid) {
+          this.datePoReportedValid = false;
+          this.poForm.controls['dateReported'].setErrors(_dateReported, {emitEvent : false});
+          this.messagePoReportedDate = 'Reported Date must be after PO Issue Date ';
+      } else {
+        this.datePoReportedBidValid = false;
+        this.poForm.controls['dateReported'].setErrors(_dateReported, {emitEvent : false});
+        this.messagePoReportedDate = 'Reported Date is not within the date range for the respective bid ';
+    }
+
+        return poDateReportedDateBidValid && poDateReportedDateAfterValid ? null : {mismatch: true};
+      });
+
+  this.poForm.get('bidNumber').valueChanges.subscribe(
+    _bidNumber => {
+
+     // Need to get list of dealers that are in the DealerBidAssoc
+     this.poService.getDealerAssoc(_bidNumber)
+     .subscribe(_dealers => {
+         this.dealers = _dealers;
+     });
+
+       this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
+       console.log(this.currentBid.AdminFeeRate);
+       this.poForm.controls['bidType'].patchValue(this.currentBid.BidType, {emitEvent : false});
+       });
+
+     const startDate   = moment(this.currentBid.StartDate, 'YYYY-MM-DD');
+     const endDate     = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
+
+     console.log('Start Date', startDate);
+     console.log('Start Date', endDate);
+
+    });
+
 
   this.poForm.get('poFinal').valueChanges.subscribe(
     _poFinal => {
       console.log('poFinal changed ' + _poFinal);
       if ( _poFinal) {
-     console.log('Kick off Po Final validation');
-      }
-    });
+        const poAmount: number = Number(this.poForm.controls.poAmount.value);
 
+        this.itemService.getItemAmountByPoId(this.poId).subscribe(_amt => {
+          const itemSum: number = Number(_amt[0].amt);
+          if (!(poAmount === itemSum)) {
+            this.messagePoFinal = 'PO and Item amounts do not match';
+            this.poFinalValid = false;
+            this.poForm.setErrors({ 'invalid': true });
+          } else {
+            this.messagePoFinal = '';
+            this.poFinalValid = true;
+          //  this.poForm.setErrors({ invalid: true });
+          }
+         console.log('Item Amount = ', _amt[0].amt);
+         });
+
+     console.log('Kick off Po Final validation');
+
+     console.log('poAmount ', poAmount );
+      } else {
+        this.messagePoFinal = '';
+        this.poFinalValid = true;
+      }
+      return this.poFinalValid ? null : {mismatch: true};
+
+    });
 
   this.poForm.get('poAmount').valueChanges.subscribe(
     _poAmount => {
@@ -174,20 +328,6 @@ formControlValueChanged() {
           });
       });
 
-   this.poForm.get('bidNumber').valueChanges.subscribe(
-       _bidNumber => {
-
-        // Need to get list of dealers that are in the DealerBidAssoc
-        this.poService.getDealerAssoc(_bidNumber)
-        .subscribe(_dealers => {
-            this.dealers = _dealers;
-        });
-
-          this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
-          console.log(this.currentBid.AdminFeeRate);
-          this.poForm.controls['bidType'].patchValue(this.currentBid.BidType, {emitEvent : false});
-          });
-    });
 
 }
 
@@ -224,6 +364,16 @@ copyModelToForm() {
 
   if (this.currentPO != null) {
 
+    this.datePoIssueValid = true;
+    this.datePoIssueBidValid = true;
+
+    this.datePoReportedBidValid = true;
+    this.datePoReportedValid = true;
+    this.poFinalValid = true;
+
+    this.messagePoFinal = '';
+          this.poFinalValid = true;
+
     this.poService.getAdminFee(this.currentPO.bidNumber).subscribe(bid => {this.currentBid = bid[0]; });
 
     const fname: string = this.currentPO.dealerName;
@@ -257,6 +407,7 @@ copyModelToForm() {
 
   }
 
+
 createFormGroup() {
 
   return new FormGroup({
@@ -281,7 +432,7 @@ createFormGroup() {
       adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
       payCd: new FormControl()
-    }, this.validateFormDates);
+    }, );
 }
 
 copyFormToNewModel() {
@@ -332,6 +483,7 @@ copyFormToModel() {
 
 }
 
+/*
 validateFormDates(g: FormGroup) {
 
   const poDate: Date =  g.get('poIssueDate').value;
@@ -346,11 +498,15 @@ validateFormDates(g: FormGroup) {
 
   }
 
+ // const isDateRangeValid:  boolean = poIssueDateValid && poReportedDateValid;
+
   const isValid:  boolean = reporteddate >= poDate;
 
- return isValid ? null : {mismatch: true};
+ return isValid  ? null : {mismatch: true};
 
 }
+
+*/
 
 revert() {
   // Resets to blank object
@@ -376,6 +532,7 @@ revert() {
     this.newPO.updatedBy = this.getCurrentUserName();
 
     this.isNew = false;
+    //this.enableItemList = true;
 
     this.poService.createPurchaseOrder(this.newPO).subscribe(po => {
     });
@@ -387,6 +544,13 @@ revert() {
       });
 
       this._markFormPristine(this.poForm);
+
+      //HACK
+      this.datePoIssueValid = true;
+      this.datePoIssueBidValid = true;
+      this.datePoReportedValid = true;
+      this.datePoReportedBidValid = true;
+
 
   }
 
@@ -416,6 +580,12 @@ revert() {
 
       console.log(this.poForm.pristine.valueOf());
 
+      //HACK
+      this.datePoIssueValid = true;
+      this.datePoIssueBidValid = true;
+      this.datePoReportedValid = true;
+      this.datePoReportedBidValid = true;
+
   }
 
   processPurchaseOrder() {
@@ -423,10 +593,10 @@ revert() {
     // Determine if the action is an update or insert of the PO.
 
      if (this.poForm.invalid) {
-       this.dateFailed = true;
+       this.datePoIssueValid = true;
        return;
      } else {
-        this.dateFailed = false;
+        this.datePoIssueValid = false;
 
 
     if (this.isNew) {

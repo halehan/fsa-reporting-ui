@@ -85,12 +85,10 @@ async delay(ms: number) {
   }
 
   ngOnInit() {
+
     this.enableList = false;
 
     this.getItems(this.poId);
-
-  
-
 
    // console.log('BidNumber ' + this.currentBid.BidNumber);
   //  console.log('BidType ' + this.currentBid.BidType);

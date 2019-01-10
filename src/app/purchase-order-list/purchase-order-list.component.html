@@ -1,28 +1,39 @@
 <div class="container">
     
-        <div class="example-header">
+    <div class="search-header">
             
-              <div class="row">
-                <div class="col-md-12">
-                    <div  class="col-md-12 form-group form-black label-floating is-empty gap">
-                            <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
+          <div class="row">
+
+              <div  class="col-md-6 gap">
+
+                    <label style="padding-left: 5px;" for="bidTypeNnumberSelect2">Bid Number</label>
     
-                            <select required  (change)="filterBids($event.target.value)" class="form-control"  
-                                    id="bidTypeNnumberSelect2">
-                                    <option>Select Bid</option>
-                                <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
+                        <select required  (change)="filterBids($event.target.value)" class="form-control"  
+                              id="bidTypeNnumberSelect2">
+                              <option>Select Bid</option>
+                              <option *ngFor="let bn of bidNumbers" value={{bn.BidNumber}}>
                                             {{bn.BidNumber}} - {{bn.BidTitle}}
                               </option>  
-                            </select>
-                    </div>
+                        </select>
+              </div>
     
-                    <mat-form-field class="gap" *ngIf="showFilter()">
-                        <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
+                <div style="margin-top: 10px;  margin-left: 10px;" class="col-md-2 gap">
+                      <mat-form-field class="gap" >
+                        <input matInput (keyup)="statusClicked($event.target.value)"  placeholder="PO Number">
                     </mat-form-field>  
+                </div>
+  
+                <div style="margin-top: 30px; margin-left: 100px;" class="col-md-2 gap">
+                      <button mat-button [disabled]="!enableSearch"  (click)="search()" type="submit"  class="mat-flat-button btn-success insert-button">Search</button>  
+                </div>
+
+                <mat-form-field class="gap" *ngIf="showFilter()">
+                    <input matInput (keyup)="applyUserFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field>  
                    
-                  </div>
+            </div>
                 
-                </div>  
+      </div> 
 
   <div class="panel-body">            
     <div class="card-content">
@@ -122,4 +133,4 @@
       <br>  
     
     </div>
-</div>            
+   

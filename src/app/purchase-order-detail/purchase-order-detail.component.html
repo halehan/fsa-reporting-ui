@@ -2,7 +2,7 @@
 <!-- Default panel contents -->
         <div class="panel-heading">
              <!--   <h4 class="panel-title">Purchase Order Details {{bidId}} {{poId}} {{ enableItemDetail }}</h4>  -->
-             <h4 class="panel-title">Purchase Order Details</h4>
+             <h4 style="font-size: 1.25rem;" class="panel-title">Purchase Order Details</h4>
         </div>
         <div class="panel-body">
 
@@ -36,7 +36,11 @@
                                                  <div class="col-md-2 topMargin">
                                                    <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Issue Date</label>
-                                                         <input type="text" class="form-control" formControlName="poIssueDate" placeholder="PO Issue Date"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" />
+                                                         <input type="text" class="form-control" formControlName="poIssueDate" placeholder="PO Issue Date"  bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }" />                                                     
+                                                         <div style="line-height: 1.2; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="datePoIssueBidValid && datePoIssueValid"
+                                                                           class="alert alert-danger">
+                                                                           {{messagePoIssueDate}}
+                                                        </div>  
                                                    </div>
                                                  </div>
                                      
@@ -44,12 +48,14 @@
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Reported Date</label>
                                                          <input type="text" class="form-control" formControlName="dateReported" placeholder="PO Date Reported"  bsDatepicker  />
-                                                             <div [hidden]="!dateFailed"
-                                                                           class="alert alert-danger">
-                                                                           PO Reported Date must be later than PO Issue Date
-                                                             </div>  
+                                                         <div style="line-height: .95; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="datePoReportedValid && datePoReportedBidValid"
+                                                             class="alert alert-danger">
+                                                              {{messagePoReportedDate}}
+                                                          </div>  
                                                      </div>
-                                                     <small  *ngIf="poForm.get('dateReported').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date</small>
+                                                <!--     <small  *ngIf="poForm.get('dateReported').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Reported Date must be later than PO Issue Date and within the date range for BidType</small>
+                                                     <small  *ngIf="poForm.get('poIssueDate').touched && poForm.hasError('mismatch')" class="form-text text-muted alert alert-danger" >PO Issue Date must be later than PO Issue Date</small>
+                                                -->
                                                   </div>
                                      
                                           <!--        <div class="col-md-2 topMargin">
@@ -115,7 +121,7 @@
                                                                 </select>
                                                         </div>
                                                         <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poStatus').touched && poForm.get('poStatus').hasError('required')">PO Status Required!</small>
-                                                 </div>  
+                                                   </div>  
                                      
                                         
                                              <div class="col-md-2">
@@ -140,6 +146,10 @@
                                                         <input  style="padding-left: 15px;" class="form-check-input" type="checkbox" formControlName="poFinal"  value="0">
                                                                
                                                         </div>
+                                                        <div style="line-height: 1.2; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="poFinalValid"
+                                                                           class="alert alert-danger">
+                                                                           {{messagePoFinal}}
+                                                        </div>  
                                                         
                                                       </div> 
                                      
@@ -162,6 +172,8 @@
                                      
                                              </div>
                                            </form>  
+
+                                         <!--  <app-item-detail></app-item-detail> -->
                                      
                                          <!--  <app-purchase-order-item  (refreshItemList)="refreshItemListHandler($event)"></app-purchase-order-item> -->
                                          
