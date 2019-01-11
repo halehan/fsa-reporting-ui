@@ -100,8 +100,6 @@ newItem() {
 
 ngOnInit() {
 
-  
-
   this.getPurchaseOrder(this.poId);
 
   this.poService.getPostatusType()
@@ -191,9 +189,11 @@ formControlValueChanged() {
 
       let poIssueDateAfterValid: boolean;
       poIssueDateAfterValid = true;
+      let isSame: boolean;
 
       if (!(this.poForm.controls.dateReported.value == null)) {
         poIssueDateAfterValid = poIssueDate.isBefore(dateReported);
+        isSame = poIssueDate.isSame(dateReported);
       }
 
        console.log('po Issue Date Valid? ', poIssueDateValid);
@@ -201,12 +201,12 @@ formControlValueChanged() {
 
       this.poForm.controls['poIssueDate'].patchValue(_issueDate, {emitEvent : false});
 
-        if (poIssueDateAfterValid && poIssueDateValid) {
+        if ((poIssueDateAfterValid || isSame ) && poIssueDateValid) {
             this.datePoIssueValid = true;
             this.datePoIssueBidValid = true;
             this.poForm.controls['poIssueDate'].setErrors(null, {emitEvent : false});
             this.messagePoIssueDate = '';
-        } else if (!poIssueDateAfterValid) {
+        } else if (!(poIssueDateAfterValid || isSame) ) {
             this.datePoIssueValid = false;
             this.poForm.controls['poIssueDate'].setErrors(_issueDate, {emitEvent : false});
             this.messagePoIssueDate = 'PO Issue Date must be before Reported Date ';
@@ -222,40 +222,48 @@ formControlValueChanged() {
   this.poForm.get('dateReported').valueChanges.subscribe(
       _dateReported => {
 
-        const startDate      = moment(this.currentBid.StartDate, 'YYYY-MM-DD');
-        const endDate        = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
+      //  const startDate      = moment(this.currentBid.StartDate, 'YYYY-MM-DD');
+      //  const endDate        = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
         const poDateReported = moment(_dateReported, 'YYYY-MM-DD');
         const poIssueDate    = moment(this.poForm.controls.poIssueDate.value, 'MM/DD/YYYY');
+        const todaysDate = moment();
 
-        const poDateReportedDateBidValid: boolean =
-          poDateReported.isBetween(startDate, endDate);
+    //    const poDateReportedDateBidValid: boolean =
+    //      poDateReported.isBetween(startDate, endDate);
 
         let poDateReportedDateAfterValid: boolean;
         poDateReportedDateAfterValid = true;
+        let isSame: boolean;
+        let isAfter: boolean;
 
         if (!(this.poForm.controls.poIssueDate.value == null)) {
-          poDateReportedDateAfterValid = poIssueDate.isBefore(poDateReported); }
+          poDateReportedDateAfterValid = poIssueDate.isBefore(poDateReported) &&
+          !(poDateReported.isAfter(todaysDate));
+          isSame  = poIssueDate.isSame(poDateReported);
+          isAfter = poDateReported.isAfter(todaysDate);
+        }
 
-        console.log('po Issue Date Valid? ', poDateReportedDateBidValid);
+     //   console.log('po Issue Date Valid? ', poDateReportedDateBidValid);
 
         this.poForm.controls['dateReported'].patchValue(_dateReported, {emitEvent : false});
 
-        if (poDateReportedDateBidValid && poDateReportedDateAfterValid) {
+        if (poDateReportedDateAfterValid || isSame) {
           this.datePoReportedValid = true;
-          this.datePoReportedBidValid = true;
+      //    this.datePoReportedBidValid = true;
           this.poForm.controls['dateReported'].setErrors(null, {emitEvent : false});
           this.messagePoReportedDate = '';
-      } else if (!poDateReportedDateAfterValid) {
+          }  else if (isAfter) {
           this.datePoReportedValid = false;
           this.poForm.controls['dateReported'].setErrors(_dateReported, {emitEvent : false});
-          this.messagePoReportedDate = 'Reported Date must be after PO Issue Date ';
-      } else {
-        this.datePoReportedBidValid = false;
-        this.poForm.controls['dateReported'].setErrors(_dateReported, {emitEvent : false});
-        this.messagePoReportedDate = 'Reported Date is not within the date range for the respective bid ';
-    }
+          this.messagePoReportedDate = 'PO Reported Date can not be after today ';
+      } else  {
+          this.datePoReportedValid = false;
+          this.poForm.controls['dateReported'].setErrors(_dateReported, {emitEvent : false});
+          this.messagePoReportedDate = 'PO Reported Date must be after PO Issue Date ';
+      }
 
-        return poDateReportedDateBidValid && poDateReportedDateAfterValid ? null : {mismatch: true};
+
+        return  poDateReportedDateAfterValid ? null : {mismatch: true};
       });
 
   this.poForm.get('bidNumber').valueChanges.subscribe(
@@ -363,6 +371,11 @@ formatDate(dateVal: Date) {
 copyModelToForm() {
 
   if (this.currentPO != null) {
+
+    this.poService.getDealerAssoc(this.bidId)
+     .subscribe(_dealers => {
+         this.dealers = _dealers;
+     });
 
     this.datePoIssueValid = true;
     this.datePoIssueBidValid = true;

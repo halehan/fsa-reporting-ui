@@ -28,7 +28,7 @@
                                                <div class="col-md-4 topMargin">
                                                   <div class="form-group input-group-sm form-black label-floating is-empty">  
                                                          <label class="label-small">P.O.Number</label>
-                                                         <input #poFocus placeholder="PO Number" type="text" formControlName="poNumber"  required class="form-control" >
+                                                         <input autocomplete="off" #poFocus placeholder="PO Number" type="text" formControlName="poNumber"  required class="form-control" >
                                                   </div>  
                                                      <small class="form-text text-muted alert alert-danger" *ngIf="poForm.get('poNumber').touched && poForm.get('poNumber').hasError('required')">PO Number Required!</small>
                                                 </div> 
@@ -48,7 +48,7 @@
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Reported Date</label>
                                                          <input type="text" class="form-control" formControlName="dateReported" placeholder="PO Date Reported"  bsDatepicker  />
-                                                         <div style="line-height: .95; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="datePoReportedValid && datePoReportedBidValid"
+                                                         <div style="line-height: .95; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="datePoReportedValid"
                                                              class="alert alert-danger">
                                                               {{messagePoReportedDate}}
                                                           </div>  
@@ -127,7 +127,7 @@
                                              <div class="col-md-2">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                          <label class="label-small">PO Amount</label>
-                                                         <input placeholder="$.00" style="text-align: right" type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
+                                                         <input autocomplete="off" placeholder="$.00" style="text-align: right" type="text"  name="poAmount"  formControlName="poAmount"  class="form-control" >
                                                      </div>
                                              </div>  
                                      

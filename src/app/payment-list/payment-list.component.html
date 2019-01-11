@@ -68,8 +68,8 @@
         </ng-container>
 
         <ng-container matColumnDef="poStatus">
-            <mat-header-cell fxFlex="100px" *matHeaderCellDef mat-sort-header> PO Status </mat-header-cell>
-            <mat-cell fxFlex="100px" *matCellDef="let row">{{row.poStatus}}</mat-cell>
+            <mat-header-cell fxFlex="75px" *matHeaderCellDef mat-sort-header> PO Status </mat-header-cell>
+            <mat-cell fxFlex="75px" *matCellDef="let row">{{row.poStatus}}</mat-cell>
           </ng-container>
 
         <ng-container matColumnDef="dateReported">
@@ -155,8 +155,8 @@
           </ng-container>
 
            <ng-container matColumnDef="itemAmount">
-                  <mat-header-cell class="pull-left" fxFlex="75px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
-                  <mat-cell fxFlex="75px" *matCellDef="let itemList">{{itemList.itemAmount  | currency }}</mat-cell>
+                  <mat-header-cell class="pull-left" fxFlex="100px" *matHeaderCellDef mat-sort-header> Item Amount </mat-header-cell>
+                  <mat-cell fxFlex="100px" *matCellDef="let itemList">{{itemList.itemAmount  | currency }}</mat-cell>
            </ng-container>
 
            <ng-container matColumnDef="adminFeeDue">
