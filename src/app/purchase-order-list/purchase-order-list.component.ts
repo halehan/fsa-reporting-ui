@@ -130,8 +130,6 @@ search() {
 
 }
 
-
-
 deletePurchaseOrder (row) {
 
   if ( confirm('Are you sure you want to delete PO?  ' + row.poNumber + ' - ' + row.dealerName ) ) {

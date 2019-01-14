@@ -42,6 +42,8 @@ export class PaymentDetailComponent implements OnInit {
   ffcaFee: number;
   newPayment: Payment;
   currentPayment: Payment;
+  datePaymentValid: boolean;
+  messagePaymentDate: string;
 
   constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService,
     private dateFormatPipe: DateFormatPipe) {
@@ -56,6 +58,7 @@ export class PaymentDetailComponent implements OnInit {
   });
 
   }
+
 
   newItemPayment () {
     console.log('calling new Payment in payment-detail-component')
@@ -172,6 +175,8 @@ export class PaymentDetailComponent implements OnInit {
 
      // this.paymentForm = this.createFormGroup();
 
+     this.datePaymentValid = true;
+
       this.paymentForm.controls['id'].patchValue(row.id, {emitEvent : false});
       this.paymentForm.controls['fsaCppPurchaseOrderId'].patchValue(row.fsaCppPurchaseOrderId, {emitEvent : false});
       this.paymentForm.controls['fsaCppItemId'].patchValue(row.fsaCppItemId, {emitEvent : false});
@@ -215,7 +220,7 @@ export class PaymentDetailComponent implements OnInit {
       this.currentPayment.fsaCppItemId = this.itemId;
 
       this.currentPayment.paymentAmount = this.paymentForm.controls.paymentAmount.value;
-      this.currentPayment.paymentDate = this.paymentForm.controls.paymentDate.value;
+      this.currentPayment.paymentDate =  this.formatDate(this.paymentForm.controls.paymentDate.value);
       this.currentPayment.paymentCheckNum = this.paymentForm.controls.paymentCheckNumber.value;
       this.currentPayment.correction = this.paymentForm.controls.correction.value;
       this.currentPayment.fsaAlloc = this.paymentForm.controls.fsaAlloc.value;
@@ -268,7 +273,24 @@ export class PaymentDetailComponent implements OnInit {
 
     this.paymentForm.get('paymentDate').valueChanges.subscribe(_paymentDate => {
 
-      this.paymentForm.controls['paymentDate'].patchValue(this.formatDate(_paymentDate), {emitEvent : false});
+      const todaysDate = moment();
+      let isAfter: boolean;
+      const payDate  = moment(_paymentDate, 'YYYY-MM-DD');
+
+
+      if (!(this.paymentForm.controls.paymentDate.value == null)) {
+        isAfter = payDate.isAfter(todaysDate);
+        this.paymentForm.controls['paymentDate'].patchValue(this.formatDate(_paymentDate), {emitEvent : false});
+      }
+
+      if (isAfter) {
+        this.datePaymentValid = false;
+        this.paymentForm.controls['paymentDate'].setErrors(_paymentDate, {emitEvent : false});
+        this.messagePaymentDate = 'PO Issue Date can not be after today ';
+      } else {
+        this.datePaymentValid = true;
+        this.messagePaymentDate = '';
+      }
 
     });
 

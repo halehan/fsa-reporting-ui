@@ -171,6 +171,12 @@ onPaymentRowClicked(row) {
 }
 
 refreshPaymentListHandler(itemId: number) {
+
+  // get Po Items
+  this.delay(1000).then(any => {
+  this.getItems(this.poId);
+});
+
   this.delay(1000).then(any => {
     this.itemService.getPaymentByItemId(itemId)
   .subscribe(items => {

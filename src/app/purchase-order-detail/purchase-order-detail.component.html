@@ -84,9 +84,10 @@
                                                    <div class="col-md-6">
                                                      <div class="form-group input-group-sm form-black label-floating is-empty">
                                                              <label class="label-small" for="dealerSelect">Vendor Select</label>
-                                                             <select   class="form-control" formControlName="dealerName" id="vendorSelect">
-                                                                             <option>Select Vendor</option>
-                                                              <option *ngFor="let dealer of dealers" >
+                                                             <select   class="form-control" formControlName="dealerName" id="dealerSelect">
+                                                                            <option *ngIf="poNew">Select Vendor</option>
+                        
+                                                              <option *ngFor="let dealer of dealers" value={{dealer.dealerName}}  >
                                                                      {{ dealer.dealerName}} 
                                                                </option>  
                                                              </select>

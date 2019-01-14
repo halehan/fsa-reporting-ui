@@ -26,7 +26,11 @@
                               <div class="form-group input-group-sm form-black label-floating is-empty">
                                       <label class="label-small">Payment Date</label>
                                       <input  type="text"  formControlName="paymentDate"   class="form-control" required bsDatepicker [bsConfig]="{ dateInputFormat: 'MM/DD/YYYY' }">
-                              </div>
+                             
+                                      <div style="line-height: .95; font-size: .90rem; padding: 0.95rem 1.25rem;" [hidden]="datePaymentValid" class="alert alert-danger">
+                                                {{messagePaymentDate}}
+                                      </div> 
+                               </div> 
                       </div>   
 
                       <div class="col-md-2">

@@ -67,6 +67,7 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
 
   messagePoFinal: string;
   poFinalValid: boolean;
+  poNew: boolean;
 
   constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService,
     private fb: FormBuilder, private dateFormatPipe: DateFormatPipe) { }
@@ -99,6 +100,7 @@ newItem() {
 }
 
 ngOnInit() {
+  this.poNew = false;
 
   this.getPurchaseOrder(this.poId);
 
@@ -154,6 +156,7 @@ newPo() {
   this.datePoReportedBidValid = true;
   this.datePoReportedValid = true;
   this.poFinalValid = true;
+  this.poNew = true;
 
   this.messagePoFinal = '';
 
@@ -183,6 +186,7 @@ formControlValueChanged() {
       const endDate      = moment(this.currentBid.EndDate, 'YYYY-MM-DD');
       const poIssueDate  = moment(_issueDate, 'YYYY-MM-DD');
       const dateReported = moment(this.poForm.controls.dateReported.value, 'MM/DD/YYYY');
+      const todaysDate   = moment();
 
       const poIssueDateValid: boolean =
            poIssueDate.isBetween(startDate, endDate);
@@ -190,10 +194,12 @@ formControlValueChanged() {
       let poIssueDateAfterValid: boolean;
       poIssueDateAfterValid = true;
       let isSame: boolean;
+      let isAfter: boolean;
 
       if (!(this.poForm.controls.dateReported.value == null)) {
         poIssueDateAfterValid = poIssueDate.isBefore(dateReported);
         isSame = poIssueDate.isSame(dateReported);
+        isAfter = poIssueDate.isAfter(todaysDate);
       }
 
        console.log('po Issue Date Valid? ', poIssueDateValid);
@@ -201,11 +207,16 @@ formControlValueChanged() {
 
       this.poForm.controls['poIssueDate'].patchValue(_issueDate, {emitEvent : false});
 
+
         if ((poIssueDateAfterValid || isSame ) && poIssueDateValid) {
             this.datePoIssueValid = true;
             this.datePoIssueBidValid = true;
             this.poForm.controls['poIssueDate'].setErrors(null, {emitEvent : false});
             this.messagePoIssueDate = '';
+         } else if (isAfter) {
+            this.datePoIssueValid = false;
+            this.poForm.controls['dateReported'].setErrors(_issueDate, {emitEvent : false});
+            this.messagePoIssueDate = 'PO Issue Date can not be after today ';
         } else if (!(poIssueDateAfterValid || isSame) ) {
             this.datePoIssueValid = false;
             this.poForm.controls['poIssueDate'].setErrors(_issueDate, {emitEvent : false});
