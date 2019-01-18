@@ -351,12 +351,12 @@ formControlValueChanged() {
  //     if ( _poAmount > 0) {
       console.log(this.calculateAdminFee(_poAmount));
       this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
- //     this.messagePoAmount = '';
- //     this.poAmountValid = true;
-  //    } else {
-  //      this.messagePoAmount = 'PO Amount must be > 0';
-  //      this.poAmountValid = false;
-  //      this.poForm.controls['poAmount'].setErrors(_poAmount, {emitEvent : false});
+ //      this.messagePoAmount = '';
+ //      this.poAmountValid = true;
+ //    } else {
+ //      this.messagePoAmount = 'PO Amount must be > 0';
+ //      this.poAmountValid = false;
+ //      this.poForm.controls['poAmount'].setErrors(_poAmount, {emitEvent : false});
  //     }
     });
 
