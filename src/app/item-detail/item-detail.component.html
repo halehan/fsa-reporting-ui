@@ -48,6 +48,7 @@
                                     <div class="form-group input-group-sm form-black label-floating is-empty">
                                             <label class="label-small">Item Number</label>
                                             <select required class="form-control"  formControlName="itemNumber">
+                                                        <option *ngIf="newItem">Select Item </option>
                                                     <option *ngFor="let item of itemTypeCodes" value={{item.itemNumber}}>
                                                                 {{item.itemNumber}} - {{ item.itemDescription}} 
                                                     </option> 

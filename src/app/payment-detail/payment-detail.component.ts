@@ -69,6 +69,8 @@ export class PaymentDetailComponent implements OnInit {
     this.formControlValueChanged();
     this.focusPayment();
 
+    this.datePaymentValid = true;
+
 
   }
 
@@ -243,7 +245,7 @@ export class PaymentDetailComponent implements OnInit {
       moment.locale();         // en
       moment().format('LT');
       const a = moment(dateVal.toLocaleString());
-      const b = a.add(8, 'hour');
+      const b = a.subtract(1, 'hour');
       const myDate2 = this.dateFormatPipe.transform(b);
 
       return myDate2;

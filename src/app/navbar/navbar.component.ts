@@ -15,8 +15,8 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   appTitle = ' FSA Cooperative Purchasing Program Reporting';
-  appVersion = '1.0.12.RC-1'
-  buildDate =  '1/13/2018 13:10:41'
+  appVersion = '1.0.16.RC-1'
+  buildDate =  '1/18/2018 14:18:11'
   homeActive = '';
   dashActive = '';
   profileActive = '';

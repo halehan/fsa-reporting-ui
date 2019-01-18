@@ -64,10 +64,13 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
   currentBid: BidNumber;
   messagePoIssueDate: string;
   messagePoReportedDate: string;
+  messagePoAmount: string;
 
   messagePoFinal: string;
   poFinalValid: boolean;
   poNew: boolean;
+  poAmountValid: boolean;
+  vendorDebugRowCount: string;
 
   constructor(private poService: PurchaseOrderService, private itemService: ItemService, private toastr: ToastrService,
     private fb: FormBuilder, private dateFormatPipe: DateFormatPipe) { }
@@ -109,10 +112,19 @@ ngOnInit() {
     this.poStatusTypeCodes = codes;
 });
 
+this.poService.getDealerAssoc(this.bidId)
+        .subscribe(_dealers => {
+            this.dealers = _dealers;
+            this.vendorDebugRowCount = _dealers.length;
+        });
+
+/*
 this.poService.getDealer()
 .subscribe(_dealers => {
      this.dealers = _dealers;
+     this.vendorDebugRowCount = _dealers.length;
 });
+*/
 
   this.poService.getCityAgency()
   .subscribe(_cityAgency => {
@@ -156,6 +168,7 @@ newPo() {
   this.datePoReportedBidValid = true;
   this.datePoReportedValid = true;
   this.poFinalValid = true;
+  this.poAmountValid = true;
   this.poNew = true;
 
   this.messagePoFinal = '';
@@ -171,6 +184,7 @@ newPo() {
   this.poService.getDealerAssoc(this.bidId)
         .subscribe(_dealers => {
             this.dealers = _dealers;
+            this.vendorDebugRowCount = _dealers.length;
         });
 
         this.poForm.controls['bidNumber'].patchValue(this.bidId, {emitEvent : false});
@@ -284,6 +298,7 @@ formControlValueChanged() {
      this.poService.getDealerAssoc(_bidNumber)
      .subscribe(_dealers => {
          this.dealers = _dealers;
+         this.vendorDebugRowCount = _dealers.length;
      });
 
        this.poService.getAdminFee(_bidNumber).subscribe(bid => {this.currentBid = bid[0];
@@ -333,16 +348,21 @@ formControlValueChanged() {
 
   this.poForm.get('poAmount').valueChanges.subscribe(
     _poAmount => {
-      if ( _poAmount > 0) {
+ //     if ( _poAmount > 0) {
       console.log(this.calculateAdminFee(_poAmount));
       this.poForm.patchValue({'adminFeeDue': this.calculateAdminFee(_poAmount)});
-      }
+ //     this.messagePoAmount = '';
+ //     this.poAmountValid = true;
+  //    } else {
+  //      this.messagePoAmount = 'PO Amount must be > 0';
+  //      this.poAmountValid = false;
+  //      this.poForm.controls['poAmount'].setErrors(_poAmount, {emitEvent : false});
+ //     }
     });
 
    this.poForm.get('cityAgency').valueChanges.subscribe(
         _cityAgency => {
           this.poService.getPayCode(_cityAgency).subscribe(cd => {
-           // this.poForm.payCd = cd[0].agencyPayCode; 
             this.poForm.controls['payCd'].patchValue(cd[0].agencyPayCode, {emitEvent : false});
           });
       });
@@ -383,9 +403,10 @@ copyModelToForm() {
 
   if (this.currentPO != null) {
 
-    this.poService.getDealerAssoc(this.bidId)
+    this.poService.getDealerAssoc(this.currentPO.bidNumber)
      .subscribe(_dealers => {
          this.dealers = _dealers;
+         this.vendorDebugRowCount = _dealers.length;
      });
 
     this.datePoIssueValid = true;
@@ -394,6 +415,7 @@ copyModelToForm() {
     this.datePoReportedBidValid = true;
     this.datePoReportedValid = true;
     this.poFinalValid = true;
+    this.poAmountValid = true;
 
     this.messagePoFinal = '';
           this.poFinalValid = true;
@@ -442,7 +464,7 @@ createFormGroup() {
       dateReported: new FormControl(),
       estimatedDelivery: new FormControl(),
       cityAgency: new FormControl('', Validators.required),
-      dealerName: new FormControl(),
+      dealerName: new FormControl('', Validators.required),
   //    spec: new FormControl('', Validators.required),
   //    vehicleType: new FormControl('', Validators.required),
       agencyFlag: new FormControl(),
@@ -452,6 +474,7 @@ createFormGroup() {
       poFinal: new FormControl(),
       qty: new FormControl(),
       poAmount: new FormControl(),
+    //  poAmount: new FormControl('', Validators.required),
       actualPo: new FormControl(),
       adminFeeDue: new FormControl({disabled: true}),
       comments: new FormControl(),
@@ -574,6 +597,7 @@ revert() {
       this.datePoIssueBidValid = true;
       this.datePoReportedValid = true;
       this.datePoReportedBidValid = true;
+      this.poAmountValid = true;
 
 
   }
@@ -609,6 +633,7 @@ revert() {
       this.datePoIssueBidValid = true;
       this.datePoReportedValid = true;
       this.datePoReportedBidValid = true;
+      this.poAmountValid = true;
 
   }
 
