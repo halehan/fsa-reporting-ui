@@ -87,14 +87,14 @@ export class PurchaseOrderDetailComponent implements OnInit, AfterViewInit {
       await new Promise(resolve => setTimeout(() => resolve(), ms)).then(() => console.log('fired'));
     }
 
-ngAfterViewInit() {
-  console.log('Values on ngAfterViewInit():');
-  console.log('itemList:', this.itemList);
-  console.log('poId', this.poId);
+   ngAfterViewInit() {
+     console.log('Values on ngAfterViewInit():');
+     console.log('itemList:', this.itemList);
+     console.log('poId', this.poId); 
 
-  this.formControlValueChanged();
+     this.formControlValueChanged();
 
-}
+   }
 
 newItem() {
 
